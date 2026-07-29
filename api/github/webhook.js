@@ -8,10 +8,41 @@
 // Uses the SAME analysis engine as the CLI/web (imported from the built core).
 
 import { verifySignature, installationToken, gh } from "./_gh.js";
+import { isProAccount } from "./_pro.js";
+import { pushAudit } from "../_store.js";
 import { analyze, renderMarkdown, renderFixPrompt } from "../../dist/core/index.js";
 
 const MARKER = "<!-- tokendam-cloud -->";
 const TRACE_DIR = process.env.TOKENDAM_TRACE_DIR || "traces";
+const CALLS_PER_DAY = 1000;
+
+function money(n) {
+  return n >= 1 ? `$${n.toFixed(0)}` : `$${n.toFixed(n >= 0.1 ? 2 : 3)}`;
+}
+
+// Free accounts get a one-line preview with the headline dollar number + an upgrade
+// CTA — enough to prove value, not the full breakdown/fix pack (that's Pro).
+function teaserComment(report, monthlyUSD) {
+  const issues = report.findings.length;
+  return (
+    `${MARKER}\n### 🧱 TokenDam · free preview\n` +
+    `This PR's traces waste **~${money(monthlyUSD)}/month** (~${report.savablePct.toFixed(0)}% of spend, at ${CALLS_PER_DAY.toLocaleString()} calls/day) — **${issues} issue${issues === 1 ? "" : "s"}** found.\n\n` +
+    `🔒 The per-finding breakdown, the copy-paste **fix pack**, and your repo's **cost trend** are TokenDam Pro.\n` +
+    `**[Unlock the full audit → tokendam.dev/pricing](https://tokendam.dev/pricing)**\n\n` +
+    `<sub>Free preview · one line per PR · no data leaves GitHub + our runner.</sub>`
+  );
+}
+
+function fullComment(report) {
+  return (
+    `${MARKER}\n` +
+    renderMarkdown(report, undefined, CALLS_PER_DAY) +
+    "\n\n<details><summary>🛠️ fix pack — paste into your coding agent</summary>\n\n```\n" +
+    renderFixPrompt(report, CALLS_PER_DAY) +
+    "\n```\n</details>\n\n" +
+    `<sub>TokenDam Cloud · <a href="https://tokendam.dev/dashboard">cost trend</a> · <a href="https://tokendam.dev/pricing">manage</a></sub>`
+  );
+}
 
 async function readRaw(req) {
   const chunks = [];
@@ -96,15 +127,31 @@ export default async function handler(req, res) {
     }
 
     const report = analyze(trace);
-    const body =
-      `${MARKER}\n` +
-      renderMarkdown(report, undefined, 1000) +
-      "\n\n<details><summary>🛠️ fix pack — paste into your coding agent</summary>\n\n```\n" +
-      renderFixPrompt(report, 1000) +
-      "\n```\n</details>\n\n<sub>TokenDam Cloud · analyzed on our runner · <a href=\"https://tokendam.dev/pricing\">manage</a></sub>";
+    const monthlyUSD = report.perCallSavableUSD * CALLS_PER_DAY * 30;
+    const pro = isProAccount(owner);
+
+    // Record the audit for the cost-trend dashboard (no-op if KV unconfigured).
+    try {
+      await pushAudit(`${owner}/${name}`, {
+        ts: new Date().toISOString(),
+        sha: String(sha).slice(0, 7),
+        pr,
+        pro,
+        numCalls: report.numCalls,
+        totalUSD: report.totalUSD,
+        savableUSD: report.savableUSD,
+        savablePct: report.savablePct,
+        monthlyUSD,
+        issues: report.findings.length,
+      });
+    } catch {
+      /* trend recording is best-effort; never block the PR comment */
+    }
+
+    const body = pro ? fullComment(report) : teaserComment(report, monthlyUSD);
     await upsertComment(token, owner, name, pr, body);
 
-    return res.status(200).json({ ok: true, calls: report.numCalls, savableUSD: report.savableUSD });
+    return res.status(200).json({ ok: true, pro, calls: report.numCalls, savableUSD: report.savableUSD });
   } catch (e) {
     return res.status(500).json({ error: String(e).slice(0, 300) });
   }

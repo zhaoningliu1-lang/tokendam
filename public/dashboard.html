@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TokenDam Cloud — cost trend</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root { --bg:#0a0b0d; --panel:#16181d; --line:#23262e; --text:#e6e8ec; --muted:#8b909b; --faint:#565c68; --accent:#5eead4; --red:#f87171; --amber:#fbbf24;
+        --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; --sans:"Inter",-apple-system,system-ui,sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; background:var(--bg); color:var(--text); font:15px/1.6 var(--sans); }
+      .wrap { max-width:820px; margin:0 auto; padding:48px 20px 80px; }
+      h1 { font:600 22px var(--mono); letter-spacing:-.02em; margin:0 0 4px; }
+      .sub { color:var(--muted); font-size:14px; margin:0 0 26px; }
+      form { display:flex; gap:8px; margin-bottom:24px; }
+      input { flex:1; background:var(--panel); border:1px solid var(--line); border-radius:8px; color:var(--text); font:14px var(--mono); padding:11px 13px; }
+      input:focus { outline:none; border-color:var(--accent); }
+      button { font:14px var(--mono); font-weight:600; background:var(--accent); color:#08130f; border:0; border-radius:8px; padding:11px 18px; cursor:pointer; }
+      .cards { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:8px 0 22px; }
+      .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
+      .card .k { font:11px var(--mono); color:var(--faint); text-transform:uppercase; letter-spacing:.04em; }
+      .card .v { font:600 20px var(--mono); margin-top:5px; }
+      .chart { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px 16px 10px; }
+      .chart h2 { font:600 12px var(--mono); color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin:0 0 12px; }
+      table { width:100%; border-collapse:collapse; margin-top:20px; font-size:13px; }
+      th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
+      th { font:11px var(--mono); color:var(--faint); text-transform:uppercase; letter-spacing:.04em; }
+      td { font:13px var(--mono); color:var(--text); } td.num { text-align:right; }
+      .msg { color:var(--muted); font-size:14px; padding:20px 0; }
+      .msg a { color:var(--accent); }
+      .badge { font:10px var(--mono); padding:1px 6px; border-radius:5px; border:1px solid var(--line); color:var(--muted); }
+      .foot { margin-top:40px; border-top:1px solid var(--line); padding-top:14px; font:12px var(--mono); color:var(--faint); }
+      .foot a { color:var(--accent); text-decoration:none; }
+      a.home { color:var(--faint); font:12px var(--mono); text-decoration:none; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="home" href="/">← tokendam.dev</a>
+      <h1 style="margin-top:14px">🧱 TokenDam Cloud — cost trend</h1>
+      <p class="sub">Token-waste $/month across a repo's pull requests, audited automatically by the TokenDam GitHub App.</p>
+      <form id="f">
+        <input id="repo" placeholder="owner/repo  (e.g. your-org/agent-service)" spellcheck="false" />
+        <button type="submit">Load</button>
+      </form>
+      <div id="out"><p class="msg">Enter a repo the TokenDam app is installed on to see its trend.</p></div>
+      <div class="foot"># One point per PR audit. Newest on the right. Free repos show only headline totals; the full per-PR fix pack lives in the PR comments. <a href="/pricing">Pricing →</a></div>
+    </div>
+
+    <script>
+      var f = document.getElementById("f"), repoI = document.getElementById("repo"), out = document.getElementById("out");
+      var pre = new URLSearchParams(location.search).get("repo");
+      if (pre) { repoI.value = pre; }
+
+      f.addEventListener("submit", function (e) { e.preventDefault(); load(repoI.value.trim()); });
+      if (pre) load(pre);
+
+      function money(n){ if(n==null||isNaN(n)) return "—"; return n>=1 ? "$"+n.toFixed(0) : "$"+n.toFixed(n>=0.1?2:3); }
+      function esc(s){ return String(s).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c];}); }
+
+      function load(repo) {
+        if (!repo) return;
+        history.replaceState(null, "", "?repo=" + encodeURIComponent(repo));
+        out.innerHTML = '<p class="msg">Loading…</p>';
+        fetch("/api/history?repo=" + encodeURIComponent(repo))
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (d.error) { out.innerHTML = '<p class="msg">' + esc(d.error) + "</p>"; return; }
+            if (!d.enabled) { out.innerHTML = '<p class="msg">Trend storage isn\'t enabled yet. Add a Vercel KV store to the project and redeploy — audits will start accumulating here.</p>'; return; }
+            var a = d.audits || [];
+            if (!a.length) { out.innerHTML = '<p class="msg">No audits recorded for <b>' + esc(repo) + "</b> yet. Open (or update) a PR with traces in it and it'll appear here.</p>"; return; }
+            render(repo, a);
+          })
+          .catch(function () { out.innerHTML = '<p class="msg">Couldn\'t load history.</p>'; });
+      }
+
+      function render(repo, a) {
+        var latest = a[a.length - 1];
+        var maxM = Math.max.apply(null, a.map(function (x) { return x.monthlyUSD || 0; }).concat([0.0001]));
+        var first = a[0].monthlyUSD || 0, last = latest.monthlyUSD || 0;
+        var delta = first > 0 ? Math.round(((last - first) / first) * 100) : 0;
+        var trend = a.length < 2 ? "—" : (delta > 0 ? "▲ +" + delta + "%" : delta < 0 ? "▼ " + delta + "%" : "flat");
+
+        var cards =
+          '<div class="cards">' +
+          card("Latest waste / mo", money(last)) +
+          card("Peak / mo", money(maxM)) +
+          card("PRs audited", String(a.length)) +
+          card("Trend (first→last)", trend) +
+          "</div>";
+
+        // SVG sparkline of monthlyUSD.
+        var W = 760, H = 150, pad = 8;
+        var n = a.length;
+        var pts = a.map(function (x, i) {
+          var px = n === 1 ? W / 2 : pad + (i * (W - 2 * pad)) / (n - 1);
+          var py = H - pad - ((x.monthlyUSD || 0) / maxM) * (H - 2 * pad);
+          return px.toFixed(1) + "," + py.toFixed(1);
+        });
+        var dots = a.map(function (x, i) {
+          var px = n === 1 ? W / 2 : pad + (i * (W - 2 * pad)) / (n - 1);
+          var py = H - pad - ((x.monthlyUSD || 0) / maxM) * (H - 2 * pad);
+          return '<circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="2.5" fill="#5eead4"><title>PR #' + (x.pr || "?") + " · " + money(x.monthlyUSD) + "/mo</title></circle>";
+        }).join("");
+        var chart =
+          '<div class="chart"><h2>Waste $/month · per PR</h2><svg viewBox="0 0 ' + W + " " + H + '" width="100%" preserveAspectRatio="none">' +
+          '<polyline fill="none" stroke="#5eead4" stroke-width="2" points="' + pts.join(" ") + '" />' +
+          dots + "</svg></div>";
+
+        var rows = a.slice().reverse().map(function (x) {
+          return "<tr><td>#" + (x.pr || "?") + " <span class='badge'>" + (x.pro ? "pro" : "free") + "</span></td><td>" + esc((x.ts || "").slice(0, 10)) +
+            "</td><td class='num'>" + (x.numCalls || "—") + "</td><td class='num'>" + money(x.totalUSD) + "</td><td class='num'>" + (x.savablePct != null ? x.savablePct.toFixed(0) + "%" : "—") +
+            "</td><td class='num'>" + money(x.monthlyUSD) + "</td></tr>";
+        }).join("");
+        var table =
+          "<table><thead><tr><th>PR</th><th>Date</th><th class='num'>Calls</th><th class='num'>Spend</th><th class='num'>Savable</th><th class='num'>Waste/mo</th></tr></thead><tbody>" +
+          rows + "</tbody></table>";
+
+        out.innerHTML = cards + chart + table;
+      }
+      function card(k, v) { return '<div class="card"><div class="k">' + k + '</div><div class="v">' + v + "</div></div>"; }
+    </script>
+  </body>
+</html>

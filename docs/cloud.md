@@ -49,9 +49,28 @@ Install the app on a test repo that has `traces/agent.json`, open a PR → a Tok
 comment appears within seconds. GitHub App settings → Advanced → **Recent Deliveries**
 shows each webhook + our response.
 
-## Billing (next)
+## Billing — subscription gating (Phase 2)
 
-MVP: the app audits any repo it's installed on. **Phase 2**: gate on an active Stripe
-subscription (match the installing org to a `TokenDam Pro` subscription) + a trends
-dashboard (store each audit) — see the roadmap. For now, onboarding is manual-first:
-a customer pays via the Stripe link, we install/enable them by hand.
+Gating is an **env allowlist**, `TOKENDAM_PRO_ACCOUNTS` (comma-separated GitHub
+logins, case-insensitive) — see `api/github/_pro.js`:
+
+- **Pro account** → full PR comment: findings table + copy-paste fix pack + trend link.
+- **Everyone else** → a one-line free preview: headline `$/month` waste + issue count
+  + an upgrade CTA to `tokendam.dev/pricing`. A funnel, not a wall.
+
+Onboarding is manual-first (right for this stage): a customer pays via the Stripe
+link → add their GitHub org/user to `TOKENDAM_PRO_ACCOUNTS` → redeploy. Swap that one
+function for a DB/Stripe lookup once volume justifies it — the webhook doesn't change.
+
+## Cost-trend dashboard (Phase 2)
+
+Each audit is recorded to **Vercel KV (Upstash)** via `api/_store.js` (plain REST, no
+deps). The dashboard at **`/dashboard`** (`public/dashboard.html` + `api/history.js`)
+charts a repo's waste `$/month` per PR over time, with a summary + per-PR table.
+
+**Graceful**: if no KV store is attached, recording no-ops and the webhook still works
+— the dashboard just says "enable storage". To turn it on:
+
+1. Vercel → the tokendam project → **Storage → Create → KV (Upstash)** → connect.
+   Vercel injects `KV_REST_API_URL` + `KV_REST_API_TOKEN` automatically.
+2. Redeploy. New PR audits start accumulating; view at `/dashboard?repo=owner/name`.

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Set up TokenDam Cloud — GitHub App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root { --bg:#0a0b0d; --panel:#16181d; --line:#23262e; --text:#e6e8ec; --muted:#8b909b; --faint:#565c68; --accent:#5eead4;
+        --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; --sans:"Inter",-apple-system,system-ui,sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 var(--sans); }
+      .wrap { max-width:620px; margin:0 auto; padding:60px 20px; }
+      h1 { font:600 24px var(--mono); letter-spacing:-.02em; }
+      p { color:var(--muted); }
+      ol { color:var(--muted); padding-left:20px; } li { margin:8px 0; } b { color:var(--text); }
+      .btn { display:inline-block; margin:18px 0 8px; font:15px var(--mono); font-weight:600; background:var(--accent); color:#08130f; border:0; border-radius:9px; padding:13px 22px; cursor:pointer; }
+      .btn:hover { filter:brightness(1.06); }
+      code { font:13px var(--mono); background:var(--panel); padding:1px 5px; border-radius:4px; color:var(--text); }
+      .note { font:12.5px var(--mono); color:var(--faint); border-top:1px solid var(--line); margin-top:28px; padding-top:14px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>🧱 Set up TokenDam Cloud</h1>
+      <p>This creates the <b>TokenDam GitHub App</b> in your account, pre-configured to audit token cost on every PR. GitHub generates the private key &amp; webhook secret for you — you don't fill in anything.</p>
+      <ol>
+        <li>Click the button → GitHub asks you to confirm creating <b>TokenDam</b>.</li>
+        <li>Click <b>Create GitHub App</b> on GitHub's page.</li>
+        <li>You'll land on a page showing the <b>App ID</b>, <b>webhook secret</b>, and <b>private key</b> — hand those to your assistant (or into Vercel) and Cloud goes live.</li>
+      </ol>
+      <form id="f" action="https://github.com/settings/apps/new" method="post">
+        <input type="hidden" name="manifest" id="manifest" />
+        <button class="btn" type="submit">Create the TokenDam GitHub App →</button>
+      </form>
+      <p style="font-size:13px">Creating for an organization instead? Add <code>?org=YOUR_ORG</code> to this page's URL first.</p>
+      <div class="note"># Uses GitHub's official App Manifest flow. TokenDam Cloud is served from tokendam.dev; the app only gets Pull requests (write), Contents (read), Metadata (read).</div>
+    </div>
+    <script>
+      var manifest = {
+        name: "TokenDam",
+        url: "https://tokendam.dev",
+        hook_attributes: { url: "https://tokendam.dev/api/github/webhook" },
+        redirect_url: "https://tokendam.dev/api/github/setup",
+        public: false,
+        default_permissions: { pull_requests: "write", contents: "read", metadata: "read" },
+        default_events: ["pull_request"],
+      };
+      document.getElementById("manifest").value = JSON.stringify(manifest);
+      // If ?org=NAME is present, create under that org.
+      var org = new URLSearchParams(location.search).get("org");
+      if (org) document.getElementById("f").action = "https://github.com/organizations/" + org + "/settings/apps/new";
+    </script>
+  </body>
+</html>

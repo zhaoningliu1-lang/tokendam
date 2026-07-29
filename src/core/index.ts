@@ -8,6 +8,9 @@ export { renderFixPrompt, renderFixPlan } from "./fixPrompt.js";
 export type { FixPlan, FixStep } from "./fixPrompt.js";
 export { diffReports, renderDiffText } from "./diff.js";
 export type { DiffResult } from "./diff.js";
+export { renderOnePager } from "./onePager.js";
+export { applyFixes, applyCacheFix } from "./fix.js";
+export type { FixResult } from "./fix.js";
 export type {
   Report,
   Finding,

@@ -44,7 +44,7 @@
         hook_attributes: { url: "https://tokendam.dev/api/github/webhook" },
         redirect_url: "https://tokendam.dev/api/github/setup",
         public: false,
-        default_permissions: { pull_requests: "write", contents: "read", metadata: "read" },
+        default_permissions: { pull_requests: "write", contents: "write", metadata: "read" },
         default_events: ["pull_request"],
       };
       document.getElementById("manifest").value = JSON.stringify(manifest);

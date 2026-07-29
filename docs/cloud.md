@@ -25,7 +25,7 @@ The customer commits representative request payloads to `traces/*.json` (via the
 1. github.com → **Settings → Developer settings → GitHub Apps → New GitHub App**.
 2. **Name**: TokenDam · **Homepage**: https://tokendam.dev
 3. **Webhook**: Active. **URL**: `https://tokendam.dev/api/github/webhook` · **Secret**: generate a random string (save it).
-4. **Permissions** (Repository): **Pull requests: Read & write** · **Contents: Read-only** · **Metadata: Read-only**.
+4. **Permissions** (Repository): **Pull requests: Read & write** · **Contents: Read & write** (needed to open the auto-fix PR; use Read-only if you only want comments) · **Metadata: Read-only**.
 5. **Subscribe to events**: **Pull request**.
 6. **Where can this be installed**: Any account (for Marketplace) or Only this account (to start).
 7. Create → note the **App ID** → **Generate a private key** (downloads a `.pem`).

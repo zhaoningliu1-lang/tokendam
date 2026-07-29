@@ -10,7 +10,7 @@
 import { verifySignature, installationToken, gh } from "./_gh.js";
 import { isProAccount } from "./_pro.js";
 import { pushAudit } from "../_store.js";
-import { analyze, renderMarkdown, renderFixPrompt } from "../../dist/core/index.js";
+import { analyze, renderMarkdown, renderFixPrompt, applyFixes } from "../../dist/core/index.js";
 
 const MARKER = "<!-- tokendam-cloud -->";
 const TRACE_DIR = process.env.TOKENDAM_TRACE_DIR || "traces";
@@ -72,6 +72,80 @@ async function collectTraces(token, owner, name, sha) {
     }
   }
   return elements;
+}
+
+// Per-file variant of collectTraces — keeps path + blob sha so we can rewrite
+// each file in place when opening the auto-fix PR.
+async function collectTraceFiles(token, owner, name, sha) {
+  let items;
+  try {
+    items = await gh(token, "GET", `/repos/${owner}/${name}/contents/${TRACE_DIR}?ref=${sha}`);
+  } catch {
+    return [];
+  }
+  const files = [];
+  for (const it of Array.isArray(items) ? items : []) {
+    if (!it.name.endsWith(".json")) continue;
+    try {
+      const file = await gh(token, "GET", `/repos/${owner}/${name}/contents/${it.path}?ref=${sha}`);
+      const content = Buffer.from(file.content, "base64").toString("utf8");
+      files.push({ path: it.path, sha: file.sha, parsed: JSON.parse(content) });
+    } catch {
+      /* skip unreadable */
+    }
+  }
+  return files;
+}
+
+// Open (or refresh) a PR that APPLIES the safe prompt-cache fix to the repo's
+// trace/request files — TokenDam acting, not just advising. Best-effort: any
+// failure returns null and the audit comment still posts. Branches off the PR
+// head and targets the PR's own branch, so merging it updates this PR.
+async function openFixPr(token, owner, name, pr, headSha, headRef, monthlyUSD) {
+  const files = await collectTraceFiles(token, owner, name, headSha);
+  const edits = [];
+  for (const f of files) {
+    const container = Array.isArray(f.parsed) ? f.parsed : f.parsed?.calls ? f.parsed.calls : f.parsed;
+    const { fixed, result } = applyFixes(container);
+    if (!result.changed) continue;
+    let out = fixed;
+    if (!Array.isArray(f.parsed) && f.parsed?.calls) out = { ...f.parsed, calls: fixed };
+    else if (!Array.isArray(f.parsed)) out = fixed[0];
+    edits.push({ path: f.path, sha: f.sha, content: JSON.stringify(out, null, 2) + "\n" });
+  }
+  if (!edits.length) return null;
+
+  const branch = `tokendam/cache-fix-pr${pr}`;
+  // Create the branch off the PR head (delete a stale one first so re-runs are clean).
+  try {
+    await gh(token, "DELETE", `/repos/${owner}/${name}/git/refs/heads/${branch}`);
+  } catch {
+    /* no stale branch */
+  }
+  await gh(token, "POST", `/repos/${owner}/${name}/git/refs`, { ref: `refs/heads/${branch}`, sha: headSha });
+
+  for (const e of edits) {
+    await gh(token, "PUT", `/repos/${owner}/${name}/contents/${e.path}`, {
+      message: `TokenDam: add prompt-cache breakpoint to ${e.path}`,
+      content: Buffer.from(e.content, "utf8").toString("base64"),
+      sha: e.sha,
+      branch,
+    });
+  }
+
+  const existing = await gh(token, "GET", `/repos/${owner}/${name}/pulls?head=${owner}:${branch}&state=open`).catch(() => []);
+  if (Array.isArray(existing) && existing.length) return existing[0].html_url;
+
+  const created = await gh(token, "POST", `/repos/${owner}/${name}/pulls`, {
+    title: `🧱 TokenDam: add prompt-cache breakpoints (est. ~${money(monthlyUSD)}/mo)`,
+    head: branch,
+    base: headRef,
+    body:
+      `TokenDam applied the one **behavior-preserving** fix it can apply automatically: a prompt-cache breakpoint on the static prefix of ${edits.length} request file(s). Prompt caching is transparent to the model — outputs are identical — so this is safe to merge.\n\n` +
+      `> **Note:** these are the request payloads TokenDam analyzed. If they're captured fixtures, mirror this same \`cache_control\` change into the code that builds your requests. Behavior-changing optimizations (trimming history, pruning tools) stay in the fix pack on the PR — TokenDam never applies those for you.\n\n` +
+      `<sub>Opened by TokenDam Cloud · <a href="https://tokendam.dev/pricing">manage</a></sub>`,
+  });
+  return created?.html_url || null;
 }
 
 async function upsertComment(token, owner, name, pr, body) {
@@ -148,7 +222,27 @@ export default async function handler(req, res) {
       /* trend recording is best-effort; never block the PR comment */
     }
 
-    const body = pro ? fullComment(report) : teaserComment(report, monthlyUSD);
+    // Pro: TokenDam doesn't just advise — it opens a PR applying the safe fix.
+    // Best-effort; a failure here never blocks the audit comment.
+    let fixPrUrl = null;
+    if (pro && report.findings.length) {
+      try {
+        fixPrUrl = await openFixPr(
+          token,
+          owner,
+          name,
+          pr,
+          sha,
+          payload.pull_request.head.ref,
+          monthlyUSD
+        );
+      } catch (e) {
+        console.error("openFixPr failed:", String(e).slice(0, 200));
+      }
+    }
+
+    let body = pro ? fullComment(report) : teaserComment(report, monthlyUSD);
+    if (fixPrUrl) body = body.replace(MARKER, `${MARKER}\n> 🛠️ **Auto-fix ready:** I opened [a PR applying the prompt-cache fix](${fixPrUrl}) — review & merge.\n`);
     await upsertComment(token, owner, name, pr, body);
 
     return res.status(200).json({ ok: true, pro, calls: report.numCalls, savableUSD: report.savableUSD });

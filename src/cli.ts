@@ -7,6 +7,8 @@ import { renderText } from "./core/format.js";
 import { evaluateCi, renderMarkdown, renderGithub, DEFAULT_CI, type CiConfig } from "./core/ci.js";
 import { renderFixPrompt, renderFixPlan } from "./core/fixPrompt.js";
 import { diffReports, renderDiffText } from "./core/diff.js";
+import { renderOnePager } from "./core/onePager.js";
+import { applyFixes } from "./core/fix.js";
 import type { Severity } from "./core/types.js";
 import pc from "picocolors";
 
@@ -19,6 +21,7 @@ Usage:
   tokendam mcp                     Run as an MCP server (agents self-optimize their own token use)
   tokendam <trace.json>            Analyze a trace (OpenAI/Anthropic/LangSmith/…)
   tokendam diff <before> <after>   Deterministic before/after cost regression (CI)
+  tokendam fix <trace.json> [--apply]  Apply the safe prompt-cache fix in place (.bak kept)
   tokendam --example sd|agent      Run a built-in demo
   cat trace.json | tokendam        Read a trace from stdin (JSON or JSONL)
 
@@ -26,7 +29,7 @@ Capture a trace with the helper:  import { tap, writeTrace } from "tokendam/capt
 
 Output:
   --json                           Emit the raw Report as JSON
-  --format human|markdown|github   Report format (default: human)
+  --format human|markdown|github|html   Report format (html = shareable one-pager → PDF)
   --fix-prompt                     Emit a fix pack to paste into your coding agent
   --calls-per-day <n>              Project savings to N calls/day (default 1000)
 
@@ -245,6 +248,58 @@ async function main() {
     process.exit(result.exitCode);
   }
 
+  // --- fix: actually APPLY the safe, behavior-preserving fixes (prompt caching) ---
+  // Dry-run by default (shows the diff); --apply writes the fixed files in place
+  // (a .bak copy is kept). Only touches the mechanical fix; behavior-changing
+  // advice still lives in the fix pack.
+  if (args[0] === "fix") {
+    const apply = args.includes("--apply");
+    const files = args.slice(1).filter((a) => !a.startsWith("--"));
+    if (files.length === 0) {
+      console.error(pc.red("Usage: tokendam fix <trace-or-request.json ...> [--apply]"));
+      process.exit(2);
+    }
+    let anyChange = false;
+    for (const file of files) {
+      const raw = readFileSync(file, "utf8");
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(raw);
+      } catch {
+        console.error(pc.yellow(`  skip ${file} (not a single JSON document)`));
+        continue;
+      }
+      const wasArray = Array.isArray(parsed);
+      const container =
+        !wasArray && parsed && typeof parsed === "object" && (parsed as any).calls ? (parsed as any).calls : parsed;
+      const { fixed, result } = applyFixes(container);
+      if (!result.changed) {
+        console.log(pc.dim(`  ${file}: nothing to fix (already cached or no static prefix)`));
+        continue;
+      }
+      anyChange = true;
+      console.log(pc.bold(file));
+      for (const c of result.changes) console.log("  " + pc.green("✓ ") + c);
+      if (apply) {
+        writeFileSync(file + ".bak", raw);
+        let out: unknown = fixed;
+        if (!wasArray && parsed && typeof parsed === "object" && (parsed as any).calls)
+          out = { ...(parsed as any), calls: fixed };
+        else if (!wasArray) out = fixed[0];
+        writeFileSync(file, JSON.stringify(out, null, 2) + "\n");
+        console.log("  " + pc.green(`wrote ${file}`) + pc.dim(` (backup: ${file}.bak)`));
+      }
+    }
+    if (!apply && anyChange)
+      console.log(pc.dim("\nDry run. Re-run with --apply to write these changes (a .bak is kept)."));
+    console.log(
+      pc.dim(
+        "\nNote: this applies prompt caching to request payloads. If your prompts are built in source code, paste `tokendam --fix-prompt` into your coding agent instead."
+      )
+    );
+    process.exit(anyChange ? 0 : 0);
+  }
+
   const asJson = args.includes("--json");
   const ciMode = args.includes("--ci");
   const format = flagVal(args, "--format") ?? (ciMode ? "github" : "human");
@@ -345,6 +400,11 @@ async function main() {
   }
 
   // --- Normal report ---
+  if (format === "html") {
+    // Shareable, print-to-PDF one-pager for non-engineers (send it to the boss).
+    console.log(renderOnePager(report, callsPerDay));
+    return;
+  }
   if (format === "markdown") {
     console.log(renderMarkdown(report, undefined, callsPerDay));
     return;

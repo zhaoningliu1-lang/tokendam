@@ -108,6 +108,7 @@ function render(core: Core, report: Report) {
   const actions = `<div class="report-actions">
     <button id="copy-fix" class="run-btn">copy fix prompt →</button>
     <button id="copy-md" class="run-btn alt">copy audit (markdown)</button>
+    <button id="dl-report" class="run-btn alt">report for your boss (PDF) →</button>
     <span class="copied" id="copied"></span>
   </div>`;
 
@@ -161,6 +162,23 @@ const tap = a =&gt; (globalThis.__td.push(a), a);
   document.getElementById("copy-md")?.addEventListener("click", async () => {
     await navigator.clipboard.writeText(core.renderMarkdown(report, undefined, 1000));
     flash("audit copied ✓");
+  });
+  // Paper report — the shareable one-pager an engineer forwards to their manager.
+  // Generated fully client-side (nothing uploaded); opens in a new tab so the user
+  // can Cmd/Ctrl-P → "Save as PDF". Falls back to a download if popups are blocked.
+  document.getElementById("dl-report")?.addEventListener("click", () => {
+    const n = Math.max(1, Number((document.getElementById("cpd") as HTMLInputElement | null)?.value) || 1000);
+    const html = core.renderOnePager(report, n);
+    const url = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    const w = window.open(url, "_blank");
+    if (!w) {
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "tokendam-report.html";
+      a.click();
+    }
+    flash("report opened — Cmd/Ctrl-P → Save as PDF ✓");
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   });
 
   // Live-update the monthly projection as the user changes calls/day.

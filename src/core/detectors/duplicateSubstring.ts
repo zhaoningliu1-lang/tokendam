@@ -1,5 +1,4 @@
 import type { Finding, NormCall, NormMessage, NormTrace } from "../types.js";
-import type { ModelPrice } from "../pricing.js";
 
 // Finds near-identical large chunks repeated within a single call — the same
 // document pasted into both the system prompt and a user turn, a retrieved
@@ -58,23 +57,24 @@ function dupTokensInCall(call: NormCall): { dup: number; pairs: string[] } {
   return { dup, pairs };
 }
 
-export function duplicateSubstring(trace: NormTrace, price: ModelPrice): Finding[] {
+export function duplicateSubstring(trace: NormTrace): Finding[] {
   let totalDup = 0;
   const evidence: string[] = [];
-  const perToken =
-    (trace.calls.some((c) => c.hasCacheMarker) ? price.cachedInput : price.input) / 1_000_000;
+  const cached = trace.calls.some((c) => c.hasCacheMarker);
 
+  let wastedUSD = 0;
   for (const call of trace.calls) {
     const { dup, pairs } = dupTokensInCall(call);
     if (dup >= FIRE_AT) {
       totalDup += dup;
+      // Price each call's duplicated tokens by its own model.
+      wastedUSD += (dup * RECOVERABLE * (cached ? call.price.cachedInput : call.price.input)) / 1_000_000;
       for (const p of pairs) if (evidence.length < 6) evidence.push(p);
     }
   }
   if (totalDup < FIRE_AT) return [];
 
   const wastedTokens = Math.round(totalDup * RECOVERABLE);
-  const wastedUSD = wastedTokens * perToken;
 
   return [
     {

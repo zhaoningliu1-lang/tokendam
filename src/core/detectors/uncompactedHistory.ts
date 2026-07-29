@@ -1,5 +1,4 @@
 import type { Finding, NormTrace } from "../types.js";
-import type { ModelPrice } from "../pricing.js";
 
 // Long-running agents resend the ENTIRE conversation on every turn. Old turns
 // far outside the "recent" window get billed again and again. Summarizing /
@@ -9,7 +8,7 @@ import type { ModelPrice } from "../pricing.js";
 const RECENT_WINDOW = 8; // keep the last N messages verbatim
 const COMPACT_RATIO = 0.7; // assume old turns compress to ~30% of their size
 
-export function uncompactedHistory(trace: NormTrace, price: ModelPrice): Finding[] {
+export function uncompactedHistory(trace: NormTrace): Finding[] {
   const calls = trace.calls;
   if (calls.length < 3) return [];
 
@@ -17,23 +16,24 @@ export function uncompactedHistory(trace: NormTrace, price: ModelPrice): Finding
   const growing = lens[lens.length - 1] > lens[0] + 2;
   if (!growing) return [];
 
-  const perToken =
-    (calls.some((c) => c.hasCacheMarker) ? price.cachedInput : price.input) / 1_000_000;
+  const cached = calls.some((c) => c.hasCacheMarker);
 
-  // For each call, tokens in "old" messages beyond the recent window.
+  // For each call, tokens in "old" messages beyond the recent window — priced by
+  // that call's own model so mixed-model agent loops are costed correctly.
   let oldTokensResent = 0;
   let maxOld = 0;
+  let wastedUSD = 0;
   for (const call of calls) {
     if (call.messages.length <= RECENT_WINDOW) continue;
     const old = call.messages.slice(0, call.messages.length - RECENT_WINDOW);
     const t = old.reduce((s, m) => s + m.tokens, 0);
     oldTokensResent += t;
     maxOld = Math.max(maxOld, t);
+    wastedUSD += (t * COMPACT_RATIO * (cached ? call.price.cachedInput : call.price.input)) / 1_000_000;
   }
   if (oldTokensResent < 2000) return [];
 
   const wastedTokens = Math.round(oldTokensResent * COMPACT_RATIO);
-  const wastedUSD = wastedTokens * perToken;
 
   return [
     {

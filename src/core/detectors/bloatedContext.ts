@@ -1,5 +1,4 @@
 import type { Finding, NormMessage, NormTrace } from "../types.js";
-import type { ModelPrice } from "../pricing.js";
 import { usd } from "../pricing.js";
 
 // Flags oversized VARIABLE content — a single user/tool message that dwarfs
@@ -11,17 +10,17 @@ import { usd } from "../pricing.js";
 const BLOAT_THRESHOLD = 3000; // tokens; a single chunk bigger than this is suspicious
 const TRIMMABLE_FRACTION = 0.4; // conservative: assume ~40% is boilerplate/noise
 
-export function bloatedContext(trace: NormTrace, price: ModelPrice): Finding[] {
+export function bloatedContext(trace: NormTrace): Finding[] {
   const findings: Finding[] = [];
-  const perToken = price.input / 1_000_000;
 
   // Aggregate the biggest non-system chunk per call, then report the worst few.
-  type Big = { call: number; msg: NormMessage; tokens: number };
+  type Big = { call: number; msg: NormMessage; tokens: number; inPrice: number };
   const bigs: Big[] = [];
   trace.calls.forEach((call, ci) => {
     for (const m of call.messages) {
       if (m.role === "assistant") continue; // model output, not our context waste
-      if (m.tokens >= BLOAT_THRESHOLD) bigs.push({ call: ci, msg: m, tokens: m.tokens });
+      if (m.tokens >= BLOAT_THRESHOLD)
+        bigs.push({ call: ci, msg: m, tokens: m.tokens, inPrice: call.price.input });
     }
   });
   if (!bigs.length) return findings;
@@ -29,7 +28,11 @@ export function bloatedContext(trace: NormTrace, price: ModelPrice): Finding[] {
   bigs.sort((a, b) => b.tokens - a.tokens);
   const totalBloatTokens = bigs.reduce((s, b) => s + b.tokens, 0);
   const trimTokens = Math.round(totalBloatTokens * TRIMMABLE_FRACTION);
-  const wastedUSD = trimTokens * perToken;
+  // Price each chunk by its own call's model (correct on mixed-model traces).
+  const wastedUSD = bigs.reduce(
+    (s, b) => s + (b.tokens * TRIMMABLE_FRACTION * b.inPrice) / 1_000_000,
+    0
+  );
 
   const worst = bigs.slice(0, 5);
   const evidence = worst.map(

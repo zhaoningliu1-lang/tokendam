@@ -1,5 +1,6 @@
 import type { NormCall, NormMessage, NormTool, NormTrace, Role } from "./types.js";
 import { countTokens } from "./tokens.js";
+import { priceFor } from "./pricing.js";
 
 // Accepts loose JSON that looks like one or more OpenAI/Anthropic requests and
 // flattens it into a NormTrace. We're deliberately permissive: real traces come
@@ -124,13 +125,17 @@ function normalizeCall(call: Any): NormCall {
       }
     : undefined;
 
+  const model = String(call.model ?? "unknown");
+  const { price, matched } = priceFor(model);
   return {
-    model: String(call.model ?? "unknown"),
+    model,
     system,
     messages,
     tools,
     usage,
     hasCacheMarker,
+    price,
+    priceMatched: matched,
     reasoningEffort: call.reasoning_effort ?? call.reasoning?.effort,
     verbosity: call.verbosity ?? call.text?.verbosity,
     thinkingBudget: call.thinking?.budget_tokens,

@@ -4,7 +4,8 @@ export { priceFor, usd, PRICES } from "./pricing.js";
 export { countTokens } from "./tokens.js";
 export { evaluateCi, renderMarkdown, renderGithub, DEFAULT_CI } from "./ci.js";
 export type { CiConfig, CiResult } from "./ci.js";
-export { renderFixPrompt } from "./fixPrompt.js";
+export { renderFixPrompt, renderFixPlan } from "./fixPrompt.js";
+export type { FixPlan, FixStep } from "./fixPrompt.js";
 export { diffReports, renderDiffText } from "./diff.js";
 export type { DiffResult } from "./diff.js";
 export type {

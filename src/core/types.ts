@@ -39,6 +39,11 @@ export interface NormCall {
   };
   /** Whether any part of this call used a cache_control marker. */
   hasCacheMarker: boolean;
+  /** This call's price, resolved from ITS OWN model — so mixed-model traces are
+   *  priced correctly per call rather than with one trace-wide price. */
+  price: import("./pricing.js").ModelPrice;
+  /** True if this call's model wasn't in the price table (fallback used). */
+  priceMatched: boolean;
   /** Raw reasoning/verbosity controls present on the request (for reasoning models). */
   reasoningEffort?: string;
   verbosity?: string;

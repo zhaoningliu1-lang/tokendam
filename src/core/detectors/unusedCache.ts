@@ -1,5 +1,4 @@
 import type { Finding, NormCall, NormTrace } from "../types.js";
-import type { ModelPrice } from "../pricing.js";
 
 // The single biggest lever for agent loops: the same static prefix (system
 // prompt + tool schemas + any identical leading messages) gets resent at FULL
@@ -51,7 +50,7 @@ function sharedPrefix(trace: NormTrace): { tokens: number; parts: string[] } {
   return { tokens, parts };
 }
 
-export function unusedCache(trace: NormTrace, price: ModelPrice): Finding[] {
+export function unusedCache(trace: NormTrace): Finding[] {
   const calls = trace.calls;
   if (calls.length < 2) return [];
 
@@ -59,7 +58,16 @@ export function unusedCache(trace: NormTrace, price: ModelPrice): Finding[] {
   if (tokens < MIN_CACHEABLE) return [];
 
   const repeats = calls.length - 1; // first call is a cache write, rest are hits
-  const perTokenSaving = (price.input - price.cachedInput) / 1_000_000;
+  // The prefix is resent on each repeat call — price the saving by those calls'
+  // own models (correct for mixed-model traces; identical to before when uniform).
+  const repeatCalls = calls.slice(1);
+  const perTokenSaving =
+    repeatCalls.reduce((s, c) => s + (c.price.input - c.price.cachedInput), 0) /
+    repeatCalls.length /
+    1_000_000;
+  const avgIn = repeatCalls.reduce((s, c) => s + c.price.input, 0) / repeatCalls.length;
+  const avgCached = repeatCalls.reduce((s, c) => s + c.price.cachedInput, 0) / repeatCalls.length;
+  const discountPct = avgIn > 0 ? Math.round((1 - avgCached / avgIn) * 100) : 90;
 
   // Two signals that caching is already in play: an explicit cache_control
   // marker, OR the trace's usage reporting cache-read tokens (OpenAI auto-caches
@@ -101,9 +109,7 @@ export function unusedCache(trace: NormTrace, price: ModelPrice): Finding[] {
       title: `Static prefix of ~${tokens.toLocaleString()} tokens is resent uncached on every call`,
       detail: `Across ${calls.length} calls, the same ${tokens.toLocaleString()}-token prefix (${parts.join(
         ", "
-      )}) is billed at full input price every time. Prompt caching would charge the cache-hit rate on the ${repeats} repeat(s) — roughly a ${Math.round(
-        (1 - price.cachedInput / price.input) * 100
-      )}% discount on that prefix.`,
+      )}) is billed at full input price every time. Prompt caching would charge the cache-hit rate on the ${repeats} repeat(s) — roughly a ${discountPct}% discount on that prefix.`,
       fix:
         trace.vendor === "anthropic" || trace.vendor === "deepseek"
           ? "Add cache_control:{type:'ephemeral'} to the last system block (and/or the last tool). Anthropic/DeepSeek cache the prefix up to that marker; hits cost ~10% of input."

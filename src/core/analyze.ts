@@ -9,6 +9,7 @@ import { uncompactedHistory } from "./detectors/uncompactedHistory.js";
 import { duplicateSubstring } from "./detectors/duplicateSubstring.js";
 import { reasoningTokenWaste } from "./detectors/reasoningTokenWaste.js";
 import { modelOverkill } from "./detectors/modelOverkill.js";
+import { duplicateRequests } from "./detectors/duplicateRequests.js";
 
 const SEV_ORDER = { high: 0, medium: 1, low: 2 } as const;
 
@@ -27,41 +28,39 @@ function callInputTokens(c: NormCall): number {
 export function analyze(input: unknown): Report {
   const trace: NormTrace = normalize(input);
 
-  // Pick pricing from the most-used model in the trace.
-  const modelCounts = new Map<string, number>();
-  for (const c of trace.calls) modelCounts.set(c.model, (modelCounts.get(c.model) ?? 0) + 1);
-  const model = [...modelCounts.entries()].sort((a, b) => b[1] - a[1])[0][0];
-  const { price, matched } = priceFor(model);
+  // Each call is priced by ITS OWN model (c.price), so a mixed-model trace —
+  // a cheap classifier plus an expensive agent in one log — is costed correctly
+  // instead of with a single trace-wide price.
+  const models = [...new Set(trace.calls.map((c) => c.model))];
+  const model = models.length === 1 ? models[0] : `mixed (${models.length} models)`;
 
   let totalInputTokens = 0;
   let totalOutputTokens = 0;
   let totalCachedTokens = 0;
   let totalUSD = 0;
   for (const c of trace.calls) {
+    const p = c.price;
     const inTok = callInputTokens(c);
-    // Tokens the provider already served from cache (OpenAI/Anthropic report
-    // this in usage) are billed at the cache-hit rate, not full input price.
+    // Tokens the provider already served from cache bill at the cache-hit rate.
     const cached = Math.min(inTok, c.usage?.cachedInputTokens ?? 0);
-    // completion_tokens already includes reasoning tokens (OpenAI/DeepSeek);
-    // only fall back to reasoningTokens when no output count was reported, so a
-    // reasoning finding can never claim to save more than the trace costs.
+    // completion_tokens already includes reasoning tokens; only fall back to
+    // reasoningTokens when no output count was reported.
     const outTok = c.usage?.outputTokens ?? c.usage?.reasoningTokens ?? 0;
     totalInputTokens += inTok;
     totalOutputTokens += outTok;
     totalCachedTokens += cached;
-    totalUSD +=
-      ((inTok - cached) * price.input + cached * price.cachedInput + outTok * price.output) /
-      1_000_000;
+    totalUSD += ((inTok - cached) * p.input + cached * p.cachedInput + outTok * p.output) / 1_000_000;
   }
 
   const findings: Finding[] = [
-    ...unusedCache(trace, price),
-    ...bloatedContext(trace, price),
-    ...redundantTools(trace, price),
-    ...uncompactedHistory(trace, price),
-    ...duplicateSubstring(trace, price),
-    ...reasoningTokenWaste(trace, price),
+    ...unusedCache(trace),
+    ...bloatedContext(trace),
+    ...redundantTools(trace),
+    ...uncompactedHistory(trace),
+    ...duplicateSubstring(trace),
+    ...reasoningTokenWaste(trace),
     ...modelOverkill(trace),
+    ...duplicateRequests(trace),
   ].sort((a, b) => SEV_ORDER[a.severity] - SEV_ORDER[b.severity] || b.wastedUSD - a.wastedUSD);
 
   // Savings can conceptually overlap between detectors; cap at 90% of spend so
@@ -72,14 +71,17 @@ export function analyze(input: unknown): Report {
   const savablePct = totalUSD > 0 ? (savableUSD / totalUSD) * 100 : 0;
 
   const notes: string[] = [...trace.notes];
-  if (isEstimatedVendor(model))
+  if (models.some((m) => isEstimatedVendor(m)))
     notes.push(
-      `Token counts for ${model} are estimated with the OpenAI o200k tokenizer (typically within ~10-15%).`
+      "Token counts for Claude/DeepSeek/Gemini are estimated with the OpenAI o200k tokenizer (typically within ~10-15%)."
     );
-  if (!matched)
+  const unmatched = models.filter((m) => !priceFor(m).matched);
+  if (unmatched.length)
     notes.push(
-      `Model "${model}" not in the price table — used a mid-range fallback ($${price.input}/1M in, $${price.output}/1M out). Costs are indicative.`
+      `Model(s) not in the price table — used a mid-range fallback (costs indicative): ${unmatched.join(", ")}.`
     );
+  if (models.length > 1)
+    notes.push(`Mixed models — each call is priced by its own model: ${models.join(", ")}.`);
   if (totalOutputTokens === 0)
     notes.push("Trace had no response usage, so output token cost isn't included in the total.");
 

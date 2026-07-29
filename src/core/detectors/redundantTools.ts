@@ -1,12 +1,11 @@
 import type { Finding, NormTrace } from "../types.js";
-import type { ModelPrice } from "../pricing.js";
 
 // Tools (and MCP tool surfaces) that are DEFINED on calls but never actually
 // invoked anywhere in the trace. Their JSON schemas are billed as input on
 // every call that carries them. Common with kitchen-sink MCP servers that
 // expose dozens of tools an agent never touches.
 
-export function redundantTools(trace: NormTrace, price: ModelPrice): Finding[] {
+export function redundantTools(trace: NormTrace): Finding[] {
   const called = new Set<string>();
   let sawToolUse = false;
   for (const call of trace.calls) {
@@ -40,8 +39,13 @@ export function redundantTools(trace: NormTrace, price: ModelPrice): Finding[] {
   if (!dead.length) return [];
 
   // Charged at cache-hit rate if a cache marker exists, else full input price.
+  // Averaged across calls' own models (this finding is secondary, so exactness
+  // matters less; the average is correct for the common uniform-model trace).
+  const cached = trace.calls.some((c) => c.hasCacheMarker);
   const perToken =
-    (trace.calls.some((c) => c.hasCacheMarker) ? price.cachedInput : price.input) / 1_000_000;
+    trace.calls.reduce((s, c) => s + (cached ? c.price.cachedInput : c.price.input), 0) /
+    trace.calls.length /
+    1_000_000;
 
   let wastedTokens = 0;
   const evidence: string[] = [];

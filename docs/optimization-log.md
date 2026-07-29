@@ -215,8 +215,26 @@ critique→propose→verify→human-approve, compounding the knowledge base) · 
 (ingest an agent's ongoing traces, learn its patterns) · a "token self-awareness" SDK an agent wraps
 its own client with. Guardrail throughout: autonomous discovery/proposal, human-approved shipping.
 
-**Parked (need bigger work):** per-call mixed-model pricing (totalUSD/CI use one majority model —
-wrong on mixed traces) · full token-level cross-detector dedup (headline is a clamped floor, not
+## Round 10 — 2026-07-29 · clear the correctness debt before autonomizing
+
+Founder call: fix the mixed-model pricing hard bug BEFORE making the loop autonomous (an autonomous
+system must not run on wrong numbers). Plus two requested features.
+
+- **③ Mixed-model pricing (the hard bug) — FIXED.** `analyze` used ONE price (majority model) for
+  the whole trace, so a mixed trace (cheap classifier + expensive agent) was wrong by up to ~19×.
+  Now every `NormCall` carries its OWN `price` (resolved at normalize time), and all 7 detectors +
+  totalUSD price per-call. `report.model` shows "mixed (N models)" with a per-model note. Test: a
+  gpt-4o-mini + claude-opus trace now costs $0.0076 (opus dominates) vs $0.00015 all-mini.
+- **① Structured fix plan.** `renderFixPlan(report)` → machine-readable JSON {summary, steps[]} for
+  a CI coding-agent to consume programmatically; CLI `--fix-prompt --format json`.
+- **② duplicate-requests detector (the Q2 gap).** Detects the SAME request (ignoring the static
+  system prompt) sent more than once → a response-cache opportunity; prices the whole repeat call
+  (input+output) per its own model. `secondary` (overlaps per-call findings). Now **8 detectors.**
+  We diagnose the semantic-cache opportunity; we don't cache for you (that's a runtime proxy).
+
+8 test suites green, typecheck clean. npm publish dry-run verified (23 files = dist + README only).
+
+**Parked (need bigger work):** full token-level cross-detector dedup (headline is a clamped floor, not
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
 "model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
 go-ahead — it's outward-facing/public while the project is pre-launch & private).

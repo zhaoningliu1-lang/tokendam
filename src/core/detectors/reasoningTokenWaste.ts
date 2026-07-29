@@ -1,5 +1,4 @@
 import type { Finding, NormCall, NormTrace } from "../types.js";
-import type { ModelPrice } from "../pricing.js";
 
 // TokenDam's most distinctive check. Reasoning models (o-series, GPT-5 reasoning,
 // deepseek-reasoner, Claude extended-thinking) burn HIDDEN reasoning tokens billed
@@ -46,13 +45,13 @@ function hasEffortKnob(c: NormCall): boolean {
   return /^o[0-9]/.test(m) || m.includes("gpt-5") || (m.includes("claude") && /thinking/.test(m + " " + (c.thinkingBudget !== undefined ? "thinking" : "")));
 }
 
-export function reasoningTokenWaste(trace: NormTrace, price: ModelPrice): Finding[] {
+export function reasoningTokenWaste(trace: NormTrace): Finding[] {
   let totalReasoning = 0;
-  let recoverableMeasured = 0; // only measured calls contribute real dollars
+  let recoverableMeasured = 0; // measured recoverable tokens (for display)
+  let recoverableUSD = 0; // priced per firing call's own model
   let synthesized = 0; // guessed (no usage) — never priced
   let firing = 0;
   const evidence: string[] = [];
-  const perOut = price.output / 1_000_000;
 
   for (const c of trace.calls) {
     if (!isReasoningModel(c)) continue;
@@ -92,8 +91,10 @@ export function reasoningTokenWaste(trace: NormTrace, price: ModelPrice): Findin
 
     const f = uncontrolled && lowComplexity ? 0.5 : 0.3;
     totalReasoning += R;
-    if (measured) recoverableMeasured += R * f;
-    else synthesized += R;
+    if (measured) {
+      recoverableMeasured += R * f;
+      recoverableUSD += (R * f * c.price.output) / 1_000_000; // this call's own output rate
+    } else synthesized += R;
     firing++;
     if (evidence.length < 5)
       evidence.push(
@@ -109,7 +110,7 @@ export function reasoningTokenWaste(trace: NormTrace, price: ModelPrice): Findin
   // guess, we still surface the finding but with NO confident $ and low severity.
   const allGuessed = recoverableMeasured === 0;
   const wastedTokens = Math.round(recoverableMeasured);
-  const wastedUSD = wastedTokens * perOut;
+  const wastedUSD = recoverableUSD;
 
   const detail = allGuessed
     ? `~${totalReasoning.toLocaleString()} reasoning tokens are likely being spent here, but this trace didn't report reasoning-token usage, so this is an estimate from input size with no reliable dollar figure. Measure completion_tokens_details.reasoning_tokens to quantify it.`

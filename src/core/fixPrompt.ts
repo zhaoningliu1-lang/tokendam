@@ -1,6 +1,42 @@
 import type { Report, Finding } from "./types.js";
 import { usd } from "./pricing.js";
 
+// Machine-readable fix plan — for a CI coding-agent step to consume programmatically
+// (each step is a discrete, applyable instruction), rather than the prose fix pack.
+export interface FixStep {
+  detector: string;
+  severity: string;
+  title: string;
+  estimatedSavingUSD: number;
+  instruction: string;
+  evidence: string[];
+}
+export interface FixPlan {
+  summary: { model: string; calls: number; savableUSD: number; savablePct: number; perCallSavableUSD: number };
+  steps: FixStep[];
+}
+
+export function renderFixPlan(report: Report): FixPlan {
+  const steps = report.findings.filter(isActionable).map((f) => ({
+    detector: f.detector,
+    severity: f.severity,
+    title: f.title,
+    estimatedSavingUSD: f.wastedUSD,
+    instruction: f.fix,
+    evidence: f.evidence ?? [],
+  }));
+  return {
+    summary: {
+      model: report.model,
+      calls: report.numCalls,
+      savableUSD: report.savableUSD,
+      savablePct: report.savablePct,
+      perCallSavableUSD: report.perCallSavableUSD,
+    },
+    steps,
+  };
+}
+
 // Turn a Report into a "fix pack" — a prompt the user pastes straight into their
 // own coding agent (Claude Code, Cursor, …). TokenDam is the brain (precise
 // diagnosis + instructions); their coding agent is the hands (it has their code

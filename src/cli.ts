@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { analyze } from "./core/analyze.js";
 import { renderText } from "./core/format.js";
 import { evaluateCi, renderMarkdown, renderGithub, DEFAULT_CI, type CiConfig } from "./core/ci.js";
-import { renderFixPrompt } from "./core/fixPrompt.js";
+import { renderFixPrompt, renderFixPlan } from "./core/fixPrompt.js";
 import { diffReports, renderDiffText } from "./core/diff.js";
 import type { Severity } from "./core/types.js";
 import pc from "picocolors";
@@ -296,7 +296,8 @@ async function main() {
 
   // --- Fix pack: a prompt to paste into your coding agent ---
   if (args.includes("--fix-prompt")) {
-    console.log(renderFixPrompt(report, callsPerDay));
+    if (format === "json") console.log(JSON.stringify(renderFixPlan(report), null, 2));
+    else console.log(renderFixPrompt(report, callsPerDay));
     return;
   }
 

@@ -21,7 +21,7 @@
     "build:web": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test": "tsx test/detectors.test.mjs && tsx test/formats.test.mjs && tsx test/ci.test.mjs && tsx test/capture.test.mjs && tsx test/round5.test.mjs && tsx test/web-smoke.mjs"
+    "test": "tsx test/detectors.test.mjs && tsx test/formats.test.mjs && tsx test/ci.test.mjs && tsx test/capture.test.mjs && tsx test/round5.test.mjs && tsx test/round7.test.mjs && tsx test/web-smoke.mjs"
   },
   "keywords": [
     "llm",

@@ -36,8 +36,9 @@ function inputTokens(c: NormCall): number {
     c.messages.reduce((s, m) => s + m.tokens, 0)
   );
 }
-function callCost(inTok: number, outTok: number, p: ModelPrice): number {
-  return (inTok * p.input + outTok * p.output) / 1_000_000;
+function callCost(inTok: number, cachedTok: number, outTok: number, p: ModelPrice): number {
+  const cached = Math.min(inTok, Math.max(0, cachedTok));
+  return ((inTok - cached) * p.input + cached * p.cachedInput + outTok * p.output) / 1_000_000;
 }
 
 export function modelOverkill(trace: NormTrace): Finding[] {
@@ -62,18 +63,23 @@ export function modelOverkill(trace: NormTrace): Finding[] {
       c.tools.length > 0 || out >= SHORT_OUTPUT || (c.usage?.reasoningTokens ?? 0) > 1500;
     const hint = c.structuredOutput || SIMPLE_TASK.test(sysText);
 
-    // Fire only on short-output, non-heavy calls. For reasoning models a short
-    // answer is NORMAL (hard problem, terse result), so require an explicit
-    // simple-task hint before ever suggesting a downgrade off them.
-    const simple = shortOut && !heavy && (hint || !isReasoning);
+    // Fire only on short-output, non-heavy calls with an EXPLICIT simple-task
+    // hint (structured output or a classify/extract/route-type prompt). "Short
+    // output alone" over-fires — a terse answer can still be a hard question,
+    // especially on reasoning models. Requiring the hint keeps false positives low.
+    const simple = shortOut && !heavy && hint;
     if (!simple) continue;
+    void isReasoning; // (kept for readability; hint now gates all models)
 
     const inTok = inputTokens(c);
     if (inTok + out < 200) continue; // too small to matter
 
+    // Price cache-aware: cached input tokens bill at the cache-hit rate for BOTH
+    // models, so the saving can never exceed the call's real cost.
+    const cached = c.usage?.cachedInputTokens ?? 0;
     const cur = priceFor(c.model).price;
     const cheap = priceFor(suggestion.target).price;
-    const delta = callCost(inTok, out, cur) - callCost(inTok, out, cheap);
+    const delta = callCost(inTok, cached, out, cur) - callCost(inTok, cached, out, cheap);
     if (delta <= 0) continue;
 
     saving += delta;

@@ -36,14 +36,16 @@ export async function writeTrace(path = "tokendam-trace.json"): Promise<number> 
   return buffer.length;
 }
 
-/** Dump the trace automatically when the process exits (Node only). */
+/** Dump the trace automatically when the process finishes (Node only). Uses
+ *  'beforeExit', which (unlike 'exit') can run the async file write. */
 export function installExitDump(path = "tokendam-trace.json"): void {
   if (typeof process !== "undefined" && process.on) {
-    process.on("exit", () => {
+    let done = false;
+    process.on("beforeExit", async () => {
+      if (done || !buffer.length) return;
+      done = true;
       try {
-        // Sync write on exit — dynamic import won't resolve during 'exit'.
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        (0, eval)("require")("node:fs").writeFileSync(path, JSON.stringify(buffer, null, 2));
+        await writeTrace(path);
       } catch {
         /* best effort */
       }

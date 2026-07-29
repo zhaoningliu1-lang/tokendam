@@ -77,6 +77,34 @@ function flagVal(args: string[], name: string): string | undefined {
   return i !== -1 ? args[i + 1] : undefined;
 }
 
+/** Flatten one file/stdin blob (JSON object, array, {calls:[]}, or JSONL) into
+ *  raw call elements. */
+function toElements(raw: string): unknown[] {
+  const s = raw.trim();
+  try {
+    const p: any = JSON.parse(s);
+    if (Array.isArray(p)) return p;
+    if (p && typeof p === "object") {
+      return p.calls ?? p.requests ?? p.trace ?? p.data ?? [p];
+    }
+    return [p];
+  } catch {
+    // JSONL: one JSON record per line.
+    return s
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .map((l) => {
+        try {
+          return JSON.parse(l);
+        } catch {
+          return null;
+        }
+      })
+      .filter((x) => x !== null);
+  }
+}
+
 const GH_ACTION = `name: token-budget
 on: [pull_request]
 jobs:
@@ -168,25 +196,26 @@ function main() {
   }
   const rest = args.filter((a, idx) => !a.startsWith("--") && !consumedIdx.has(idx));
 
-  let raw = "";
+  // Assemble the input. Multiple files/globs (e.g. `traces/*.json` expanded by
+  // the shell) are aggregated into ONE trace — otherwise a CI gate would only
+  // see the first file and silently pass (fail open).
+  let input: unknown;
   const exIdx = args.indexOf("--example");
   if (exIdx !== -1) {
-    raw = loadExample(args[exIdx + 1] ?? "agent");
-  } else if (rest[0]) {
-    raw = readFileSync(rest[0], "utf8");
+    input = toElements(loadExample(args[exIdx + 1] ?? "agent"));
+  } else if (rest.length > 0) {
+    input = rest.flatMap((f) => toElements(readFileSync(f, "utf8")));
   } else {
-    raw = readStdin();
+    const stdin = readStdin();
+    if (!stdin.trim()) {
+      console.log(HELP);
+      process.exit(1);
+    }
+    input = toElements(stdin);
   }
-  if (!raw.trim()) {
-    console.log(HELP);
-    process.exit(1);
-  }
-
-  let input: unknown;
-  try {
-    input = JSON.parse(raw);
-  } catch {
-    input = raw; // let normalize() handle JSONL
+  if (Array.isArray(input) && input.length === 0) {
+    console.error(pc.red("No LLM calls found in the input."));
+    process.exit(2);
   }
 
   let report;

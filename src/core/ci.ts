@@ -34,7 +34,12 @@ export function evaluateCi(report: Report, cfg: CiConfig): CiResult {
       `waste ${usd(report.perCallSavableUSD)}/call exceeds budget of ${usd(cfg.maxWasteUSDPerCall)}/call`
     );
   if (cfg.failOnSeverity?.length) {
-    const hits = report.findings.filter((f) => cfg.failOnSeverity!.includes(f.severity));
+    // Only actionable findings can fail a build — never a zero-waste "good news"
+    // advisory (e.g. "caching already active"). Punishing correct behavior is
+    // worse than no gate.
+    const hits = report.findings.filter(
+      (f) => f.wastedUSD > 0 && cfg.failOnSeverity!.includes(f.severity)
+    );
     if (hits.length)
       violations.push(
         `${hits.length} finding(s) at severity ${cfg.failOnSeverity.join("/")}: ${hits

@@ -123,3 +123,42 @@ gave a confident verdict across DIFFERENT models — now flagged `crossModel` wi
 warning. Regression tests added for all three.
 
 6 test suites green, typecheck clean, redeployed, pushed to GitHub.
+
+## Round 6 — 2026-07-28 · fresh 5-lens critique of the grown product
+
+The product grew from 4 → 7 detectors + CI + diff + capture + fix-prompt across R2-R5 (all
+pre-scoped), so a holistic critique army swept the whole thing. It cut deep — the dollar figures
+are the moat, and several newer ones were individually wrong. Top concerns: per-finding $ on the
+new detectors could exceed the whole trace cost 7-17×; the headline only stayed <100% via a blunt
+clamp (real cross-detector overlap); and single-model pricing breaks on mixed-model traces (parked
+as an L-effort rearchitecture). See Round 7 for what shipped.
+
+## Round 7 — 2026-07-28 · fix the Round 6 correctness bugs (protect the moat)
+
+Implemented the ship list; big rearchitectures (full token-level dedup, per-call mixed-model
+pricing) parked. All are correctness/trust fixes — a linter whose numbers lie is worthless.
+
+- **CI failing OPEN (#1, the scary one)** — the CLI read only ONE file, but `docs/ci.md` + the
+  scaffolded GitHub Action use `traces/*.json` (shell-expanded to many). So a real CI gate saw only
+  the first file and silently passed. Fixed: the CLI now aggregates all file args/globs into one
+  trace (`toElements` + flatMap). (`cli.ts`)
+- **modelOverkill cache-blind pricing (#3)** — it priced full input at the uncached rate, ignoring
+  `cachedInputTokens`, so it could claim a saving 7× the trace cost. Now cache-aware for both
+  current and target model. (`modelOverkill.ts`)
+- **modelOverkill over-firing (#4)** — required only "short output" for non-reasoning models. Now
+  needs an explicit simple-task hint (structured output / classify-extract-route prompt) for ALL
+  models. (`modelOverkill.ts`)
+- **CI gate punished good behavior (#5)** — `--fail-on low` failed the build on a zero-waste
+  "caching already active" advisory. Now only findings with `wastedUSD > 0` can fail a gate. (`ci.ts`)
+- **diff cross-model contradiction (#6)** — it warned "not comparable" yet still exited 1 on the
+  model price gap. Now cross-model is neutral (verdict NOT COMPARABLE, exit 0). (`diff.ts`)
+- **capture ESM dead path (#8)** — `installExitDump` used `eval("require")` (broken in ESM); now
+  uses `beforeExit` with the async write. (`capture.ts`)
+
+7 test suites green (added round7.test), typecheck clean.
+
+**Parked (need bigger work):** per-call mixed-model pricing (totalUSD/CI use one majority model —
+wrong on mixed traces) · full token-level cross-detector dedup (headline is a clamped floor, not
+additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
+"model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
+go-ahead — it's outward-facing/public while the project is pre-launch & private).

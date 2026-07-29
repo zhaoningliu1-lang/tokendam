@@ -27,10 +27,22 @@ export function diffReports(before: Report, after: Report, maxRegressionPct = 1)
   const spendDeltaPct = b > 0 ? ((a - b) / b) * 100 : a > 0 ? 100 : 0;
   const wasteDeltaPts = after.savablePct - before.savablePct;
 
+  const crossModel = before.model !== after.model;
+
   // "Worse" = per-call spend up beyond tolerance, or recoverable waste % up.
-  const regressed = spendDeltaPct > maxRegressionPct || wasteDeltaPts > maxRegressionPct;
-  const improved = spendDeltaPct < -maxRegressionPct || wasteDeltaPts < -maxRegressionPct;
-  const verdict = regressed ? "regressed" : improved ? "improved" : "unchanged";
+  // But a cross-model diff is not comparable (the delta is the model price gap,
+  // not your change), so we never fail the build on it — verdict is neutral.
+  const regressed =
+    !crossModel && (spendDeltaPct > maxRegressionPct || wasteDeltaPts > maxRegressionPct);
+  const improved =
+    !crossModel && (spendDeltaPct < -maxRegressionPct || wasteDeltaPts < -maxRegressionPct);
+  const verdict = crossModel
+    ? "unchanged"
+    : regressed
+    ? "regressed"
+    : improved
+    ? "improved"
+    : "unchanged";
 
   return {
     regressed,
@@ -42,7 +54,7 @@ export function diffReports(before: Report, after: Report, maxRegressionPct = 1)
     wastePctAfter: after.savablePct,
     wasteDeltaPts,
     verdict,
-    crossModel: before.model !== after.model,
+    crossModel,
   };
 }
 
@@ -52,7 +64,7 @@ export function renderDiffText(before: Report, after: Report, r: DiffResult): st
   const L: string[] = [];
   const bar = "─".repeat(56);
   L.push(bar);
-  L.push(`  TokenDam diff — ${r.verdict.toUpperCase()}`);
+  L.push(`  TokenDam diff — ${r.crossModel ? "NOT COMPARABLE" : r.verdict.toUpperCase()}`);
   L.push(bar);
   L.push(
     `  models     ${before.model} → ${after.model}` + (r.crossModel ? "  ⚠ different models" : "")
@@ -69,15 +81,18 @@ export function renderDiffText(before: Report, after: Report, r: DiffResult): st
     )} ${r.wasteDeltaPts >= 0 ? "+" : ""}${r.wasteDeltaPts.toFixed(0)} pts`
   );
   L.push(bar);
-  L.push(
-    r.verdict === "regressed"
-      ? "  ✗ This change increased token cost."
-      : r.verdict === "improved"
-      ? "  ✓ This change reduced token cost."
-      : "  • No meaningful change in token cost."
-  );
-  if (r.crossModel)
-    L.push("  ⚠ Different models — this delta reflects the model change, not just token usage.");
+  if (r.crossModel) {
+    L.push("  ⚠ Different models — the delta reflects the model change, not your");
+    L.push("    prompt change. Not comparable; the gate is neutral (exit 0).");
+  } else {
+    L.push(
+      r.verdict === "regressed"
+        ? "  ✗ This change increased token cost."
+        : r.verdict === "improved"
+        ? "  ✓ This change reduced token cost."
+        : "  • No meaningful change in token cost."
+    );
+  }
   L.push(bar);
   return L.join("\n");
 }

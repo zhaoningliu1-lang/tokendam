@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms — TokenDam</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root { --bg:#0a0b0d; --panel:#16181d; --line:#23262e; --text:#e6e8ec; --muted:#8b909b; --faint:#565c68; --accent:#5eead4; --med:#e3b341;
+        --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; --sans:"Inter",-apple-system,system-ui,sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; background:var(--bg); color:var(--text); font:15px/1.7 var(--sans); }
+      .wrap { max-width:720px; margin:0 auto; padding:48px 20px 80px; }
+      a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+      .back { font:12px var(--mono); color:var(--faint); }
+      h1 { font:600 26px var(--mono); letter-spacing:-.02em; margin:18px 0 6px; }
+      .eff { font:12px var(--mono); color:var(--faint); margin-bottom:28px; }
+      h2 { font:600 14px var(--mono); color:var(--accent); margin:30px 0 8px; }
+      h2::before { content:"## "; color:var(--faint); }
+      p, li { color:var(--muted); } b { color:var(--text); }
+      .warn { background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--med); border-radius:8px; padding:14px 16px; margin:8px 0 4px; }
+      .warn b { color:var(--med); }
+      code { font:13px var(--mono); background:var(--panel); padding:1px 5px; border-radius:4px; color:var(--text); }
+      ul { padding-left:18px; }
+      .note { font:12px var(--mono); color:var(--faint); border-top:1px solid var(--line); margin-top:34px; padding-top:14px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="/">← ~/agent $ cd ..</a>
+      <h1>Terms of Use</h1>
+      <div class="eff">Effective 2026-07-29 · TokenDam</div>
+
+      <div class="warn"><b>Estimates, not guarantees.</b> Token counts and dollar figures are approximations for guidance only. They are <b>not</b> a promise of savings, a bill, or financial advice. Always verify against your provider's actual usage before making decisions.</div>
+
+      <h2>The service</h2>
+      <p>TokenDam is a free tool that analyzes an LLM request "trace" you provide and reports where tokens may be wasted, with suggested fixes. It runs in your browser or as a local CLI. Provided "as is."</p>
+
+      <h2>How the numbers work (and their limits)</h2>
+      <ul>
+        <li>Token counts use the OpenAI <code>o200k</code> tokenizer as a cross-vendor approximation — typically within ~10–15% for Claude / DeepSeek / Gemini, and flagged as an estimate in the report.</li>
+        <li>Prices come from a small, manually-maintained table and <b>may be out of date</b>; providers change pricing frequently.</li>
+        <li>"Potential savings," per-call, and $/month figures are <b>illustrative projections</b> based on a single trace, not a measurement of your actual bill or a guarantee that any fix will save money.</li>
+        <li>Suggested fixes (including model-downgrade suggestions) are judgment calls that may affect output quality; test before applying.</li>
+      </ul>
+
+      <h2>No warranty</h2>
+      <p>TokenDam is provided <b>"as is" and "as available," without warranties of any kind</b>, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that results are accurate, complete, or error-free.</p>
+
+      <h2>Limitation of liability</h2>
+      <p>To the maximum extent permitted by law, the authors and contributors are <b>not liable</b> for any indirect, incidental, or consequential damages, or for any loss arising from your use of — or reliance on — TokenDam or its estimates, including cost or engineering decisions made based on its output.</p>
+
+      <h2>License &amp; acceptable use</h2>
+      <p>The TokenDam source code is licensed under the <b>MIT License</b>; the license text governs use of the code. Don't use the tool to violate any law or any third party's rights, and don't misrepresent its output as an official measurement from any model provider.</p>
+
+      <h2>No affiliation</h2>
+      <p>TokenDam is an independent project and is <b>not affiliated with, endorsed by, or sponsored by</b> OpenAI, Anthropic, Google, DeepSeek, Vercel, or any other provider. Product and model names are trademarks of their respective owners.</p>
+
+      <h2>Changes</h2>
+      <p>These terms may change; the effective date above will be updated. Continued use after a change constitutes acceptance.</p>
+
+      <h2>Contact</h2>
+      <p><a href="mailto:hello@avantia2a.com">hello@avantia2a.com</a></p>
+
+      <div class="note"># Covers the free web app and CLI. A future paid or data-processing feature will add its own agreement.</div>
+    </div>
+  </body>
+</html>

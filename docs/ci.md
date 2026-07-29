@@ -32,12 +32,15 @@ tokendam --format json traces/*.json             # raw Report
 
 Exit codes: `0` pass · `1` over budget · `2` bad input.
 
-## GitHub Actions
+## GitHub Actions — gate + auto-comment the fix pack
 
 ```yaml
-# .github/workflows/tokendam.yml
+# .github/workflows/tokendam.yml   (also written by `tokendam init`)
 name: token-budget
 on: [pull_request]
+permissions:
+  contents: read
+  pull-requests: write        # lets tokendam post a PR comment
 jobs:
   tokendam:
     runs-on: ubuntu-latest
@@ -45,14 +48,40 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
-      # Your test run should write representative request payloads to traces/*.json
-      - run: node your-capture-script.js      # produces traces/
-      - run: npx tokendam --ci --format github traces/agent.json
+      - run: node your-capture-script.js          # writes traces/*.json
+      - run: npx tokendam --ci --pr-comment traces/*.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-`--format github` emits `::error::`/`::warning::` annotations that show up inline
-on the PR. To post a Markdown comment instead, capture `--format markdown` output
-and pipe it to `gh pr comment`.
+`--pr-comment` posts (and updates on each push) a single PR comment with the audit,
+the $/month projection, the pass/fail budget result, **and the ready-to-paste fix
+pack**. So the fix lands right in the review flow — a human, or your own coding
+agent, applies it. `--format github` additionally emits inline `::error::`
+annotations if you want them.
+
+## Opt-in: let CI open a fix PR automatically
+
+TokenDam stays out of your codebase by design — it emits the *fix pack*, and your
+own coding agent applies it. If you already run an agent (Claude Code, etc.) in CI,
+compose them: pipe the fix pack in and let the agent edit code + open a PR.
+
+```yaml
+      - name: capture fix pack
+        run: npx tokendam --fix-prompt traces/*.json > /tmp/fixpack.md
+      - name: let the agent apply it and open a PR
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # your coding-agent step reads /tmp/fixpack.md, edits the prompt code,
+          # and opens a PR. TokenDam is the brain; the agent is the hands — your
+          # code and keys never pass through us.
+          your-coding-agent --instructions /tmp/fixpack.md --open-pr
+```
+
+This keeps the zero-upload guarantee intact: the agent runs **in your CI, on your
+runner, with your keys** — the fixes are applied by your agent, never by us.
 
 ## How teams capture traces
 

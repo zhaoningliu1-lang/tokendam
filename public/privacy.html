@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy — TokenDam</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root { --bg:#0a0b0d; --panel:#16181d; --line:#23262e; --text:#e6e8ec; --muted:#8b909b; --faint:#565c68; --accent:#5eead4; --money:#7ee787;
+        --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; --sans:"Inter",-apple-system,system-ui,sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; background:var(--bg); color:var(--text); font:15px/1.7 var(--sans); }
+      .wrap { max-width:720px; margin:0 auto; padding:48px 20px 80px; }
+      a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+      .back { font:12px var(--mono); color:var(--faint); }
+      h1 { font:600 26px var(--mono); letter-spacing:-.02em; margin:18px 0 6px; }
+      .eff { font:12px var(--mono); color:var(--faint); margin-bottom:28px; }
+      h2 { font:600 14px var(--mono); color:var(--accent); margin:30px 0 8px; }
+      h2::before { content:"## "; color:var(--faint); }
+      p, li { color:var(--muted); } b { color:var(--text); }
+      .tldr { background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--money); border-radius:8px; padding:14px 16px; margin:8px 0 4px; }
+      .tldr b { color:var(--money); }
+      code { font:13px var(--mono); background:var(--panel); padding:1px 5px; border-radius:4px; color:var(--text); }
+      ul { padding-left:18px; }
+      .note { font:12px var(--mono); color:var(--faint); border-top:1px solid var(--line); margin-top:34px; padding-top:14px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="/">← ~/agent $ cd ..</a>
+      <h1>Privacy Policy</h1>
+      <div class="eff">Effective 2026-07-29 · TokenDam</div>
+
+      <div class="tldr"><b>TL;DR —</b> Your traces and prompts <b>never leave your browser</b>. TokenDam analyzes them entirely on your device. We have no account system, run no analytics, and never receive, store, or log the content you paste.</div>
+
+      <h2>What we don't collect</h2>
+      <p>TokenDam's analysis runs <b>100% client-side</b> (in your browser) or locally (the CLI on your machine). Specifically, we do <b>not</b> collect, transmit, store, or log:</p>
+      <ul>
+        <li>the traces, prompts, tool schemas, or any content you paste or analyze;</li>
+        <li>the analysis results ($ figures, findings, fix prompts);</li>
+        <li>accounts, emails, names, or any personal information (there is no sign-up);</li>
+        <li>cookies, local analytics, fingerprinting, or third-party trackers.</li>
+      </ul>
+
+      <h2>The only third parties involved</h2>
+      <p>To be precise and honest, loading the web page itself involves two ordinary web requests that — like visiting any website — reveal your IP address to the host, but <b>never see your trace content</b>:</p>
+      <ul>
+        <li><b>Vercel</b> serves the static page. Its standard edge logs may record the IP address and timestamp of a page request (not its contents). See Vercel's privacy policy.</li>
+        <li><b>Google Fonts</b> serves the page's typeface, which means Google receives your IP as part of delivering the font. It receives nothing about your traces.</li>
+      </ul>
+      <p>That's the complete list. There is no backend that your trace data is sent to — because there isn't one. The <code>tokendam</code> CLI makes no network calls at all when analyzing.</p>
+
+      <h2>Where your data goes when you use it</h2>
+      <p>When you click "copy fix prompt" or "copy audit," the text is placed on <b>your clipboard</b>. If you then paste it into another tool (e.g. your own coding agent, a PR, an issue), that tool's own privacy terms apply — that action is yours, not ours.</p>
+
+      <h2>Children</h2>
+      <p>TokenDam is a developer tool and is not directed at children under 13.</p>
+
+      <h2>Changes</h2>
+      <p>If this policy changes, the effective date above will change. Because we keep no contact information, material changes will be reflected here and in the project's changelog.</p>
+
+      <h2>Contact</h2>
+      <p>Questions: <a href="mailto:hello@avantia2a.com">hello@avantia2a.com</a>.</p>
+
+      <div class="note"># This policy covers the free, zero-upload web app and CLI. Any future opt-in feature that processes your data at runtime (e.g. a proxy) will be governed by a separate, clearly-consented data-processing agreement.</div>
+    </div>
+  </body>
+</html>

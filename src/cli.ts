@@ -34,6 +34,7 @@ CI gate (fails the build when waste exceeds budget):
   --max-waste <pct>                Budget: max % of spend recoverable (default 25)
   --max-waste-per-call <usd>       Budget: max recoverable $ per call
   --fail-on high|medium|low        Fail if any finding at/above this severity
+  --pr-comment                     Post the audit + fix pack as a PR comment (GitHub Actions)
   (or put maxWastePct / maxWasteUSDPerCall / failOnSeverity in .tokendam.json)
 
 Nothing is uploaded. Analysis runs locally.`;
@@ -107,6 +108,9 @@ function toElements(raw: string): unknown[] {
 
 const GH_ACTION = `name: token-budget
 on: [pull_request]
+permissions:
+  contents: read
+  pull-requests: write   # lets tokendam post the audit + fix pack as a PR comment
 jobs:
   tokendam:
     runs-on: ubuntu-latest
@@ -116,7 +120,9 @@ jobs:
         with: { node-version: 20 }
       # Your test run should write representative request payloads to traces/*.json
       # (see the tokendam/capture helper, or log JSON.stringify of your request args).
-      - run: npx tokendam --ci --format github traces/*.json
+      - run: npx tokendam --ci --pr-comment traces/*.json
+        env:
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
 `;
 
 const CAPTURE_SNIPPET = `  // Capture a trace with the tokendam/capture helper:
@@ -146,7 +152,58 @@ function doInit() {
   console.log(CAPTURE_SNIPPET);
 }
 
-function main() {
+/** Post/update a PR comment when running in a GitHub Actions pull_request job.
+ *  No-ops gracefully outside CI. Upserts by an HTML marker so it doesn't spam. */
+async function ghPrComment(body: string): Promise<string> {
+  const token = process.env.GITHUB_TOKEN;
+  const repo = process.env.GITHUB_REPOSITORY;
+  if (!token || !repo) return "pr-comment: skipped (no GITHUB_TOKEN / GITHUB_REPOSITORY)";
+  let pr: string | number | undefined;
+  try {
+    if (process.env.GITHUB_EVENT_PATH) {
+      const evt = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"));
+      pr = evt.pull_request?.number ?? evt.number;
+    }
+  } catch {
+    /* ignore */
+  }
+  if (!pr) {
+    const m = (process.env.GITHUB_REF || "").match(/refs\/pull\/(\d+)/);
+    if (m) pr = m[1];
+  }
+  if (!pr) return "pr-comment: skipped (not a pull_request event)";
+  const base = `https://api.github.com/repos/${repo}`;
+  const headers = {
+    authorization: `Bearer ${token}`,
+    accept: "application/vnd.github+json",
+    "user-agent": "tokendam",
+    "content-type": "application/json",
+  };
+  try {
+    const list = await (await fetch(`${base}/issues/${pr}/comments`, { headers })).json();
+    const existing = Array.isArray(list)
+      ? list.find((c: any) => typeof c.body === "string" && c.body.includes("<!-- tokendam -->"))
+      : null;
+    if (existing) {
+      await fetch(`${base}/issues/comments/${existing.id}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ body }),
+      });
+      return "pr-comment: updated";
+    }
+    await fetch(`${base}/issues/${pr}/comments`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ body }),
+    });
+    return "pr-comment: posted";
+  } catch (e) {
+    return "pr-comment: failed — " + String(e).slice(0, 140);
+  }
+}
+
+async function main() {
   const args = process.argv.slice(2);
   if (args.includes("-h") || args.includes("--help")) {
     console.log(HELP);
@@ -267,6 +324,16 @@ function main() {
     if (format === "markdown") console.log(renderMarkdown(report, result, callsPerDay));
     else if (format === "json") console.log(JSON.stringify({ report, ci: result }, null, 2));
     else console.log(renderGithub(report, result));
+    // Optionally post the audit + fix pack as a PR comment (GitHub Actions).
+    if (args.includes("--pr-comment")) {
+      const body =
+        "<!-- tokendam -->\n" +
+        renderMarkdown(report, result, callsPerDay) +
+        "\n\n<details><summary>🛠️ fix pack — paste into your coding agent</summary>\n\n```\n" +
+        renderFixPrompt(report, callsPerDay) +
+        "\n```\n</details>\n";
+      console.error(await ghPrComment(body));
+    }
     process.exit(result.exitCode);
   }
 
@@ -283,4 +350,7 @@ function main() {
   console.log(text);
 }
 
-main();
+main().catch((e) => {
+  console.error(pc.red(String(e?.message ?? e)));
+  process.exit(2);
+});

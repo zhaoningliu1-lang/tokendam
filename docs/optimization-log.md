@@ -157,6 +157,38 @@ pricing) parked. All are correctness/trust fixes — a linter whose numbers lie 
 
 7 test suites green (added round7.test), typecheck clean.
 
+## Round 8 — 2026-07-29 · positioning, principle, UI, legal, CI-into-dev-flow
+
+Driven by four founder questions: (1) does the zero-upload principle limit the "reduce tokens"
+mission? (2) make "detect vs actually-reduce" an option? (3) legal/privacy for a prod-touching
+tool? (4) a cool-CLI UI + a UI/UX agent.
+
+**Answers → decisions:** the zero-upload/read-only line is a *wedge & default*, not a religion —
+reduction becomes an **opt-in tier** layered on measurement (tier 0 diagnose → tier 1 apply-in-your-
+CI → tier 2 optional runtime proxy, self-hostable). We DON'T do gateway/routing/semantic-caching/
+prompt-compression as runtime middleware (that's the proxy lane we deliberately avoid — it'd break
+the trust moat); we DETECT + recommend instead (model-overkill = routing lens; bloated-context =
+compression lens).
+
+**Shipped:**
+- **UI/UX designer added to the crew** → cool-terminal redesign (Vercel × Warp × Charm): JetBrains
+  Mono, near-monochrome + teal accent + green-for-money, window-chrome panes, `~/agent $ tokendam
+  analyze` shell action, report rendered as stdout (echo + box-drawn summary + `[HIGH]` linter rows),
+  privacy claim promoted to a Warp-style status bar. (`index.html`, `style.css`, `main.ts`)
+- **Legal (free zero-upload scope)** — `/privacy` + `/terms` pages (terminal-styled): privacy makes
+  "nothing leaves your browser" a factual promise + honestly discloses the only 3rd parties (Vercel
+  host, Google Fonts); terms = estimates-not-guarantees, no-warranty, liability limit, no provider
+  affiliation. Linked from footer + status bar. (Templates — need a lawyer before launch/paid.)
+- **CI into the dev flow (tier 1)** — `tokendam --ci --pr-comment` posts/updates a single PR comment
+  with the audit + $/mo + pass/fail + the **fix pack**, via the GitHub Actions token. Deterministic,
+  no LLM, never touches code. Plus a documented opt-in recipe: pipe the fix pack to your own coding
+  agent in CI to auto-open a fix PR (brain=TokenDam, hands=your agent, keys/code never leave your
+  runner). `tokendam init` scaffold + `docs/ci.md` updated. CLI `main()` is now async.
+- **Deploy fixed** — Vercel cloud build was stuck; `npm run deploy` (local `vercel build` +
+  `vercel deploy --prebuilt`) bypasses it reliably. Git left disconnected for now.
+
+7 test suites green, typecheck clean, deployed to tokendam.dev, pushed.
+
 **Parked (need bigger work):** per-call mixed-model pricing (totalUSD/CI use one majority model —
 wrong on mixed traces) · full token-level cross-detector dedup (headline is a clamped floor, not
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct

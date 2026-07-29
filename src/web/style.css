@@ -34,8 +34,25 @@ a:hover { text-decoration: underline; }
 .cursor { color: var(--accent); animation: blink 1.05s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
+/* ---------- top nav ---------- */
+.topnav { border-bottom: 1px solid var(--line); background: rgba(10, 11, 13, 0.7); backdrop-filter: blur(6px); position: sticky; top: 0; z-index: 30; }
+.topnav .wrap { display: flex; align-items: center; gap: 18px; padding-top: 12px; padding-bottom: 12px; }
+.topnav .brand { font: 600 14px var(--mono); color: var(--text); }
+.topnav .spacer { flex: 1; }
+.topnav a { font: 13px var(--mono); color: var(--muted); }
+.topnav a:hover { color: var(--text); text-decoration: none; }
+.topnav a.pro { color: var(--accent); border: 1px solid rgba(94, 234, 212, 0.35); border-radius: 7px; padding: 5px 11px; }
+.topnav a.pro:hover { background: var(--accent-dim); }
+
+/* ---------- report upsell ---------- */
+.upsell { margin-top: 20px; background: linear-gradient(180deg, var(--accent-dim), transparent); border: 1px solid rgba(94, 234, 212, 0.3); border-radius: 12px; padding: 16px 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.upsell-text { flex: 1; min-width: 240px; font-size: 13.5px; color: var(--muted); }
+.upsell-text b { color: var(--text); }
+.upsell a { font: 13px var(--mono); background: var(--accent); color: #08130f; font-weight: 600; padding: 9px 15px; border-radius: 8px; white-space: nowrap; }
+.upsell a:hover { filter: brightness(1.06); text-decoration: none; }
+
 /* ---------- hero ---------- */
-.hero { padding: 46px 0 30px; }
+.hero { padding: 40px 0 30px; }
 .wordmark { font: 600 15px var(--mono); color: var(--text); letter-spacing: 0.02em; margin-bottom: 20px; }
 h1 { font: 600 30px/1.2 var(--mono); letter-spacing: -0.02em; margin: 0 0 14px; max-width: 760px; }
 .sub { color: var(--muted); max-width: 660px; margin: 0; font-size: 15px; }

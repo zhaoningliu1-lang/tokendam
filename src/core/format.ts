@@ -64,6 +64,11 @@ export function renderText(report: Report, callsPerDay = 1000): string {
     for (const n of report.notes) L.push(`  note: ${n}`);
   }
   L.push(BAR);
+  if (report.savableUSD > 0) {
+    L.push(`  ▸ Get this on every PR automatically + trends & alerts:`);
+    L.push(`    TokenDam Cloud → https://tokendam.dev/pricing`);
+    L.push(BAR);
+  }
   return L.join("\n");
 }
 

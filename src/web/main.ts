@@ -134,7 +134,14 @@ const tap = a =&gt; (globalThis.__td.push(a), a);
          </div>`
       : "";
 
-  reportEl.innerHTML = `${echo}${banner}${sumbox}${projection}${actions}<div class="findings">${findings}</div>${notes}`;
+  // Upsell — this is one trace; TokenDam Cloud watches every PR. The touchpoint
+  // that tells free users the paid tier exists.
+  const upsell = `<div class="upsell">
+    <div class="upsell-text"><b>That's one trace.</b> TokenDam Cloud audits <b>every PR</b> automatically and alerts you the moment token cost regresses — trends, per-agent attribution, auto-fix PRs.</div>
+    <a href="/pricing">See Pro →</a>
+  </div>`;
+
+  reportEl.innerHTML = `${echo}${banner}${sumbox}${projection}${actions}<div class="findings">${findings}</div>${upsell}${notes}`;
   reportEl.classList.remove("hidden");
   reportEl.scrollIntoView({ behavior: "smooth", block: "start" });
 

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pricing — TokenDam</title>
+    <meta name="description" content="TokenDam pricing. Free local linter for everyone; TokenDam Cloud watches every PR and alerts on token-cost regressions." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root { --bg:#0a0b0d; --panel:#101216; --panel2:#16181d; --line:#23262e; --line2:#2e323c; --text:#e6e8ec; --muted:#8b909b; --faint:#565c68; --accent:#5eead4; --accent-dim:rgba(94,234,212,.12); --money:#7ee787;
+        --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; --sans:"Inter",-apple-system,system-ui,sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; background:radial-gradient(900px 300px at 50% -140px,#101216 0%,transparent 70%),var(--bg); color:var(--text); font:15px/1.65 var(--sans); -webkit-font-smoothing:antialiased; }
+      .wrap { max-width:960px; margin:0 auto; padding:36px 20px 90px; }
+      a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+      .nav { display:flex; align-items:center; gap:18px; font:13px var(--mono); color:var(--muted); }
+      .nav .brand { color:var(--text); font-weight:600; }
+      .nav .spacer { flex:1; }
+      h1 { font:600 30px var(--mono); letter-spacing:-.02em; margin:34px 0 6px; }
+      .sub { color:var(--muted); margin:0 0 30px; max-width:640px; }
+      .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+      .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:22px 20px; display:flex; flex-direction:column; }
+      .card.pro { border-color:rgba(94,234,212,.4); box-shadow:0 0 0 1px var(--accent-dim); }
+      .tier { font:12px var(--mono); color:var(--faint); text-transform:uppercase; letter-spacing:1px; }
+      .card.pro .tier { color:var(--accent); }
+      .price { font:600 30px var(--mono); margin:6px 0 2px; letter-spacing:-.02em; }
+      .price small { font:400 13px var(--mono); color:var(--muted); }
+      .for { color:var(--muted); font-size:13px; margin:0 0 14px; }
+      ul { list-style:none; padding:0; margin:0 0 20px; display:flex; flex-direction:column; gap:9px; }
+      li { font-size:13.5px; color:var(--text); padding-left:20px; position:relative; }
+      li::before { content:"✓"; position:absolute; left:0; color:var(--money); }
+      li.off { color:var(--faint); } li.off::before { content:"–"; color:var(--faint); }
+      .btn { margin-top:auto; display:block; text-align:center; font:13.5px var(--mono); padding:11px; border-radius:8px; cursor:pointer; }
+      .btn.primary { background:var(--accent); color:#08130f; font-weight:600; border:1px solid var(--accent); }
+      .btn.primary:hover { filter:brightness(1.06); text-decoration:none; }
+      .btn.ghost { background:transparent; color:var(--muted); border:1px solid var(--line); }
+      .btn.ghost:hover { color:var(--text); border-color:var(--line2); text-decoration:none; }
+      .note { margin-top:26px; font:12.5px var(--mono); color:var(--faint); line-height:1.7; }
+      .note b { color:var(--money); }
+      .faq { margin-top:40px; }
+      .faq h3 { font:13px var(--mono); color:var(--faint); margin:0 0 10px; }
+      .faq p { color:var(--muted); font-size:13.5px; margin:0 0 14px; } .faq b { color:var(--text); }
+      @media (max-width:760px){ .grid{grid-template-columns:1fr} h1{font-size:24px} }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="nav"><a class="brand" href="/">tokendam</a><span class="spacer"></span><a href="/">audit a trace</a><a href="/pricing">pricing</a></nav>
+
+      <h1>Pricing</h1>
+      <p class="sub">The linter is free and runs on your machine. <b style="color:var(--text)">TokenDam Cloud</b> is the hosted layer that watches your agents on every PR and tells you the moment token cost regresses.</p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="tier">Free</div>
+          <div class="price">$0</div>
+          <p class="for">for individuals, evaluation, and agents</p>
+          <ul>
+            <li>Web linter (paste a trace)</li>
+            <li>CLI: <code>npx tokendam</code></li>
+            <li>MCP server (agents self-optimize)</li>
+            <li>8 detectors · $/month projection</li>
+            <li>Self-run CI gate &amp; fix pack</li>
+            <li>100% local · nothing uploaded</li>
+          </ul>
+          <a class="btn ghost" href="/">Use it →</a>
+        </div>
+
+        <div class="card pro">
+          <div class="tier">Pro · TokenDam Cloud</div>
+          <div class="price">$29<small> /repo / mo</small></div>
+          <p class="for">for teams shipping agents to production</p>
+          <ul>
+            <li>Everything in Free, plus:</li>
+            <li><b>GitHub App</b> — audits every PR automatically</li>
+            <li>Token-cost <b>trend dashboard</b> over time</li>
+            <li><b>Regression alerts</b> (Slack / email)</li>
+            <li>Per-agent cost attribution &amp; history</li>
+            <li>Auto-generated fix PRs (opt-in)</li>
+          </ul>
+          <!-- TODO: swap href to your Stripe Payment Link (Khotan Stripe → new "TokenDam Pro" recurring product → Payment Link) for self-serve checkout. Until then, this mailto does manual-first intake. -->
+          <a class="btn primary" id="get-pro" href="mailto:hello@avantia2a.com?subject=Start%20TokenDam%20Pro&body=I%27d%20like%20TokenDam%20Pro.%20My%20GitHub%20repo(s)%3A%20">Get Pro →</a>
+        </div>
+
+        <div class="card">
+          <div class="tier">Team / Enterprise</div>
+          <div class="price">Custom</div>
+          <p class="for">for orgs with many repos &amp; agents</p>
+          <ul>
+            <li>Everything in Pro, across all repos</li>
+            <li>SSO &amp; role-based access</li>
+            <li>Self-hosted runtime reduction layer</li>
+            <li>Priority support &amp; onboarding</li>
+            <li>Volume pricing</li>
+          </ul>
+          <a class="btn ghost" href="mailto:hello@avantia2a.com?subject=TokenDam%20Team">Talk to us →</a>
+        </div>
+      </div>
+
+      <div class="note"># <b>Free is genuinely free — forever.</b> It runs on your machine, so it costs us nothing to provide, at any scale. Pro is the hosted service that watches your agents continuously; that's what you pay for.</div>
+
+      <div class="faq">
+        <h3>## faq</h3>
+        <p><b>Does the free tool send my data anywhere?</b> No. The web app and CLI analyze on your device — see <a href="/privacy">privacy</a>. Pro is opt-in and processes only what you connect.</p>
+        <p><b>Is this billed per seat or per repo?</b> Pro is per repository you connect. Team pricing is custom for many repos + SSO.</p>
+        <p><b>Can I cancel anytime?</b> Yes — it's a month-to-month subscription, cancel from your billing portal.</p>
+        <p><b>I just want the audit, not the cloud.</b> Great — the free web/CLI does that fully, keep using it.</p>
+      </div>
+    </div>
+  </body>
+</html>

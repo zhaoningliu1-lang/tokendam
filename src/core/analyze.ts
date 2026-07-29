@@ -8,6 +8,7 @@ import { redundantTools } from "./detectors/redundantTools.js";
 import { uncompactedHistory } from "./detectors/uncompactedHistory.js";
 import { duplicateSubstring } from "./detectors/duplicateSubstring.js";
 import { reasoningTokenWaste } from "./detectors/reasoningTokenWaste.js";
+import { modelOverkill } from "./detectors/modelOverkill.js";
 
 const SEV_ORDER = { high: 0, medium: 1, low: 2 } as const;
 
@@ -60,6 +61,7 @@ export function analyze(input: unknown): Report {
     ...uncompactedHistory(trace, price),
     ...duplicateSubstring(trace, price),
     ...reasoningTokenWaste(trace, price),
+    ...modelOverkill(trace),
   ].sort((a, b) => SEV_ORDER[a.severity] - SEV_ORDER[b.severity] || b.wastedUSD - a.wastedUSD);
 
   // Savings can conceptually overlap between detectors; cap at 90% of spend so

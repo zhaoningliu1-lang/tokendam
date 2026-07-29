@@ -94,3 +94,32 @@ This round makes it a one-liner and teaches it in-product.
 **Next candidates:** hosted PR-comment GitHub App (real SaaS packaging) · npm publish so
 `npx tokendam` + `tokendam/capture` actually resolve · demo GIF + GitHub push (launch prep) ·
 detector-precision round (#9/#11/#13/#14/#15).
+
+## Round 5 — 2026-07-28 · theme: answer "why not just a one-line LLM?" with product
+
+Two strategic questions drove this round. **Q1 (moat):** a one-line LLM gives an *opinion*; we
+give a *measurement* — exact tokenizer × current price = a trustworthy dollar figure, the same
+answer every time, free, local, and CI-enforceable ("ESLint, not ask-an-AI"). **Q2 (gaps vs the
+research):** the biggest missing lever was **model selection** (using a flagship for a simple task —
+10-20× price gap, often > any prompt-side saving). Built into both.
+
+**Shipped:**
+- **model-overkill detector** (`src/core/detectors/modelOverkill.ts`) — flags a flagship model
+  (Opus/GPT-4o/GPT-5/o3) on a simple task, suggests the cheaper sibling, and prices the delta.
+  `secondary` (different lever than token-cutting, kept out of the headline floor); heavy "A/B the
+  quality first" framing. We DETECT + recommend; we never route (that's a proxy's job — Q2 boundary).
+- **`tokendam diff <before> <after>`** (`src/core/diff.ts`) — deterministic before/after cost
+  regression with an exit code. The thing a one-line LLM can't do: repeatable, exact, CI-gateable
+  ("did this PR make token cost worse?"). Verdict improved/regressed/unchanged.
+- **Positioning** — a "Why not just ask an LLM 'where am I wasting tokens?'" section on the site
+  (measurement vs opinion; ESLint analogy).
+
+**Adversarial verify (1 agent):** math/keys/`secondary` all confirmed correct. Found + fixed 3
+false-positive bugs — the exact thing that would kill the "trustworthy, no false positives" moat:
+(1) reasoning models (o1/o3) flagged via the short-output path — short answers are normal for hard
+reasoning, so now they need an explicit simple-task hint; (2) heavy agent calls (tools + long output)
+qualifying via `structuredOutput`/keyword alone — now short-output + not-heavy is required; (3) `diff`
+gave a confident verdict across DIFFERENT models — now flagged `crossModel` with a "not comparable"
+warning. Regression tests added for all three.
+
+6 test suites green, typecheck clean, redeployed, pushed to GitHub.

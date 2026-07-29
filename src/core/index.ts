@@ -5,6 +5,8 @@ export { countTokens } from "./tokens.js";
 export { evaluateCi, renderMarkdown, renderGithub, DEFAULT_CI } from "./ci.js";
 export type { CiConfig, CiResult } from "./ci.js";
 export { renderFixPrompt } from "./fixPrompt.js";
+export { diffReports, renderDiffText } from "./diff.js";
+export type { DiffResult } from "./diff.js";
 export type {
   Report,
   Finding,

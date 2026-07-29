@@ -6,6 +6,7 @@ import { analyze } from "./core/analyze.js";
 import { renderText } from "./core/format.js";
 import { evaluateCi, renderMarkdown, renderGithub, DEFAULT_CI, type CiConfig } from "./core/ci.js";
 import { renderFixPrompt } from "./core/fixPrompt.js";
+import { diffReports, renderDiffText } from "./core/diff.js";
 import type { Severity } from "./core/types.js";
 import pc from "picocolors";
 
@@ -16,6 +17,7 @@ const HELP = `${pc.bold("tokendam")} — a linter for your LLM token spend
 Usage:
   tokendam init                    Scaffold .tokendam.json + traces/ + CI workflow
   tokendam <trace.json>            Analyze a trace (OpenAI/Anthropic/LangSmith/…)
+  tokendam diff <before> <after>   Deterministic before/after cost regression (CI)
   tokendam --example sd|agent      Run a built-in demo
   cat trace.json | tokendam        Read a trace from stdin (JSON or JSONL)
 
@@ -125,6 +127,31 @@ function main() {
   if (args[0] === "init") {
     doInit();
     return;
+  }
+  if (args[0] === "diff") {
+    const files = args.slice(1).filter((a) => !a.startsWith("--"));
+    if (files.length < 2) {
+      console.error(pc.red("Usage: tokendam diff <before.json> <after.json> [--max-regression <pct>]"));
+      process.exit(2);
+    }
+    const load = (p: string) => {
+      const raw = readFileSync(p, "utf8");
+      try {
+        return analyze(JSON.parse(raw));
+      } catch {
+        return analyze(raw);
+      }
+    };
+    const before = load(files[0]);
+    const after = load(files[1]);
+    const tol = Number(flagVal(args, "--max-regression"));
+    const result = diffReports(before, after, Number.isFinite(tol) ? tol : 1);
+    console.log(
+      renderDiffText(before, after, result)
+        .replace(/REGRESSED|✗.*/g, (m) => pc.red(m))
+        .replace(/IMPROVED|✓.*/g, (m) => pc.green(m))
+    );
+    process.exit(result.exitCode);
   }
 
   const asJson = args.includes("--json");

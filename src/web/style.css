@@ -166,6 +166,13 @@ button.primary:hover { filter: brightness(1.06); }
 .fits tbody tr:last-child td { border-bottom: none; }
 .fits > p { color: var(--muted); font-size: 13px; margin: 12px 0 0; }
 
+.why { margin-top: 28px; }
+.why h3 { font-size: 15px; margin: 0 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--mono); }
+.why p { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.65; }
+.why b { color: var(--text); }
+.why em { color: var(--accent); font-style: normal; }
+.why code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; font-family: var(--mono); font-size: 12px; color: var(--text); }
+
 footer { border-top: 1px solid var(--line); padding: 22px 0; margin-top: 20px; }
 footer p { color: var(--muted); font-size: 12.5px; text-align: center; }
 

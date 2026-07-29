@@ -112,6 +112,11 @@ print(Client().read_run(run_id).inputs)
         </table>
         <p>Use TokenDam to <b>find and fix</b> the waste in your prompts; reach for a gateway when you want to <b>route</b> traffic. They're complementary — TokenDam just doesn't ask you to trust it with your data.</p>
       </section>
+
+      <section class="why">
+        <h3>Why not just ask an LLM "where am I wasting tokens?"</h3>
+        <p>You can — and it'll give you a plausible <em>opinion</em>. But TokenDam gives you a <b>measurement</b>: exact tokenizer counts × current prices = a dollar figure you can trust, the same answer every time, for free, without sending your prompts to anyone. That's what lets it live in CI with a pass/fail budget and a <code>tokendam diff</code> regression gate — you can't put "paste it into Claude and hope" in a pipeline. Think ESLint, not "ask an AI to review my code."</p>
+      </section>
     </main>
 
     <footer class="wrap">

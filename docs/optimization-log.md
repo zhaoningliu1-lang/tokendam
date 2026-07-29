@@ -189,6 +189,32 @@ compression lens).
 
 7 test suites green, typecheck clean, deployed to tokendam.dev, pushed.
 
+## Round 9 — 2026-07-29 · toward the autonomous-agent era
+
+Founder directive: build toward a future where agents work 24/7 and self-evolve. Reframe: in that
+world, tokens are the dominant operating cost and self-throttling is a core agent organ — so
+TokenDam should become **agent-native infrastructure** and **self-evolving**, while staying
+efficient *and* auditable (autonomy needs oversight — the approve-gate is the alignment guardrail).
+
+**Shipped:**
+- **MCP server (`tokendam mcp`)** — `src/mcp.ts`, a minimal stdio JSON-RPC MCP server exposing
+  `analyze_trace` / `fix_prompt` / `token_diff`. An autonomous agent adds it to its MCP config and
+  runs TokenDam **on itself in its own loop**: measure my waste → get the fix → self-adjust →
+  `token_diff` to verify I got cheaper. Local, deterministic, zero-upload. `tokendam mcp` subcommand
+  + `tokendam-mcp` bin; `docs/mcp.md`. Full protocol test (initialize→tools/list→tools/call).
+- **Self-evolution: detector-R&D agent** — `api/detector-rnd.js`, a dormant standing scientist that
+  weekly scans LLM-efficiency signal (HN + its own knowledge) and DRAFTS new-detector proposals
+  (trigger heuristic + savings formula + false-positive analysis) for human approval. The tool's
+  detector set grows over time without a human hunting patterns; the approve-gate keeps it aligned.
+  Added to the crew (now PM + CTO + R&D + ops).
+
+8 test suites green (added mcp.test), typecheck clean.
+
+**Roadmap toward the vision:** ② make the self-optimization loop itself autonomous (scheduled
+critique→propose→verify→human-approve, compounding the knowledge base) · ③ continuous monitoring
+(ingest an agent's ongoing traces, learn its patterns) · a "token self-awareness" SDK an agent wraps
+its own client with. Guardrail throughout: autonomous discovery/proposal, human-approved shipping.
+
 **Parked (need bigger work):** per-call mixed-model pricing (totalUSD/CI use one majority model —
 wrong on mixed traces) · full token-level cross-detector dedup (headline is a clamped floor, not
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct

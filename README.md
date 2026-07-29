@@ -26,8 +26,13 @@ OpenAI / Anthropic request bodies · LangSmith runs · Langfuse observations · 
 output · Vercel AI SDK (`onFinish` + `UIMessage[]`) · generic `{request,response}` JSONL ·
 OpenAI Usage Admin API. Single object, an array, `{calls:[...]}`, or JSONL all work.
 
-It's also an [AI-native project](docs/standing-agents.md): a tiny standing crew (PM + CTO +
-uptime sentinel) runs the roadmap and guards accuracy.
+**For autonomous agents:** TokenDam ships an [MCP server](docs/mcp.md) (`tokendam mcp`) so an
+agent can run it **on itself, in its own loop** — analyze its recent calls, get a fix, and
+self-throttle its token spend. Nothing uploaded; every cost decision is a measurement.
+
+It's also an [AI-native project](docs/standing-agents.md): a standing crew (PM + CTO + detector-R&D
+scientist + uptime sentinel) runs the roadmap, keeps prices current, and proposes new detectors — so
+the tool self-evolves, with a human-approve gate on anything that ships.
 
 ## Try it
 

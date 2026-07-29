@@ -16,6 +16,7 @@ const HELP = `${pc.bold("tokendam")} — a linter for your LLM token spend
 
 Usage:
   tokendam init                    Scaffold .tokendam.json + traces/ + CI workflow
+  tokendam mcp                     Run as an MCP server (agents self-optimize their own token use)
   tokendam <trace.json>            Analyze a trace (OpenAI/Anthropic/LangSmith/…)
   tokendam diff <before> <after>   Deterministic before/after cost regression (CI)
   tokendam --example sd|agent      Run a built-in demo
@@ -211,6 +212,11 @@ async function main() {
   }
   if (args[0] === "init") {
     doInit();
+    return;
+  }
+  if (args[0] === "mcp") {
+    const { startMcp } = await import("./mcp.js");
+    startMcp();
     return;
   }
   if (args[0] === "diff") {

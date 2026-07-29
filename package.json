@@ -4,8 +4,8 @@
   "description": "A linter for your LLM token spend. Paste your agent's trace, see exactly where you're burning tokens — and how to stop. Runs 100% in your browser, nothing uploaded.",
   "type": "module",
   "bin": {
-    "tokendam": "./dist/cli.js",
-    "tokendam-mcp": "./dist/mcp.js"
+    "tokendam": "dist/cli.js",
+    "tokendam-mcp": "dist/mcp.js"
   },
   "exports": {
     ".": "./dist/core/index.js",

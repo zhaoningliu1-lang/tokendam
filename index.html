@@ -8,124 +8,129 @@
       name="description"
       content="Paste your agent's trace. See exactly where you're burning tokens — and how to stop. Runs 100% in your browser. Nothing is uploaded."
     />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪣</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='84' fill='%235eead4' font-family='monospace'>&gt;_</text></svg>" />
   </head>
   <body>
     <header class="hero">
       <div class="wrap">
-        <div class="logo">🧱 <b>TokenDam</b></div>
-        <h1>See where your agent burns tokens — without a proxy.</h1>
+        <div class="wordmark">tokendam<span class="cursor">▍</span></div>
+        <h1 id="headline">See where your agent burns tokens — without a proxy.</h1>
         <p class="sub">
           Audit your LLM token spend by pasting a trace. TokenDam gives you the line-item waste
           — uncached prefixes, bloated context, dead tools, duplicated docs, runaway reasoning —
           each with a dollar figure and a fix. No SDK swap, no gateway, no routing your prod
           traffic through anyone.
         </p>
-        <p class="privacy">🔒 100% in your browser. Your trace never leaves this tab — no upload, no server, no logging.</p>
       </div>
     </header>
 
     <main class="wrap">
-      <section class="input-card">
-        <div class="toolbar">
-          <span class="label">Trace JSON</span>
-          <div class="spacer"></div>
-          <button class="ghost" data-example="sd">Try: scraper agent</button>
-          <button class="ghost" data-example="agent">Try: coding agent</button>
-          <label class="ghost file-btn">
-            Upload<input type="file" id="file" accept=".json,application/json" hidden />
-          </label>
+      <section class="pane input-pane">
+        <div class="chrome">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="chrome-title">trace.json — tokendam</span>
+          <div class="chrome-actions">
+            <button class="ghost" data-example="sd">▸ scraper</button>
+            <button class="ghost" data-example="agent">▸ coding-agent</button>
+            <label class="ghost file-btn">⬆ upload<input type="file" id="file" accept=".json,application/json" hidden /></label>
+          </div>
         </div>
         <textarea
           id="trace"
           spellcheck="false"
-          placeholder='Paste one request body, an array of them, or {"calls":[...]}.
+          placeholder='paste one request body, an array of them, or {"calls":[...]}
 
-Example (OpenAI):
+# example (openai)
 [
   { "model": "gpt-4o", "messages": [{"role":"system","content":"..."}, {"role":"user","content":"..."}] },
   { "model": "gpt-4o", "messages": [{"role":"system","content":"..."}, {"role":"user","content":"..."}] }
 ]'
         ></textarea>
-        <div class="actions">
-          <button id="run" class="primary">Analyze →</button>
+        <div class="cmdline">
+          <span class="prompt">~/agent&nbsp;$</span>
+          <button id="run" class="run">tokendam analyze ./trace.json<span class="cursor">▍</span></button>
           <span id="err" class="err"></span>
-          <span class="formats">reads: OpenAI · Anthropic · LangSmith · Langfuse · Vercel AI SDK · Batch · raw logs</span>
         </div>
+        <p class="reads"># reads: openai · anthropic · langsmith · langfuse · vercel-ai-sdk · batch · raw logs</p>
       </section>
 
-      <details class="guide">
-        <summary>How do I get my trace? →</summary>
+      <details class="guide pane">
+        <summary><span class="prompt">~/agent&nbsp;$</span> tokendam --help <span class="dim"># how do I get my trace?</span></summary>
         <div class="guide-body">
-          <p>A "trace" is just the request payload(s) you send the model. <b>Capture a few calls</b> from one agent run — caching, history &amp; duplicate-doc waste only show across multiple calls.</p>
+          <p><b>Capture a few calls</b> from one agent run — caching, history &amp; duplicate-doc waste only show across multiple calls.</p>
           <pre class="guide-capture">// easiest: the capture helper (any SDK)
 import { tap, writeTrace } from "tokendam/capture";
 await openai.chat.completions.create(tap({ model, messages, tools }));
 await writeTrace("trace.json");   // then paste trace.json here</pre>
-          <p class="guide-or">— or log the request args yourself —</p>
+          <p class="guide-or"># — or log the request args yourself —</p>
           <div class="guide-grid">
             <div>
-              <h4>Raw OpenAI SDK</h4>
+              <h4>raw openai sdk</h4>
               <pre>const params = { model, messages, tools };
 console.log(JSON.stringify(params));
-// paste it — or wrap several as [p1, p2, ...]
-const res = await openai.chat.completions.create(params);</pre>
+// paste it — or wrap several as [p1, p2, ...]</pre>
             </div>
             <div>
-              <h4>Raw Anthropic SDK</h4>
+              <h4>raw anthropic sdk</h4>
               <pre>const req = { model, system, messages, tools };
 console.log(JSON.stringify(req));
-// TokenDam reads your cache_control markers directly
-const res = await anthropic.messages.create(req);</pre>
+// reads your cache_control markers directly</pre>
             </div>
             <div>
-              <h4>Vercel AI SDK</h4>
+              <h4>vercel ai sdk</h4>
               <pre>const openai = createOpenAI({
   fetch: async (url, init) => {
-    console.log(init?.body); // the exact request JSON
+    console.log(init?.body);
     return fetch(url, init);
   },
 });</pre>
             </div>
             <div>
-              <h4>LangChain / LangSmith</h4>
+              <h4>langchain / langsmith</h4>
               <pre>from langsmith import Client
 print(Client().read_run(run_id).inputs)
-# paste the JSON — or paste a run/array of runs directly</pre>
+# paste the JSON, or a run / array of runs</pre>
             </div>
           </div>
-          <p class="guide-tip">Tip: add each response's <code>usage</code> object to include output-cost and score real cache hits.</p>
         </div>
       </details>
 
       <section id="report" class="report hidden"></section>
 
       <section class="fits">
-        <h3>How this fits</h3>
+        <h3>## how this fits</h3>
         <table>
-          <thead><tr><th></th><th>TokenDam</th><th>Proxies &amp; gateways<br /><span>(Tokenwise, OpenRouter, Portkey…)</span></th></tr></thead>
+          <thead><tr><th></th><th>tokendam</th><th>proxies &amp; gateways<br /><span>(tokenwise, openrouter, portkey…)</span></th></tr></thead>
           <tbody>
-            <tr><td>Setup</td><td>Paste a trace — zero integration</td><td>Route your prod traffic through them</td></tr>
-            <tr><td>Sees your prompts</td><td><b>Never</b> — runs in your browser</td><td>Yes — sits in the request path</td></tr>
-            <tr><td>Best for</td><td>Auditing &amp; fixing waste at the source</td><td>Ongoing routing / failover / caching</td></tr>
+            <tr><td>setup</td><td>paste a trace — zero integration</td><td>route your prod traffic through them</td></tr>
+            <tr><td>sees your prompts</td><td><b>never</b> — runs in your browser</td><td>yes — sits in the request path</td></tr>
+            <tr><td>best for</td><td>auditing &amp; fixing waste at the source</td><td>ongoing routing / failover / caching</td></tr>
           </tbody>
         </table>
-        <p>Use TokenDam to <b>find and fix</b> the waste in your prompts; reach for a gateway when you want to <b>route</b> traffic. They're complementary — TokenDam just doesn't ask you to trust it with your data.</p>
+        <p>Use TokenDam to <b>find and fix</b> the waste in your prompts; reach for a gateway when you want to <b>route</b> traffic. Complementary — TokenDam just doesn't ask you to trust it with your data.</p>
       </section>
 
       <section class="why">
-        <h3>Why not just ask an LLM "where am I wasting tokens?"</h3>
-        <p>You can — and it'll give you a plausible <em>opinion</em>. But TokenDam gives you a <b>measurement</b>: exact tokenizer counts × current prices = a dollar figure you can trust, the same answer every time, for free, without sending your prompts to anyone. That's what lets it live in CI with a pass/fail budget and a <code>tokendam diff</code> regression gate — you can't put "paste it into Claude and hope" in a pipeline. Think ESLint, not "ask an AI to review my code."</p>
+        <h3>## why not just ask an LLM "where am I wasting tokens?"</h3>
+        <p>You can — and it'll give you a plausible <em>opinion</em>. TokenDam gives you a <b>measurement</b>: exact tokenizer counts × current prices = a dollar figure you can trust, the same answer every time, for free, without sending your prompts to anyone. That's what lets it live in CI with a pass/fail budget and a <code>tokendam diff</code> regression gate — you can't put "paste it into Claude and hope" in a pipeline. Think ESLint, not "ask an AI to review my code."</p>
       </section>
     </main>
 
     <footer class="wrap">
-      <p>
-        Built by <a href="#" id="author">Johnson Liu</a> · open source (MIT) ·
-        token counts via the o200k tokenizer (estimates for non-OpenAI models). Not affiliated
-        with any provider.
-      </p>
+      <p><span class="prompt">~/agent&nbsp;$</span> built by <a href="#" id="author">Johnson Liu</a> · open source (MIT) · token counts via o200k (estimates for non-OpenAI models)</p>
     </footer>
+
+    <div class="statusbar">
+      <span class="live">● client-side — nothing uploaded</span>
+      <span>o200k tokenizer</span>
+      <span>MIT</span>
+    </div>
 
     <script type="module" src="/src/web/main.ts"></script>
   </body>

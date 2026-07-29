@@ -22,97 +22,119 @@ const fileEl = $<HTMLInputElement>("#file");
 function setError(msg: string) {
   errEl.textContent = msg;
 }
-function setBusy(busy: boolean, label = "Analyze →") {
+function setBusy(busy: boolean) {
   runEl.disabled = busy;
-  runEl.textContent = busy ? "Analyzing…" : label;
+  runEl.innerHTML = busy
+    ? `analyzing…<span class="cursor"> ▍</span>`
+    : `tokendam analyze ./trace.json<span class="cursor">▍</span>`;
 }
 
 const sevClass: Record<string, string> = { high: "sev-high", medium: "sev-med", low: "sev-low" };
-const sevLabel: Record<string, string> = { high: "HIGH", medium: "MEDIUM", low: "LOW" };
+const sevLabel: Record<string, string> = { high: "HIGH", medium: "MED", low: "LOW" };
 
 function esc(s: string): string {
   return s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!);
 }
 
-function findingCard(usd: Core["usd"], f: Finding, i: number): string {
+function findingCard(usd: Core["usd"], f: Finding, _i: number): string {
   const dollars =
     f.wastedUSD > 0 || f.wastedTokens > 0
-      ? `<div class="waste"><span class="tok">~${f.wastedTokens.toLocaleString()} tok</span><span class="dol">${usd(
+      ? `<span class="waste"><span class="tok">~${f.wastedTokens.toLocaleString()} tok</span><span class="dol">${usd(
           f.wastedUSD
-        )}</span></div>`
+        )}</span></span>`
       : "";
   const evidence = f.evidence?.length
     ? `<ul class="evidence">${f.evidence.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>`
     : "";
   return `
     <div class="finding ${sevClass[f.severity]}">
-      <div class="finding-head">
-        <span class="sev">${sevLabel[f.severity]}</span>
-        <span class="ftitle">${i + 1}. ${esc(f.title)}</span>
-        ${dollars}
+      <div class="finding-bar"></div>
+      <div class="finding-body">
+        <div class="finding-head">
+          <span class="tag">[${sevLabel[f.severity]}]</span>
+          <span class="ftitle">${esc(f.title)}</span>
+          ${dollars}
+        </div>
+        <p class="detail">${esc(f.detail)}</p>
+        ${evidence}
+        <div class="fix"><span>${esc(f.fix)}</span></div>
       </div>
-      <p class="detail">${esc(f.detail)}</p>
-      ${evidence}
-      <div class="fix"><span>FIX</span> ${esc(f.fix)}</div>
     </div>`;
 }
 
 function render(core: Core, report: Report) {
   const usd = core.usd;
-  const headline =
-    report.savableUSD > 0
-      ? `<div class="save">Potential savings <b>${usd(report.savableUSD)}</b> <span>~${report.savablePct.toFixed(
-          0
-        )}% of this trace</span></div>`
-      : `<div class="save clean">No obvious waste found 🎉</div>`;
 
-  // Project one trace to production volume — the "toy → tool" lever.
+  // Command echo + parse line — the report opens like streamed stdout.
+  const echo = `<div class="echo"><span class="prompt">~/agent&nbsp;$</span> tokendam analyze ./trace.json</div>
+    <div class="echo"><span class="ok">✓</span> parsed ${report.numCalls} call(s) · ${esc(
+    report.vendor
+  )} · o200k</div>`;
+
+  // Box-drawn summary block.
+  const TW = 48;
+  const bar = (pct: number) => {
+    const n = Math.max(0, Math.min(10, Math.round(pct / 10)));
+    return "▇".repeat(n) + "░".repeat(10 - n);
+  };
+  const line = (label: string, val: string) =>
+    ("│  " + (label.padEnd(9) + val)).padEnd(TW - 1) + "│";
+  const boxTop = "┌─ summary " + "─".repeat(TW - 12) + "┐";
+  const boxBot = "└" + "─".repeat(TW - 2) + "┘";
+  const saveVal =
+    report.savableUSD > 0
+      ? `${bar(report.savablePct)}  ${report.savablePct.toFixed(0)}% · ${usd(report.savableUSD)}`
+      : "no obvious waste found";
+  const boxText = [
+    boxTop,
+    line("spend", `${usd(report.totalUSD)} / run`),
+    line("savings", saveVal),
+    line("input", `${report.totalInputTokens.toLocaleString()} tok`),
+    boxBot,
+  ].join("\n");
+  const sumbox = `<div class="sumbox">${esc(boxText)
+    .replace(/\$[\d.,]+/g, (m) => `<span class="dol">${m}</span>`)
+    .replace(/▇+/g, (m) => `<span class="pct">${m}</span>`)
+    .replace(/(\d+%)/g, (m) => `<span class="pct">${m}</span>`)}</div>`;
+
+  // Projection — the "toy → tool" lever, styled as a command.
   const projection =
     report.perCallSavableUSD > 0
-      ? `<div class="project">If you run <input id="cpd" type="number" min="1" value="1000" /> calls/day shaped like this →
-           <b id="permo">${usd(report.perCallSavableUSD * 1000 * 30)}</b><span>/month saved</span>
-           <span class="permo-note">(${usd(report.perCallSavableUSD)}/call × calls/day × 30)</span></div>`
+      ? `<div class="project"><span class="prompt">~/agent&nbsp;$</span> tokendam project --calls <input id="cpd" type="number" min="1" value="1000" />/day → <b id="permo">${usd(
+          report.perCallSavableUSD * 1000 * 30
+        )}</b>/mo saved</div>`
       : "";
 
-  const stats = `
-    <div class="stats">
-      <div><span>${esc(report.model)}</span><label>model</label></div>
-      <div><span>${report.numCalls}</span><label>calls</label></div>
-      <div><span>${report.totalInputTokens.toLocaleString()}</span><label>input tok</label></div>
-      <div><span>${usd(report.totalUSD)}</span><label>spend (as-is)</label></div>
-    </div>`;
-
-  const findings = report.findings.length
-    ? report.findings.map((f, i) => findingCard(usd, f, i)).join("")
-    : `<p class="empty">Nothing flagged. Your prompts are lean.</p>`;
-
-  const notes = report.notes.length
-    ? `<div class="notes">${report.notes.map((n) => `<div>ⓘ ${esc(n)}</div>`).join("")}</div>`
-    : "";
-
   const actions = `<div class="report-actions">
-    <button id="copy-fix" class="primary">Copy fix prompt →</button>
-    <button id="copy-md" class="ghost">Copy audit as Markdown</button>
+    <button id="copy-fix" class="run-btn">copy fix prompt →</button>
+    <button id="copy-md" class="run-btn alt">copy audit (markdown)</button>
     <span class="copied" id="copied"></span>
   </div>`;
 
-  // Teaching state: several detectors (caching, history, duplicate docs) can only
-  // fire across MULTIPLE calls. If the user pasted one, tell them how to get more.
+  const findings = report.findings.length
+    ? report.findings.map((f, i) => findingCard(usd, f, i)).join("")
+    : `<p class="empty"># nothing flagged — your prompts are lean.</p>`;
+
+  const notes = report.notes.length
+    ? `<div class="notes">${report.notes.map((n) => `<div># ${esc(n)}</div>`).join("")}</div>`
+    : "";
+
+  // Teaching state: caching/history/duplicate waste only shows across MULTIPLE calls.
   const banner =
     report.numCalls === 1
       ? `<div class="teach">
-           <b>You pasted 1 call.</b> The biggest wins — <em>uncached prefixes, uncompacted history, duplicated context</em> — only show up <b>across several calls</b>. Capture a few from one agent run:
+           <b>You pasted 1 call.</b> The biggest wins — <em>uncached prefixes, uncompacted history, duplicated context</em> — only show up <b>across several calls</b>. Capture a few from one run:
            <pre>globalThis.__td ??= [];
 const tap = a =&gt; (globalThis.__td.push(a), a);
 // wrap your request args:
 //   openai.chat.completions.create(tap({ model, messages, tools }))
-// after the run, in your console:
-//   copy(JSON.stringify(globalThis.__td))   // then paste here
+// then, in your console:
+//   copy(JSON.stringify(globalThis.__td))   // paste here
 </pre>
          </div>`
       : "";
 
-  reportEl.innerHTML = `${banner}${headline}${projection}${stats}${actions}<div class="findings">${findings}</div>${notes}`;
+  reportEl.innerHTML = `${echo}${banner}${sumbox}${projection}${actions}<div class="findings">${findings}</div>${notes}`;
   reportEl.classList.remove("hidden");
   reportEl.scrollIntoView({ behavior: "smooth", block: "start" });
 

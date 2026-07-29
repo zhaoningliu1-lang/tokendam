@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
     <style>
-      :root { --bg:#0a0b0d; --panel:#16181d; --line:#23262e; --text:#e6e8ec; --muted:#8b909b; --faint:#565c68; --accent:#5eead4; --red:#f87171; --amber:#fbbf24;
+      :root { --bg:#0a0b0d; --panel:#16181d; --line:#23262e; --text:#e6e8ec; --muted:#8b909b; --faint:#7a8290; --accent:#5eead4; --red:#f87171; --amber:#fbbf24;
         --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; --sans:"Inter",-apple-system,system-ui,sans-serif; }
       * { box-sizing:border-box; }
       body { margin:0; background:var(--bg); color:var(--text); font:15px/1.6 var(--sans); }
@@ -22,7 +22,7 @@
       .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
       .card .k { font:11px var(--mono); color:var(--faint); text-transform:uppercase; letter-spacing:.04em; }
       .card .v { font:600 20px var(--mono); margin-top:5px; }
-      .chart { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px 16px 10px; }
+      .chart { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px 16px 10px; min-height:120px; }
       .chart h2 { font:600 12px var(--mono); color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin:0 0 12px; }
       table { width:100%; border-collapse:collapse; margin-top:20px; font-size:13px; }
       th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
@@ -34,12 +34,13 @@
       .foot { margin-top:40px; border-top:1px solid var(--line); padding-top:14px; font:12px var(--mono); color:var(--faint); }
       .foot a { color:var(--accent); text-decoration:none; }
       a.home { color:var(--faint); font:12px var(--mono); text-decoration:none; }
+      @media (max-width:600px){ .cards{grid-template-columns:repeat(2,1fr)} }
     </style>
   </head>
   <body>
     <div class="wrap">
       <a class="home" href="/">← tokendam.dev</a>
-      <h1 style="margin-top:14px">🧱 TokenDam Cloud — cost trend</h1>
+      <h1 style="margin-top:14px">TokenDam Cloud — cost trend</h1>
       <p class="sub">Token-waste $/month across a repo's pull requests, audited automatically by the TokenDam GitHub App.</p>
       <form id="f">
         <input id="repo" placeholder="owner/repo  (e.g. your-org/agent-service)" spellcheck="false" />

@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
-      :root { --bg:#0a0b0d; --panel:#101216; --panel2:#16181d; --line:#23262e; --line2:#2e323c; --text:#e6e8ec; --muted:#8b909b; --faint:#565c68; --accent:#5eead4; --accent-dim:rgba(94,234,212,.12); --money:#7ee787;
+      :root { --bg:#0a0b0d; --panel:#101216; --panel2:#16181d; --line:#23262e; --line2:#2e323c; --text:#e6e8ec; --muted:#8b909b; --faint:#7a8290; --accent:#5eead4; --accent-dim:rgba(94,234,212,.12); --money:#7ee787;
         --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; --sans:"Inter",-apple-system,system-ui,sans-serif; }
       * { box-sizing:border-box; }
       body { margin:0; background:radial-gradient(900px 300px at 50% -140px,#101216 0%,transparent 70%),var(--bg); color:var(--text); font:15px/1.65 var(--sans); -webkit-font-smoothing:antialiased; }
@@ -26,7 +26,8 @@
       .card.pro .tier { color:var(--accent); }
       .price { font:600 30px var(--mono); margin:6px 0 2px; letter-spacing:-.02em; }
       .price small { font:400 13px var(--mono); color:var(--muted); }
-      .for { color:var(--muted); font-size:13px; margin:0 0 14px; }
+      .for { color:var(--muted); font-size:13px; margin:0 0 10px; }
+      .value { color:var(--text); font-size:13px; line-height:1.5; margin:0 0 14px; padding:9px 11px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; }
       ul { list-style:none; padding:0; margin:0 0 20px; display:flex; flex-direction:column; gap:9px; }
       li { font-size:13.5px; color:var(--text); padding-left:20px; position:relative; }
       li::before { content:"✓"; position:absolute; left:0; color:var(--money); }
@@ -57,12 +58,13 @@
           <div class="tier">Free</div>
           <div class="price">$0</div>
           <p class="for">for individuals, evaluation, and agents</p>
+          <p class="value">Paste a trace and see exactly where your AI spend is being wasted — with a dollar figure and a fix for each — on your own machine.</p>
           <ul>
             <li>Web linter (paste a trace)</li>
-            <li>CLI: <code>npx tokendam</code></li>
-            <li>MCP server (agents self-optimize)</li>
-            <li>8 detectors · $/month projection</li>
-            <li>Self-run CI gate &amp; fix pack</li>
+            <li>Command-line tool: <code>npx tokendam</code></li>
+            <li>8 checks · projected $/month savings</li>
+            <li>Run it yourself before shipping<sup>1</sup></li>
+            <li>Let AI agents optimize their own spend<sup>2</sup></li>
             <li>100% local · nothing uploaded</li>
           </ul>
           <a class="btn ghost" href="/">Use it →</a>
@@ -71,10 +73,11 @@
         <div class="card pro">
           <div class="tier">Pro · TokenDam Cloud</div>
           <div class="price">$40<small> /active dev / mo</small></div>
-          <p class="for">$32/dev billed annually · only devs who open a PR that month</p>
+          <p class="for">$32/dev billed annually · only devs who make a code change that month</p>
+          <p class="value">Automatically checks every change your engineers make and flags cost regressions before they ship — so your AI bill can't quietly creep up.</p>
           <ul>
             <li>Everything in Free, plus:</li>
-            <li><b>GitHub App</b> — audits every PR automatically</li>
+            <li><b>Checks every code change</b> automatically<sup>3</sup></li>
             <li>Token-cost <b>trend dashboard</b> over time</li>
             <li><b>Regression alerts</b> (Slack / email)</li>
             <li>Per-agent cost attribution &amp; history</li>
@@ -98,10 +101,12 @@
         </div>
       </div>
 
-      <div class="note"># <b>Free is genuinely free — forever.</b> It runs on your machine, so it costs us nothing to provide, at any scale. Pro is the hosted service that watches your agents continuously; that's what you pay for.</div>
+      <div class="note"># <b>Free is genuinely free — forever.</b> It runs on your machine, so it costs us nothing to provide, at any scale. Pro is the hosted service that watches your agents continuously; that's what you pay for.
+        <br />＃ <b style="color:var(--text)">"Active dev"</b> = an engineer who made a code change that month. 5 engineers ≈ 5 × $40. No change from someone, no charge for them.
+        <br />＃ <sup>1</sup> Adds an automatic cost check to your build pipeline (CI) so waste is caught before release. <sup>2</sup> Exposes TokenDam over MCP so AI coding agents can audit and trim their own token use. <sup>3</sup> Runs on each pull request (a proposed code change) via the GitHub App — the same model as CodeRabbit.</div>
 
       <div class="faq">
-        <h3>## faq</h3>
+        <h3>FAQ</h3>
         <p><b>Does the free tool send my data anywhere?</b> No. The web app and CLI analyze on your device — see <a href="/privacy">privacy</a>. Pro is opt-in and processes only what you connect.</p>
         <p><b>How is Pro billed?</b> Per <b>active developer</b> — only the devs who open a pull request that month. No PR, no charge. Unlimited repos. (This is the CodeRabbit model — it grows with your team, not your repo sprawl.)</p>
         <p><b>Can I cancel anytime?</b> Yes — it's a month-to-month subscription, cancel from your billing portal.</p>

@@ -36,6 +36,34 @@ function esc(s: string): string {
   return s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!);
 }
 
+// Copy to clipboard with a fallback for http:// origins and older browsers where
+// navigator.clipboard is unavailable or throws. Returns false if every path fails
+// so the caller can flash an error instead of failing silently.
+async function copyText(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    /* fall through to execCommand */
+  }
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 function findingCard(usd: Core["usd"], f: Finding, _i: number): string {
   const dollars =
     f.wastedUSD > 0 || f.wastedTokens > 0
@@ -69,7 +97,7 @@ function render(core: Core, report: Report) {
   const echo = `<div class="echo"><span class="prompt">~/agent&nbsp;$</span> tokendam analyze ./trace.json</div>
     <div class="echo"><span class="ok">✓</span> parsed ${report.numCalls} call(s) · ${esc(
     report.vendor
-  )} · o200k</div>`;
+  )}</div>`;
 
   // Box-drawn summary block.
   const TW = 48;
@@ -102,7 +130,10 @@ function render(core: Core, report: Report) {
     report.perCallSavableUSD > 0
       ? `<div class="project"><span class="prompt">~/agent&nbsp;$</span> tokendam project --calls <input id="cpd" type="number" min="1" value="1000" />/day → <b id="permo">${usd(
           report.perCallSavableUSD * 1000 * 30
-        )}</b>/mo saved</div>`
+        )}</b>/mo saved</div>
+      <div class="project-hint"># enter YOUR real calls/day (ask your engineer or check your provider dashboard). The <b>${report.savablePct.toFixed(
+        0
+      )}% of spend</b> above doesn't depend on volume — that's your true waste rate.</div>`
       : "";
 
   const actions = `<div class="report-actions">
@@ -155,13 +186,13 @@ const tap = a =&gt; (globalThis.__td.push(a), a);
   };
   // Fix pack — paste straight into Claude Code / Cursor to apply the fixes.
   document.getElementById("copy-fix")?.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(core.renderFixPrompt(report, 1000));
-    flash("fix prompt copied → paste into Claude Code / Cursor ✓");
+    const ok = await copyText(core.renderFixPrompt(report, 1000));
+    flash(ok ? "fix prompt copied → paste into Claude Code / Cursor ✓" : "couldn't copy — select the text and copy manually");
   });
   // Markdown audit — same as `tokendam --format markdown`, for a PR/issue.
   document.getElementById("copy-md")?.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(core.renderMarkdown(report, undefined, 1000));
-    flash("audit copied ✓");
+    const ok = await copyText(core.renderMarkdown(report, undefined, 1000));
+    flash(ok ? "audit copied ✓" : "couldn't copy — select the text and copy manually");
   });
   // Paper report — the shareable one-pager an engineer forwards to their manager.
   // Generated fully client-side (nothing uploaded); opens in a new tab so the user
@@ -186,7 +217,7 @@ const tap = a =&gt; (globalThis.__td.push(a), a);
   const permo = document.getElementById("permo");
   if (cpd && permo) {
     cpd.addEventListener("input", () => {
-      const n = Math.max(0, Number(cpd.value) || 0);
+      const n = Math.max(1, Number(cpd.value) || 1);
       permo.textContent = usd(report.perCallSavableUSD * n * 30);
     });
   }
@@ -212,7 +243,7 @@ async function run() {
     const core = await loadCore();
     render(core, core.analyze(input));
   } catch (e) {
-    setError((e as Error).message);
+    setError(`Couldn't read that trace — ${(e as Error).message}. Check it's valid JSON (or click an example).`);
   } finally {
     setBusy(false);
   }
@@ -221,6 +252,18 @@ async function run() {
 runEl.addEventListener("click", run);
 traceEl.addEventListener("keydown", (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run();
+});
+
+// "Not a developer?" — copy the hand-off note to email an engineer.
+document.getElementById("copy-fwd")?.addEventListener("click", async () => {
+  const note = document.getElementById("fwd-note")?.textContent || "";
+  const ok = await copyText(note);
+  const btn = document.getElementById("copy-fwd");
+  if (btn) {
+    const prev = btn.textContent;
+    btn.textContent = ok ? "copied ✓ — paste into an email" : "select the text above and copy manually";
+    setTimeout(() => (btn.textContent = prev), 2200);
+  }
 });
 
 const base = import.meta.env.BASE_URL;

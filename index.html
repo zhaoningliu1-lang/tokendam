@@ -28,12 +28,12 @@
     </nav>
     <header class="hero">
       <div class="wrap">
-        <h1 id="headline">See where your agent burns tokens — without a proxy.</h1>
+        <h1 id="headline">Cut your OpenAI &amp; Claude bill 20–50% — without changing how your product behaves.</h1>
         <p class="sub">
-          Audit your LLM token spend by pasting a trace. TokenDam gives you the line-item waste
-          — uncached prefixes, bloated context, dead tools, duplicated docs, runaway reasoning —
-          each with a dollar figure and a fix. No SDK swap, no gateway, no routing your prod
-          traffic through anyone.
+          TokenDam finds the waste in how your app talks to AI — uncached prefixes, bloated context,
+          dead tools, duplicated docs, runaway reasoning — and tells you exactly what to fix, each with
+          a dollar figure. Paste a trace; it runs in your browser and nothing is uploaded.
+          <span class="sub-trust">No SDK swap, no gateway, no routing your prod traffic through anyone.</span>
         </p>
       </div>
     </header>
@@ -44,9 +44,9 @@
           <span class="dots"><i></i><i></i><i></i></span>
           <span class="chrome-title">trace.json — tokendam</span>
           <div class="chrome-actions">
-            <button class="ghost" data-example="sd">▸ scraper</button>
-            <button class="ghost" data-example="agent">▸ coding-agent</button>
-            <label class="ghost file-btn">⬆ upload<input type="file" id="file" accept=".json,application/json" hidden /></label>
+            <button class="ghost" data-example="sd" aria-label="Load the customer-support bot example trace">▸ Customer-support bot</button>
+            <button class="ghost" data-example="agent" aria-label="Load the coding assistant example trace">▸ Coding assistant</button>
+            <label class="ghost file-btn">⬆ upload<input type="file" id="file" accept=".json,application/json" hidden aria-label="Upload a trace JSON file" /></label>
           </div>
         </div>
         <textarea
@@ -67,6 +67,26 @@
         </div>
         <p class="reads"># reads: openai · anthropic · langsmith · langfuse · vercel-ai-sdk · batch · raw logs</p>
       </section>
+
+      <div class="try-example">
+        <button class="example-cta" data-example="agent" aria-label="See a live example report — loads and analyzes a sample coding assistant trace">See a live example →</button>
+        <span class="example-cap">No setup — see what a report looks like.</span>
+      </div>
+
+      <details class="not-dev pane">
+        <summary>Not a developer? Start here.</summary>
+        <div class="not-dev-body">
+          <ol>
+            <li>Click <b>See a live example</b> above — that's what a report looks like, in ~2 seconds.</li>
+            <li>To get <b>your own numbers</b>, forward this page to whoever manages your AI integration.
+              It takes them about two minutes. You can copy the note below:</li>
+          </ol>
+          <pre id="fwd-note">Hi — can you run our LLM requests through tokendam.dev? Paste a few real
+request payloads (or a captured trace) and send me back the report / the
+"report for your boss (PDF)". Trying to see where we can cut our AI bill.</pre>
+          <button id="copy-fwd" class="run-btn alt">copy note to send your engineer</button>
+        </div>
+      </details>
 
       <details class="guide pane">
         <summary><span class="prompt">~/agent&nbsp;$</span> tokendam --help <span class="dim"># how do I get my trace?</span></summary>
@@ -112,7 +132,7 @@ print(Client().read_run(run_id).inputs)
       <section id="report" class="report hidden"></section>
 
       <section class="fits">
-        <h3>## how this fits</h3>
+        <h3>How this fits</h3>
         <table>
           <thead><tr><th></th><th>tokendam</th><th>proxies &amp; gateways<br /><span>(tokenwise, openrouter, portkey…)</span></th></tr></thead>
           <tbody>
@@ -124,10 +144,10 @@ print(Client().read_run(run_id).inputs)
         <p>Use TokenDam to <b>find and fix</b> the waste in your prompts; reach for a gateway when you want to <b>route</b> traffic. Complementary — TokenDam just doesn't ask you to trust it with your data.</p>
       </section>
 
-      <section class="why">
-        <h3>## why not just ask an LLM "where am I wasting tokens?"</h3>
+      <details class="why for-engineers">
+        <summary>For engineers — why not just ask an LLM "where am I wasting tokens?"</summary>
         <p>You can — and it'll give you a plausible <em>opinion</em>. TokenDam gives you a <b>measurement</b>: exact tokenizer counts × current prices = a dollar figure you can trust, the same answer every time, for free, without sending your prompts to anyone. That's what lets it live in CI with a pass/fail budget and a <code>tokendam diff</code> regression gate — you can't put "paste it into Claude and hope" in a pipeline. Think ESLint, not "ask an AI to review my code."</p>
-      </section>
+      </details>
     </main>
 
     <footer class="wrap">

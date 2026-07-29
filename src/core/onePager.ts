@@ -32,14 +32,22 @@ export function renderOnePager(report: Report, callsPerDay = 1000): string {
       ? "No material token waste found — this workload is already well optimized."
       : `Across a representative sample of ${report.numCalls} LLM call(s), TokenDam found ${report.findings.length} source(s) of token waste totaling about ${report.savablePct.toFixed(0)}% of spend. At ${callsPerDay.toLocaleString()} calls/day that is roughly ${money(monthly)}/month (${money(annual)}/year) recoverable without changing model behavior.`;
 
+  // Reconcile: the per-finding "gross waste" figures sum to more than the headline
+  // because the total is NET (discounted for prompt caching + capped for overlap).
+  // Allocate the net recoverable across findings in proportion to each one's gross
+  // waste, so the rows sum EXACTLY to the headline — a boss-facing doc must foot.
+  const grossTotal = report.findings.reduce((s, f) => s + (f.wastedUSD || 0), 0);
+  const netPerCall = report.perCallSavableUSD; // net, per call
   const rows = report.findings
     .map((f) => {
       const s = SEV[f.severity] || SEV.low;
+      const share = grossTotal > 0 ? (f.wastedUSD || 0) / grossTotal : 0;
+      const netMonthly = netPerCall * share * callsPerDay * 30;
       return `<tr>
         <td><span style="display:inline-block;font:600 10px/1 ui-monospace,monospace;color:#fff;background:${s.color};padding:3px 6px;border-radius:4px">${s.label}</span></td>
         <td><b>${esc(f.title)}</b><div style="color:#6b7280;font-size:12px;margin-top:3px">${esc(f.fix || f.detail || "")}</div></td>
         <td style="text-align:right;white-space:nowrap">${f.wastedTokens ? f.wastedTokens.toLocaleString() + " tok" : "—"}</td>
-        <td style="text-align:right;white-space:nowrap;font-weight:600">${f.wastedUSD ? money(f.wastedUSD * callsPerDay * 30) + "/mo" : "—"}</td>
+        <td style="text-align:right;white-space:nowrap;font-weight:600">${netMonthly > 0 ? money(netMonthly) + "/mo" : "—"}</td>
       </tr>`;
     })
     .join("");
@@ -66,7 +74,10 @@ export function renderOnePager(report: Report, callsPerDay = 1000): string {
 </style></head>
 <body><div class="page">
   <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #111827;padding-bottom:12px">
-    <h1>🧱 TokenDam — LLM token-cost report</h1>
+    <div>
+      <h1>TokenDam — LLM token-cost report</h1>
+      <div class="muted" style="margin-top:4px">${esc(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }))} · prepared for the <b>${esc(report.model || report.vendor)}</b> workload</div>
+    </div>
     <div class="muted">model: <b>${esc(report.model || report.vendor)}</b></div>
   </div>
 
@@ -81,13 +92,14 @@ export function renderOnePager(report: Report, callsPerDay = 1000): string {
 
   <h3 style="margin:26px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#374151">Findings</h3>
   <table>
-    <thead><tr><th>Sev</th><th>Issue &amp; recommended fix</th><th style="text-align:right">Waste</th><th style="text-align:right">Cost / mo</th></tr></thead>
+    <thead><tr><th>Sev</th><th>Issue &amp; recommended fix</th><th style="text-align:right">Waste</th><th style="text-align:right">Recoverable / mo</th></tr></thead>
     <tbody>${rows || `<tr><td colspan="4" class="muted">Nothing material — already optimized.</td></tr>`}</tbody>
   </table>
 
   <h3 style="margin:26px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#374151">Method &amp; assumptions</h3>
   <ul class="muted" style="margin:4px 0;padding-left:18px">
     <li>Projections assume ${callsPerDay.toLocaleString()} calls/day; scale linearly to your real volume.</li>
+    <li>Per-finding "Recoverable / mo" is the <b>net</b> recoverable after prompt-cache discounts and overlap, allocated across findings by their share of gross waste — so the line items sum to the headline.</li>
     <li>Savings are cost-only — the recommended fixes keep model outputs identical.</li>
     ${notes}
   </ul>

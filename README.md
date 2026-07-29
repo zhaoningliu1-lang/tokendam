@@ -19,6 +19,8 @@ TokenDam reads a trace and points at each one with a dollar figure and a fix.
 | **Uncompacted history** | Long-running agent loops that resend the entire conversation every turn instead of compacting old turns. |
 | **Duplicate content** | The same (or near-identical) document pasted more than once within a call — you pay for every copy. |
 | **Reasoning-token waste** | Reasoning models (o-series, GPT-5, deepseek-reasoner, Claude thinking) burning uncapped hidden reasoning tokens on simple tasks, billed at the output rate. |
+| **Duplicate requests** | The same request (same task/query, ignoring the static system prompt) sent to the model more than once in a trace — a response/semantic cache would skip the repeat entirely. |
+| **Model overkill** | A flagship model (Opus, GPT-4o, GPT-5) used for a simple task a cheaper sibling would nail — model price gaps of 10–20x, often larger than any prompt-side saving. |
 
 ## Reads (paste any of these)
 

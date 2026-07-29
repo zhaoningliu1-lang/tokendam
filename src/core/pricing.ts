@@ -12,17 +12,34 @@ export interface ModelPrice {
   output: number;
 }
 
-// List prices are approximate and drift constantly — treat as indicative, and
-// keep this stamp current (the CTO agent watches it).
-export const PRICES_AS_OF = "2026-07";
+// List prices verified against platform.claude.com/docs pricing on this date.
+// They drift, so keep this stamp current (the CTO agent watches it).
+export const PRICES_AS_OF = "2026-07-29";
 
-// Keys are matched by substring against the model string (longest match wins).
+// Keys are matched by substring against the model string (longest match wins),
+// so specific versions (claude-opus-4-8) override family defaults (claude-opus-4).
 export const PRICES: Record<string, ModelPrice> = {
-  // ---- Anthropic (cache hit ≈ 10% of input) ----
-  "claude-opus-4": { input: 15, cachedInput: 1.5, output: 75 },
-  "claude-sonnet-4": { input: 3, cachedInput: 0.3, output: 15 },
+  // ---- Anthropic, current gen (cache hit = 10% of input) ----
+  // Opus 4.5–4.8 + Opus 5 dropped to $5/$25 (from the old $15/$75 Opus-4 tier).
+  "claude-opus-5": { input: 5, cachedInput: 0.5, output: 25 },
+  "claude-opus-4-8": { input: 5, cachedInput: 0.5, output: 25 },
+  "claude-opus-4-7": { input: 5, cachedInput: 0.5, output: 25 },
+  "claude-opus-4-6": { input: 5, cachedInput: 0.5, output: 25 },
+  "claude-opus-4-5": { input: 5, cachedInput: 0.5, output: 25 },
+  // Sonnet 5 introductory pricing $2/$10 through 2026-08-31; then $3/$15 (= Sonnet 4.x).
+  "claude-sonnet-5": { input: 2, cachedInput: 0.2, output: 10 },
+  // Fable 5 / Mythos 5 (creative flagship tier).
+  "claude-fable-5": { input: 10, cachedInput: 1, output: 50 },
+  "claude-mythos-5": { input: 10, cachedInput: 1, output: 50 },
+  // NOTE: Claude 4.7+ use a new tokenizer that emits ~30% MORE tokens than the
+  // o200k estimate TokenDam counts with — real cost on those models runs higher
+  // than reported. Flagged in report notes; a tokenizer-aware pass is a TODO.
+
+  // ---- Anthropic, prior gen ----
+  "claude-opus-4": { input: 15, cachedInput: 1.5, output: 75 }, // Opus 4 / 4.1 (deprecated tier)
+  "claude-sonnet-4": { input: 3, cachedInput: 0.3, output: 15 }, // Sonnet 4 / 4.5 / 4.6
+  "claude-haiku-4": { input: 1, cachedInput: 0.1, output: 5 }, // Haiku 4.5
   "claude-3-5-haiku": { input: 0.8, cachedInput: 0.08, output: 4 },
-  "claude-haiku-4": { input: 1, cachedInput: 0.1, output: 5 },
   "claude-3-5-sonnet": { input: 3, cachedInput: 0.3, output: 15 },
   "claude-3-opus": { input: 15, cachedInput: 1.5, output: 75 },
   "claude-3-haiku": { input: 0.25, cachedInput: 0.03, output: 1.25 },

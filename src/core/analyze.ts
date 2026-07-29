@@ -75,6 +75,12 @@ export function analyze(input: unknown): Report {
     notes.push(
       "Token counts for Claude/DeepSeek/Gemini are estimated with the OpenAI o200k tokenizer (typically within ~10-15%)."
     );
+  // Claude 4.7+ (Opus 4.7/4.8/5, Sonnet 5, Fable/Mythos 5) use a newer tokenizer
+  // that emits ~30% more tokens than the o200k estimate — real cost runs higher.
+  if (models.some((m) => /claude-(opus-(4-7|4-8|5)|sonnet-5|fable-5|mythos-5)/i.test(m)))
+    notes.push(
+      "This model uses Claude's newer tokenizer (~30% more tokens than the o200k estimate) — actual cost is likely ~30% higher than shown."
+    );
   const unmatched = models.filter((m) => !priceFor(m).matched);
   if (unmatched.length)
     notes.push(

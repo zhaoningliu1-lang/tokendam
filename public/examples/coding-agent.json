@@ -1,0 +1,1068 @@
+[
+  {
+    "model": "claude-sonnet-4-6",
+    "system": "You are a senior software engineer agent operating in a user's repository.\nGuideline 1: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 2: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 3: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 4: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 5: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 6: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 7: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 8: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 9: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 10: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 11: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 12: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 13: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 14: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 15: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 16: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 17: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 18: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 19: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 20: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 21: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 22: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 23: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 24: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 25: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 26: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 27: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 28: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 29: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 30: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 31: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 32: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 33: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 34: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 35: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 36: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 37: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 38: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 39: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 40: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 41: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 42: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 43: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 44: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 45: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 46: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 47: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 48: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 49: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 50: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 51: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 52: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 53: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 54: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 55: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 56: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 57: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 58: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 59: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 60: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.",
+    "tools": [
+      {
+        "name": "read_file",
+        "description": "Read a file from disk. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      },
+      {
+        "name": "edit_file",
+        "description": "Edit a file. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "patch": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "patch"
+          ]
+        }
+      },
+      {
+        "name": "run_bash",
+        "description": "Run a shell command. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "cmd": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "cmd"
+          ]
+        }
+      },
+      {
+        "name": "grep",
+        "description": "Search the repo. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "jira_create_issue",
+        "description": "Create a Jira issue. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "body"
+          ]
+        }
+      },
+      {
+        "name": "slack_post",
+        "description": "Post to Slack. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "channel": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "channel",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "figma_export",
+        "description": "Export a Figma frame. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "frameId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "frameId"
+          ]
+        }
+      },
+      {
+        "name": "datadog_query",
+        "description": "Query Datadog metrics. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "stripe_refund",
+        "description": "Issue a Stripe refund. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "chargeId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chargeId"
+          ]
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "The build is failing on CI. Fix it."
+      }
+    ],
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 120
+    }
+  },
+  {
+    "model": "claude-sonnet-4-6",
+    "system": "You are a senior software engineer agent operating in a user's repository.\nGuideline 1: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 2: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 3: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 4: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 5: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 6: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 7: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 8: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 9: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 10: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 11: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 12: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 13: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 14: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 15: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 16: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 17: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 18: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 19: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 20: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 21: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 22: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 23: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 24: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 25: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 26: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 27: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 28: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 29: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 30: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 31: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 32: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 33: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 34: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 35: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 36: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 37: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 38: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 39: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 40: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 41: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 42: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 43: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 44: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 45: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 46: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 47: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 48: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 49: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 50: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 51: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 52: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 53: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 54: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 55: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 56: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 57: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 58: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 59: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 60: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.",
+    "tools": [
+      {
+        "name": "read_file",
+        "description": "Read a file from disk. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      },
+      {
+        "name": "edit_file",
+        "description": "Edit a file. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "patch": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "patch"
+          ]
+        }
+      },
+      {
+        "name": "run_bash",
+        "description": "Run a shell command. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "cmd": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "cmd"
+          ]
+        }
+      },
+      {
+        "name": "grep",
+        "description": "Search the repo. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "jira_create_issue",
+        "description": "Create a Jira issue. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "body"
+          ]
+        }
+      },
+      {
+        "name": "slack_post",
+        "description": "Post to Slack. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "channel": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "channel",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "figma_export",
+        "description": "Export a Figma frame. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "frameId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "frameId"
+          ]
+        }
+      },
+      {
+        "name": "datadog_query",
+        "description": "Query Datadog metrics. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "stripe_refund",
+        "description": "Issue a Stripe refund. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "chargeId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chargeId"
+          ]
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "The build is failing on CI. Fix it."
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me look at the CI logs."
+          },
+          {
+            "type": "tool_use",
+            "name": "run_bash",
+            "input": {
+              "cmd": "cat ci.log"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "TypeError: cannot read 'map' of undefined at build.js:42"
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 120
+    }
+  },
+  {
+    "model": "claude-sonnet-4-6",
+    "system": "You are a senior software engineer agent operating in a user's repository.\nGuideline 1: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 2: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 3: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 4: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 5: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 6: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 7: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 8: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 9: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 10: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 11: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 12: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 13: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 14: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 15: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 16: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 17: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 18: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 19: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 20: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 21: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 22: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 23: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 24: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 25: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 26: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 27: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 28: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 29: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 30: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 31: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 32: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 33: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 34: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 35: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 36: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 37: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 38: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 39: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 40: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 41: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 42: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 43: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 44: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 45: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 46: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 47: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 48: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 49: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 50: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 51: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 52: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 53: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 54: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 55: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 56: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 57: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 58: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 59: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 60: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.",
+    "tools": [
+      {
+        "name": "read_file",
+        "description": "Read a file from disk. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      },
+      {
+        "name": "edit_file",
+        "description": "Edit a file. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "patch": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "patch"
+          ]
+        }
+      },
+      {
+        "name": "run_bash",
+        "description": "Run a shell command. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "cmd": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "cmd"
+          ]
+        }
+      },
+      {
+        "name": "grep",
+        "description": "Search the repo. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "jira_create_issue",
+        "description": "Create a Jira issue. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "body"
+          ]
+        }
+      },
+      {
+        "name": "slack_post",
+        "description": "Post to Slack. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "channel": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "channel",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "figma_export",
+        "description": "Export a Figma frame. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "frameId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "frameId"
+          ]
+        }
+      },
+      {
+        "name": "datadog_query",
+        "description": "Query Datadog metrics. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "stripe_refund",
+        "description": "Issue a Stripe refund. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "chargeId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chargeId"
+          ]
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "The build is failing on CI. Fix it."
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me look at the CI logs."
+          },
+          {
+            "type": "tool_use",
+            "name": "run_bash",
+            "input": {
+              "cmd": "cat ci.log"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "TypeError: cannot read 'map' of undefined at build.js:42"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me read build.js."
+          },
+          {
+            "type": "tool_use",
+            "name": "read_file",
+            "input": {
+              "path": "build.js"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 120
+    }
+  },
+  {
+    "model": "claude-sonnet-4-6",
+    "system": "You are a senior software engineer agent operating in a user's repository.\nGuideline 1: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 2: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 3: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 4: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 5: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 6: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 7: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 8: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 9: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 10: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 11: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 12: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 13: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 14: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 15: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 16: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 17: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 18: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 19: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 20: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 21: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 22: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 23: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 24: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 25: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 26: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 27: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 28: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 29: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 30: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 31: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 32: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 33: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 34: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 35: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 36: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 37: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 38: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 39: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 40: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 41: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 42: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 43: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 44: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 45: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 46: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 47: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 48: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 49: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 50: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 51: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 52: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 53: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 54: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 55: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 56: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 57: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 58: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 59: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 60: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.",
+    "tools": [
+      {
+        "name": "read_file",
+        "description": "Read a file from disk. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      },
+      {
+        "name": "edit_file",
+        "description": "Edit a file. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "patch": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "patch"
+          ]
+        }
+      },
+      {
+        "name": "run_bash",
+        "description": "Run a shell command. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "cmd": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "cmd"
+          ]
+        }
+      },
+      {
+        "name": "grep",
+        "description": "Search the repo. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "jira_create_issue",
+        "description": "Create a Jira issue. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "body"
+          ]
+        }
+      },
+      {
+        "name": "slack_post",
+        "description": "Post to Slack. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "channel": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "channel",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "figma_export",
+        "description": "Export a Figma frame. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "frameId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "frameId"
+          ]
+        }
+      },
+      {
+        "name": "datadog_query",
+        "description": "Query Datadog metrics. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "stripe_refund",
+        "description": "Issue a Stripe refund. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "chargeId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chargeId"
+          ]
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "The build is failing on CI. Fix it."
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me look at the CI logs."
+          },
+          {
+            "type": "tool_use",
+            "name": "run_bash",
+            "input": {
+              "cmd": "cat ci.log"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "TypeError: cannot read 'map' of undefined at build.js:42"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me read build.js."
+          },
+          {
+            "type": "tool_use",
+            "name": "read_file",
+            "input": {
+              "path": "build.js"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Searching for the caller."
+          },
+          {
+            "type": "tool_use",
+            "name": "grep",
+            "input": {
+              "query": "buildManifest"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 120
+    }
+  },
+  {
+    "model": "claude-sonnet-4-6",
+    "system": "You are a senior software engineer agent operating in a user's repository.\nGuideline 1: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 2: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 3: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 4: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 5: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 6: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 7: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 8: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 9: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 10: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 11: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 12: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 13: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 14: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 15: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 16: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 17: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 18: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 19: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 20: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 21: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 22: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 23: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 24: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 25: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 26: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 27: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 28: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 29: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 30: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 31: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 32: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 33: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 34: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 35: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 36: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 37: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 38: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 39: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 40: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 41: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 42: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 43: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 44: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 45: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 46: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 47: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 48: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 49: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 50: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 51: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 52: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 53: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 54: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 55: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 56: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 57: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 58: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 59: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.\nGuideline 60: prefer minimal diffs, match surrounding style, never fabricate file paths, run tests before claiming done, explain reasoning succinctly, use the provided tools rather than guessing, and keep the working tree clean.",
+    "tools": [
+      {
+        "name": "read_file",
+        "description": "Read a file from disk. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      },
+      {
+        "name": "edit_file",
+        "description": "Edit a file. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "patch": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "patch"
+          ]
+        }
+      },
+      {
+        "name": "run_bash",
+        "description": "Run a shell command. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "cmd": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "cmd"
+          ]
+        }
+      },
+      {
+        "name": "grep",
+        "description": "Search the repo. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "jira_create_issue",
+        "description": "Create a Jira issue. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "body"
+          ]
+        }
+      },
+      {
+        "name": "slack_post",
+        "description": "Post to Slack. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "channel": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "channel",
+            "text"
+          ]
+        }
+      },
+      {
+        "name": "figma_export",
+        "description": "Export a Figma frame. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "frameId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "frameId"
+          ]
+        }
+      },
+      {
+        "name": "datadog_query",
+        "description": "Query Datadog metrics. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "stripe_refund",
+        "description": "Issue a Stripe refund. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "chargeId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chargeId"
+          ]
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "The build is failing on CI. Fix it."
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me look at the CI logs."
+          },
+          {
+            "type": "tool_use",
+            "name": "run_bash",
+            "input": {
+              "cmd": "cat ci.log"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "TypeError: cannot read 'map' of undefined at build.js:42"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Let me read build.js."
+          },
+          {
+            "type": "tool_use",
+            "name": "read_file",
+            "input": {
+              "path": "build.js"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "Searching for the caller."
+          },
+          {
+            "type": "tool_use",
+            "name": "grep",
+            "input": {
+              "query": "buildManifest"
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "I'll patch the guard."
+          },
+          {
+            "type": "tool_use",
+            "name": "edit_file",
+            "input": {
+              "path": "build.js",
+              "patch": "..."
+            }
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "content": "ok"
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 120
+    }
+  }
+]

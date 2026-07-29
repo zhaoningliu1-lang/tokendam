@@ -1,0 +1,5 @@
+{
+  "maxWastePct": 15,
+  "maxWasteUSDPerCall": 0.01,
+  "failOnSeverity": ["high"]
+}

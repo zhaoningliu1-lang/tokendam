@@ -1,0 +1,230 @@
+#!/usr/bin/env node
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { analyze } from "./core/analyze.js";
+import { renderText } from "./core/format.js";
+import { evaluateCi, renderMarkdown, renderGithub, DEFAULT_CI, type CiConfig } from "./core/ci.js";
+import { renderFixPrompt } from "./core/fixPrompt.js";
+import type { Severity } from "./core/types.js";
+import pc from "picocolors";
+
+const here = dirname(fileURLToPath(import.meta.url));
+
+const HELP = `${pc.bold("tokendam")} — a linter for your LLM token spend
+
+Usage:
+  tokendam init                    Scaffold .tokendam.json + traces/ + CI workflow
+  tokendam <trace.json>            Analyze a trace (OpenAI/Anthropic/LangSmith/…)
+  tokendam --example sd|agent      Run a built-in demo
+  cat trace.json | tokendam        Read a trace from stdin (JSON or JSONL)
+
+Capture a trace with the helper:  import { tap, writeTrace } from "tokendam/capture"
+
+Output:
+  --json                           Emit the raw Report as JSON
+  --format human|markdown|github   Report format (default: human)
+  --fix-prompt                     Emit a fix pack to paste into your coding agent
+  --calls-per-day <n>              Project savings to N calls/day (default 1000)
+
+CI gate (fails the build when waste exceeds budget):
+  --ci                             Exit non-zero if over budget
+  --max-waste <pct>                Budget: max % of spend recoverable (default 25)
+  --max-waste-per-call <usd>       Budget: max recoverable $ per call
+  --fail-on high|medium|low        Fail if any finding at/above this severity
+  (or put maxWastePct / maxWasteUSDPerCall / failOnSeverity in .tokendam.json)
+
+Nothing is uploaded. Analysis runs locally.`;
+
+function readStdin(): string {
+  try {
+    return readFileSync(0, "utf8");
+  } catch {
+    return "";
+  }
+}
+
+function loadExample(name: string): string {
+  const file = name.startsWith("sd") ? "sd-tender-radar.json" : "coding-agent.json";
+  for (const c of [join(here, "..", "examples", file), join(here, "..", "..", "examples", file)]) {
+    try {
+      return readFileSync(c, "utf8");
+    } catch {
+      /* try next */
+    }
+  }
+  throw new Error(`Example not found: ${file}`);
+}
+
+function loadConfig(): CiConfig {
+  try {
+    const raw = readFileSync(join(process.cwd(), ".tokendam.json"), "utf8");
+    const c = JSON.parse(raw);
+    return {
+      maxWastePct: c.maxWastePct,
+      maxWasteUSDPerCall: c.maxWasteUSDPerCall,
+      failOnSeverity: c.failOnSeverity,
+    };
+  } catch {
+    return {};
+  }
+}
+
+function flagVal(args: string[], name: string): string | undefined {
+  const i = args.indexOf(name);
+  return i !== -1 ? args[i + 1] : undefined;
+}
+
+const GH_ACTION = `name: token-budget
+on: [pull_request]
+jobs:
+  tokendam:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      # Your test run should write representative request payloads to traces/*.json
+      # (see the tokendam/capture helper, or log JSON.stringify of your request args).
+      - run: npx tokendam --ci --format github traces/*.json
+`;
+
+const CAPTURE_SNIPPET = `  // Capture a trace with the tokendam/capture helper:
+  //   import { tap, writeTrace } from "tokendam/capture";
+  //   await openai.chat.completions.create(tap({ model, messages, tools }));
+  //   await writeTrace("traces/agent.json");   // then: tokendam traces/agent.json
+  // Or with zero SDK changes, log your request args:
+  //   console.log(JSON.stringify({ model, messages, tools }));`;
+
+function doInit() {
+  const cwd = process.cwd();
+  const write = (p: string, content: string) => {
+    if (existsSync(p)) {
+      console.log(pc.dim(`  exists   ${p}`));
+    } else {
+      writeFileSync(p, content);
+      console.log(pc.green(`  created  ${p}`));
+    }
+  };
+  console.log(pc.bold("tokendam init") + " — scaffolding a token budget + CI gate\n");
+  write(join(cwd, ".tokendam.json"), JSON.stringify({ maxWastePct: 15, failOnSeverity: ["high"] }, null, 2) + "\n");
+  mkdirSync(join(cwd, "traces"), { recursive: true });
+  write(join(cwd, "traces", ".gitkeep"), "");
+  mkdirSync(join(cwd, ".github", "workflows"), { recursive: true });
+  write(join(cwd, ".github", "workflows", "tokendam.yml"), GH_ACTION);
+  console.log("\nNext: capture a trace, then run " + pc.bold("tokendam traces/agent.json") + "\n");
+  console.log(CAPTURE_SNIPPET);
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  if (args.includes("-h") || args.includes("--help")) {
+    console.log(HELP);
+    return;
+  }
+  if (args[0] === "init") {
+    doInit();
+    return;
+  }
+
+  const asJson = args.includes("--json");
+  const ciMode = args.includes("--ci");
+  const format = flagVal(args, "--format") ?? (ciMode ? "github" : "human");
+  const callsPerDay = Number(flagVal(args, "--calls-per-day")) || 1000;
+
+  // Flag values (by INDEX, so a trace file named like a flag value isn't eaten)
+  // must not be treated as the input path.
+  const consumedIdx = new Set<number>();
+  for (const f of ["--format", "--calls-per-day", "--max-waste", "--max-waste-per-call", "--fail-on", "--example"]) {
+    const i = args.indexOf(f);
+    if (i !== -1) consumedIdx.add(i + 1);
+  }
+  const rest = args.filter((a, idx) => !a.startsWith("--") && !consumedIdx.has(idx));
+
+  let raw = "";
+  const exIdx = args.indexOf("--example");
+  if (exIdx !== -1) {
+    raw = loadExample(args[exIdx + 1] ?? "agent");
+  } else if (rest[0]) {
+    raw = readFileSync(rest[0], "utf8");
+  } else {
+    raw = readStdin();
+  }
+  if (!raw.trim()) {
+    console.log(HELP);
+    process.exit(1);
+  }
+
+  let input: unknown;
+  try {
+    input = JSON.parse(raw);
+  } catch {
+    input = raw; // let normalize() handle JSONL
+  }
+
+  let report;
+  try {
+    report = analyze(input);
+  } catch (e) {
+    console.error(pc.red((e as Error).message));
+    process.exit(2);
+  }
+
+  if (asJson) {
+    console.log(JSON.stringify(report, null, 2));
+    return;
+  }
+
+  // --- Fix pack: a prompt to paste into your coding agent ---
+  if (args.includes("--fix-prompt")) {
+    console.log(renderFixPrompt(report, callsPerDay));
+    return;
+  }
+
+  // --- CI gate ---
+  if (ciMode) {
+    const cfg: CiConfig = { ...DEFAULT_CI, ...loadConfig() };
+    // A CI gate must FAIL SAFE: bad flags must error out, never silently pass.
+    const numArg = (name: string, cur?: number): number | undefined => {
+      const v = flagVal(args, name);
+      if (v === undefined) return cur;
+      const n = Number(v);
+      if (!Number.isFinite(n)) {
+        console.error(pc.red(`${name} needs a number, got "${v}"`));
+        process.exit(2);
+      }
+      return n;
+    };
+    cfg.maxWastePct = numArg("--max-waste", cfg.maxWastePct);
+    cfg.maxWasteUSDPerCall = numArg("--max-waste-per-call", cfg.maxWasteUSDPerCall);
+    const fo = flagVal(args, "--fail-on");
+    if (fo !== undefined) {
+      const order = ["high", "medium", "low"] as const;
+      const idx = order.indexOf(fo as (typeof order)[number]);
+      if (idx === -1) {
+        console.error(pc.red(`--fail-on must be high|medium|low, got "${fo}"`));
+        process.exit(2);
+      }
+      cfg.failOnSeverity = order.slice(0, idx + 1) as Severity[];
+    }
+    const result = evaluateCi(report, cfg);
+    if (format === "markdown") console.log(renderMarkdown(report, result, callsPerDay));
+    else if (format === "json") console.log(JSON.stringify({ report, ci: result }, null, 2));
+    else console.log(renderGithub(report, result));
+    process.exit(result.exitCode);
+  }
+
+  // --- Normal report ---
+  if (format === "markdown") {
+    console.log(renderMarkdown(report, undefined, callsPerDay));
+    return;
+  }
+  const text = renderText(report, callsPerDay)
+    .replace(/\[HIGH\]/g, pc.red("[HIGH]"))
+    .replace(/\[MED\]/g, pc.yellow("[MED]"))
+    .replace(/\[LOW\]/g, pc.dim("[LOW]"))
+    .replace(/▶ Potential savings: (\S+)/, (_m, p) => `▶ Potential savings: ${pc.green(pc.bold(p))}`);
+  console.log(text);
+}
+
+main();

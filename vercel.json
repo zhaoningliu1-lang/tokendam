@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build:web",
+  "outputDirectory": "dist-web",
+  "framework": null,
+  "cleanUrls": true,
+  "crons": [
+    { "path": "/api/ops-sentinel", "schedule": "*/15 * * * *" },
+    { "path": "/api/pm-agent", "schedule": "0 16 * * 1" },
+    { "path": "/api/cto-agent", "schedule": "0 16 * * 4" }
+  ]
+}

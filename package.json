@@ -1,6 +1,6 @@
 {
   "name": "tokendam",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A linter for your LLM token spend. Paste your agent's trace, see exactly where you're burning tokens — and how to stop. Runs 100% in your browser, nothing uploaded.",
   "type": "module",
   "bin": {
@@ -39,12 +39,12 @@
   "author": "Johnson Liu",
   "license": "MIT",
   "dependencies": {
-    "gpt-tokenizer": "^2.9.0"
+    "gpt-tokenizer": "^2.9.0",
+    "picocolors": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
     "jsdom": "^29.1.1",
-    "picocolors": "^1.1.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vite": "^6.0.0"

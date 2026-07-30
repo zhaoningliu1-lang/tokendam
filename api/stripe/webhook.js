@@ -36,12 +36,14 @@ function verify(raw, header, secret) {
   return { ok: true };
 }
 
-// Pull the customer-supplied GitHub account out of a checkout session.
+// Pull the customer-supplied GitHub account out of a checkout session. Gating is
+// per ACCOUNT (org/user login), so if they typed "org/repo" we keep just the owner.
 function githubAccountFrom(obj) {
   const fields = obj.custom_fields || [];
   const f = fields.find((x) => /github/i.test(x.key || "") || /github/i.test(x.label?.custom || ""));
   const fromField = f?.text?.value || f?.dropdown?.value;
-  return (fromField || obj.metadata?.github_account || obj.client_reference_id || "").trim();
+  const raw = (fromField || obj.metadata?.github_account || obj.client_reference_id || "").trim();
+  return raw.replace(/^https?:\/\/github\.com\//i, "").split("/")[0].trim();
 }
 
 export default async function handler(req, res) {

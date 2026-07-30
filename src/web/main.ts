@@ -202,7 +202,26 @@ const tap = a =&gt; (globalThis.__td.push(a), a);
     <a href="/pricing">See Pro →</a>
   </div>`;
 
-  reportEl.innerHTML = `${echo}${banner}${sumbox}${projection}${actions}<div class="findings">${findings}</div>${upsell}${notes}`;
+  // Per-agent cost tree — only for traces that carried agent identity.
+  const byAgentBlock = report.byAgent?.length
+    ? `<div style="margin:14px 0;border:1px solid #23262e;border-radius:10px;padding:12px 14px;background:rgba(255,255,255,.02)">
+        <div style="font:600 12px/1.4 'JetBrains Mono',ui-monospace,monospace;color:#8b909b;margin-bottom:9px"># cost by agent — where the spend goes</div>
+        ${report.byAgent
+          .map((a) => {
+            const w = Math.max(4, Math.min(100, a.pctOfSpend));
+            return `<div style="display:flex;align-items:center;gap:10px;margin:5px 0;font:500 13px 'JetBrains Mono',ui-monospace,monospace">
+              <span style="width:38px;text-align:right;color:#5eead4">${a.pctOfSpend.toFixed(0)}%</span>
+              <span style="flex:1;position:relative;height:8px;background:#1a1d23;border-radius:4px;overflow:hidden"><span style="position:absolute;top:0;left:0;bottom:0;width:${w}%;background:linear-gradient(90deg,#5eead4,#2f6f65)"></span></span>
+              <span style="min-width:110px;color:#e6e8ec;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.id)}</span>
+              <span class="dol">${usd(a.usd)}</span>
+              <span style="color:#565c68;font-size:11px;white-space:nowrap">${a.calls}× · ${a.tokens.toLocaleString()} tok</span>
+            </div>`;
+          })
+          .join("")}
+      </div>`
+    : "";
+
+  reportEl.innerHTML = `${echo}${banner}${sumbox}${projection}${byAgentBlock}${actions}<div class="findings">${findings}</div>${upsell}${notes}`;
   reportEl.classList.remove("hidden");
   reportEl.scrollIntoView({ behavior: "smooth", block: "start" });
 

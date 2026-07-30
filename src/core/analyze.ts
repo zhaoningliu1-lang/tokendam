@@ -1,4 +1,4 @@
-import type { NormCall, NormTrace, Report, Finding } from "./types.js";
+import type { NormCall, NormTrace, Report, Finding, AgentCost } from "./types.js";
 import { normalize } from "./normalize.js";
 import { priceFor } from "./pricing.js";
 import { isEstimatedVendor } from "./tokens.js";
@@ -38,6 +38,7 @@ export function analyze(input: unknown): Report {
   let totalOutputTokens = 0;
   let totalCachedTokens = 0;
   let totalUSD = 0;
+  const agentAgg = new Map<string, { calls: number; tokens: number; usd: number }>();
   for (const c of trace.calls) {
     const p = c.price;
     const inTok = callInputTokens(c);
@@ -46,10 +47,20 @@ export function analyze(input: unknown): Report {
     // completion_tokens already includes reasoning tokens; only fall back to
     // reasoningTokens when no output count was reported.
     const outTok = c.usage?.outputTokens ?? c.usage?.reasoningTokens ?? 0;
+    const callUSD =
+      ((inTok - cached) * p.input + cached * p.cachedInput + outTok * p.output) / 1_000_000;
     totalInputTokens += inTok;
     totalOutputTokens += outTok;
     totalCachedTokens += cached;
-    totalUSD += ((inTok - cached) * p.input + cached * p.cachedInput + outTok * p.output) / 1_000_000;
+    totalUSD += callUSD;
+    // Per-agent rollup — only when the trace carried agent identity.
+    if (c.agentId) {
+      const a = agentAgg.get(c.agentId) ?? { calls: 0, tokens: 0, usd: 0 };
+      a.calls += 1;
+      a.tokens += inTok + outTok;
+      a.usd += callUSD;
+      agentAgg.set(c.agentId, a);
+    }
   }
 
   const findings: Finding[] = [
@@ -78,6 +89,20 @@ export function analyze(input: unknown): Report {
   const wastedTokens = Math.min(rawWastedTokens, Math.round(totalTokens * 0.9));
   const effectiveTokens = totalTokens - wastedTokens;
   const wasteRatePct = totalTokens > 0 ? (wastedTokens / totalTokens) * 100 : 0;
+
+  // Per-agent cost attribution — which agent/step burned the spend. Present only
+  // when the trace carried agent identity (LangGraph/LangSmith/Langfuse/tap meta).
+  const byAgent: AgentCost[] | undefined = agentAgg.size
+    ? [...agentAgg.entries()]
+        .map(([id, a]) => ({
+          id,
+          calls: a.calls,
+          tokens: a.tokens,
+          usd: a.usd,
+          pctOfSpend: totalUSD > 0 ? (a.usd / totalUSD) * 100 : 0,
+        }))
+        .sort((x, y) => y.usd - x.usd)
+    : undefined;
 
   const notes: string[] = [...trace.notes];
   if (models.some((m) => isEstimatedVendor(m)))
@@ -116,6 +141,7 @@ export function analyze(input: unknown): Report {
     perCallUSD: trace.calls.length ? totalUSD / trace.calls.length : 0,
     perCallSavableUSD: trace.calls.length ? savableUSD / trace.calls.length : 0,
     findings,
+    byAgent,
     notes,
   };
 }

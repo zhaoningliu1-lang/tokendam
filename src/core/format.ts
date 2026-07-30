@@ -50,6 +50,18 @@ export function renderText(report: Report, callsPerDay = 1000): string {
   L.push(BAR);
   L.push("");
 
+  if (report.byAgent?.length) {
+    L.push("  Cost by agent  (which agent/step is burning spend)");
+    for (const a of report.byAgent) {
+      L.push(
+        `    ${(a.pctOfSpend.toFixed(0) + "%").padStart(4)}  ${usd(a.usd).padEnd(9)}` +
+          `  ${String(a.calls).padStart(3)} call(s) · ${a.tokens.toLocaleString()} tok   ${a.id}`
+      );
+    }
+    L.push(BAR);
+    L.push("");
+  }
+
   if (!report.findings.length) {
     L.push("  No findings.");
   }

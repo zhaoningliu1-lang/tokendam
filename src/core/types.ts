@@ -50,6 +50,13 @@ export interface NormCall {
   thinkingBudget?: number;
   /** True if the request asked for structured output (response_format / json_schema). */
   structuredOutput?: boolean;
+  /** Agent/step identity — pulled from a LangGraph node, LangSmith run, Langfuse
+   *  observation, or a tap() `meta`. Enables per-agent / per-step cost attribution.
+   *  All optional; absent for plain single-model traces (behavior unchanged). */
+  agentId?: string;
+  stepId?: string;
+  parentId?: string;
+  turnIndex?: number;
 }
 
 export interface NormTrace {
@@ -84,6 +91,17 @@ export interface Finding {
   secondary?: boolean;
 }
 
+/** Per-agent (or per-step) cost rollup for multi-agent traces. */
+export interface AgentCost {
+  /** agentId (or a step label when grouping by step). */
+  id: string;
+  calls: number;
+  tokens: number;
+  usd: number;
+  /** Share of the trace's total spend (0-100). */
+  pctOfSpend: number;
+}
+
 export interface Report {
   vendor: string;
   model: string;
@@ -109,5 +127,8 @@ export interface Report {
   perCallUSD: number;
   perCallSavableUSD: number;
   findings: Finding[];
+  /** Per-agent cost rollup — present only when the trace carried agent/step
+   *  identity. Sorted by spend desc. */
+  byAgent?: AgentCost[];
   notes: string[];
 }

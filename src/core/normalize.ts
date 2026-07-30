@@ -144,6 +144,10 @@ function normalizeCall(call: Any): NormCall {
       call.text?.format ||
       call.tools?.some?.((t: Any) => t?.type === "json_schema")
     ),
+    agentId: call._meta?.agentId,
+    stepId: call._meta?.stepId,
+    parentId: call._meta?.parentId,
+    turnIndex: call._meta?.turnIndex,
   };
 }
 
@@ -291,6 +295,26 @@ function adaptElement(el: Any): Any | null {
   return null;
 }
 
+/** Best-effort agent/step identity from common agent-framework exports
+ *  (LangGraph node, LangSmith run, Langfuse observation, or a tap() `meta`).
+ *  Returns undefined for plain traces so behavior there is unchanged. */
+function extractMeta(el: Any): Pick<NormCall, "agentId" | "stepId" | "parentId" | "turnIndex"> | undefined {
+  if (!el || typeof el !== "object") return undefined;
+  const md = el.extra?.metadata ?? el.metadata ?? {};
+  const m = el.meta ?? {};
+  const agentId = md.langgraph_node ?? m.agentId ?? m.agent ?? el.agentId ?? el.agent ?? el.node ?? el.name;
+  const stepId = m.stepId ?? m.step ?? el.stepId ?? el.step ?? el.id ?? el.run_id ?? el.observationId;
+  const parentId = m.parentId ?? el.parentId ?? el.parent_run_id ?? el.parentObservationId ?? el.parent_id;
+  const turnRaw = m.turnIndex ?? m.turn ?? el.turnIndex ?? el.turn ?? el.iteration;
+  const turnIndex = turnRaw != null && Number.isFinite(Number(turnRaw)) ? Number(turnRaw) : undefined;
+  const out: Any = {};
+  if (agentId != null) out.agentId = String(agentId);
+  if (stepId != null) out.stepId = String(stepId);
+  if (parentId != null) out.parentId = String(parentId);
+  if (turnIndex != null) out.turnIndex = turnIndex;
+  return Object.keys(out).length ? out : undefined;
+}
+
 /** Pull an array of raw (already OpenAI/Anthropic-shaped) call objects out of
  * whatever the user pasted, running format adapters as needed. */
 function extractRawCalls(input: Any): Any[] {
@@ -326,7 +350,18 @@ function extractRawCalls(input: Any): Any[] {
     arr = [];
   }
 
-  const adapted = arr.map(adaptElement).filter(Boolean) as Any[];
+  const adapted = arr
+    .map((el) => {
+      const body = adaptElement(el);
+      // Carry agent/step identity from the SOURCE element onto the adapted body
+      // (adapters strip it), so normalizeCall can attribute cost per agent.
+      if (body && typeof body === "object") {
+        const meta = extractMeta(el);
+        if (meta) (body as Any)._meta = meta;
+      }
+      return body;
+    })
+    .filter(Boolean) as Any[];
   if (!adapted.length) {
     throw new Error(
       "Couldn't find any LLM calls. Paste OpenAI/Anthropic request bodies, an array of them, or an export from LangSmith / Langfuse / OpenAI Batch / Vercel AI SDK."

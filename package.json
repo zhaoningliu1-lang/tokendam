@@ -1,6 +1,6 @@
 {
   "name": "tokendam",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A linter for your LLM token spend. Paste your agent's trace, see exactly where you're burning tokens — and how to stop. Runs 100% in your browser, nothing uploaded.",
   "type": "module",
   "bin": {

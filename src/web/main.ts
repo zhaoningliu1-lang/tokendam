@@ -141,6 +141,12 @@ function render(core: Core, report: Report) {
     line("spend", `${usd(report.totalUSD)} / run`),
     line("savings", saveVal),
     line("input", `${report.totalInputTokens.toLocaleString()} tok`),
+    line(
+      "effective",
+      report.wasteRatePct > 0
+        ? `${report.wasteRatePct.toFixed(0)}% wasted · ${(100 - report.wasteRatePct).toFixed(0)}% did work`
+        : "all working"
+    ),
     boxBot,
   ].join("\n");
   const sumbox = `<div class="sumbox">${esc(boxText)

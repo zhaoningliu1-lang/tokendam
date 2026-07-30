@@ -38,6 +38,7 @@ Output:
 CI gate (fails the build when waste exceeds budget):
   --ci                             Exit non-zero if over budget
   --max-waste <pct>                Budget: max % of spend recoverable (default 25)
+  --max-waste-rate <pct>           Budget: max % of TOKENS wasted (Effective Tokens)
   --max-waste-per-call <usd>       Budget: max recoverable $ per call
   --fail-on high|medium|low        Fail if any finding at/above this severity
   --pr-comment                     Post the audit + fix pack as a PR comment (GitHub Actions)
@@ -71,6 +72,7 @@ function loadConfig(): CiConfig {
     const c = JSON.parse(raw);
     return {
       maxWastePct: c.maxWastePct,
+      maxWasteRatePct: c.maxWasteRatePct,
       maxWasteUSDPerCall: c.maxWasteUSDPerCall,
       failOnSeverity: c.failOnSeverity,
     };
@@ -344,7 +346,7 @@ async function main() {
   // Flag values (by INDEX, so a trace file named like a flag value isn't eaten)
   // must not be treated as the input path.
   const consumedIdx = new Set<number>();
-  for (const f of ["--format", "--calls-per-day", "--max-waste", "--max-waste-per-call", "--fail-on", "--example"]) {
+  for (const f of ["--format", "--calls-per-day", "--max-waste", "--max-waste-rate", "--max-waste-per-call", "--fail-on", "--example"]) {
     const i = args.indexOf(f);
     if (i !== -1) consumedIdx.add(i + 1);
   }
@@ -407,6 +409,7 @@ async function main() {
       return n;
     };
     cfg.maxWastePct = numArg("--max-waste", cfg.maxWastePct);
+    cfg.maxWasteRatePct = numArg("--max-waste-rate", cfg.maxWasteRatePct);
     cfg.maxWasteUSDPerCall = numArg("--max-waste-per-call", cfg.maxWasteUSDPerCall);
     const fo = flagVal(args, "--fail-on");
     if (fo !== undefined) {

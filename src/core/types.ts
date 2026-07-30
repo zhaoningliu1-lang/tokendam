@@ -95,6 +95,16 @@ export interface Report {
   /** Sum of wastedUSD across findings (capped at totalUSD). */
   savableUSD: number;
   savablePct: number;
+  /** Total tokens (input + output) across the trace. */
+  totalTokens: number;
+  /** Tokens flagged as waste (non-secondary findings, capped) — the token-level
+   *  analog of savableUSD. */
+  wastedTokens: number;
+  /** Tokens that did real work = totalTokens − wastedTokens. */
+  effectiveTokens: number;
+  /** Waste as a share of all tokens — powers the "X% of your tokens did nothing"
+   *  headline and the CI --max-waste-rate gate. */
+  wasteRatePct: number;
   /** Per-call averages, for projecting one trace to production volume. */
   perCallUSD: number;
   perCallSavableUSD: number;

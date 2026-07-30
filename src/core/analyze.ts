@@ -70,6 +70,15 @@ export function analyze(input: unknown): Report {
   const savableUSD = Math.min(rawSavable, totalUSD * 0.9);
   const savablePct = totalUSD > 0 ? (savableUSD / totalUSD) * 100 : 0;
 
+  // Token-level analog of the $ savings, for the "Effective Tokens" headline:
+  // how many of your tokens actually did work vs. were structural waste. Same
+  // secondary-exclusion + 90% cap so the number stays a credible floor.
+  const totalTokens = totalInputTokens + totalOutputTokens;
+  const rawWastedTokens = findings.reduce((s, f) => s + (f.secondary ? 0 : f.wastedTokens), 0);
+  const wastedTokens = Math.min(rawWastedTokens, Math.round(totalTokens * 0.9));
+  const effectiveTokens = totalTokens - wastedTokens;
+  const wasteRatePct = totalTokens > 0 ? (wastedTokens / totalTokens) * 100 : 0;
+
   const notes: string[] = [...trace.notes];
   if (models.some((m) => isEstimatedVendor(m)))
     notes.push(
@@ -100,6 +109,10 @@ export function analyze(input: unknown): Report {
     totalUSD,
     savableUSD,
     savablePct,
+    totalTokens,
+    wastedTokens,
+    effectiveTokens,
+    wasteRatePct,
     perCallUSD: trace.calls.length ? totalUSD / trace.calls.length : 0,
     perCallSavableUSD: trace.calls.length ? savableUSD / trace.calls.length : 0,
     findings,

@@ -7,8 +7,11 @@ import { usd } from "./pricing.js";
 // build fails when a prompt change makes token waste regress past a threshold.
 
 export interface CiConfig {
-  /** Fail if savablePct exceeds this (0-100). */
+  /** Fail if savablePct ($ waste as a share of spend) exceeds this (0-100). */
   maxWastePct?: number;
+  /** Fail if wasteRatePct (share of TOKENS that were waste) exceeds this (0-100).
+   *  The "Effective Tokens" gate — volume-independent, so it's stable as traffic grows. */
+  maxWasteRatePct?: number;
   /** Fail if per-call recoverable waste exceeds this many USD. */
   maxWasteUSDPerCall?: number;
   /** Fail if any finding at these severities is present. */
@@ -28,6 +31,10 @@ export function evaluateCi(report: Report, cfg: CiConfig): CiResult {
   if (cfg.maxWastePct != null && report.savablePct > cfg.maxWastePct)
     violations.push(
       `token waste ${report.savablePct.toFixed(0)}% exceeds budget of ${cfg.maxWastePct}%`
+    );
+  if (cfg.maxWasteRatePct != null && report.wasteRatePct > cfg.maxWasteRatePct)
+    violations.push(
+      `effective-token waste ${report.wasteRatePct.toFixed(0)}% of tokens exceeds budget of ${cfg.maxWasteRatePct}%`
     );
   if (cfg.maxWasteUSDPerCall != null && report.perCallSavableUSD > cfg.maxWasteUSDPerCall)
     violations.push(

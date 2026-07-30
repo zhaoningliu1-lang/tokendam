@@ -36,7 +36,7 @@ Live: https://tokendam.vercel.app · CLI: `npx tokendam`
 > is boringly consistent: the same 2–3k-token system prompt resent at full price every call, a
 > whole scraped page dumped into context, 30 MCP tools the model never touches. TokenDam reads
 > a trace and points at each one with a dollar figure and a fix. It's fully client-side — your
-> prompts never leave the tab — and open source (MIT). Would love to know what waste it finds
+> prompts never leave the tab — and source-available (FSL-1.1-MIT). Would love to know what waste it finds
 > in *your* traces.
 
 ## Detectors (what it catches)

@@ -103,4 +103,4 @@ the same code powers the CLI and the browser app.
 
 ## License
 
-MIT. Not affiliated with OpenAI, Anthropic, or any provider.
+Fair Source — [FSL-1.1-MIT](LICENSE) (converts to the MIT license two years after each release). Not affiliated with OpenAI, Anthropic, or any provider.

@@ -8,7 +8,7 @@
 // Uses the SAME analysis engine as the CLI/web (imported from the built core).
 
 import { verifySignature, installationToken, gh } from "./_gh.js";
-import { isProAccount } from "./_pro.js";
+import { isPro } from "./_pro.js";
 import { pushAudit } from "../_store.js";
 import { analyze, renderMarkdown, renderFixPrompt, applyFixes } from "../../dist/core/index.js";
 
@@ -202,7 +202,7 @@ export default async function handler(req, res) {
 
     const report = analyze(trace);
     const monthlyUSD = report.perCallSavableUSD * CALLS_PER_DAY * 30;
-    const pro = isProAccount(owner);
+    const pro = await isPro(owner);
 
     // Record the audit for the cost-trend dashboard (no-op if KV unconfigured).
     try {

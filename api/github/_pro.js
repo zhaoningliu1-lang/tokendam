@@ -15,8 +15,23 @@ const LIST = (process.env.TOKENDAM_PRO_ACCOUNTS || "")
   .map((s) => s.trim().toLowerCase())
   .filter(Boolean);
 
+// Synchronous env-allowlist check (concierge / manual comps).
 export function isProAccount(login) {
   return LIST.includes(String(login || "").toLowerCase());
+}
+
+// Full check: env allowlist OR an active Stripe subscription recorded in KV by the
+// Stripe webhook. This is what makes Pro self-serve — a paid customer is entitled
+// the moment their checkout completes, with no manual redeploy. Falls back to the
+// env allowlist if KV is unconfigured.
+export async function isPro(login) {
+  if (isProAccount(login)) return true;
+  try {
+    const { isProInStore } = await import("../_store.js");
+    return await isProInStore(login);
+  } catch {
+    return false;
+  }
 }
 
 export function proAccountCount() {

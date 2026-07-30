@@ -58,9 +58,19 @@ logins, case-insensitive) — see `api/github/_pro.js`:
 - **Everyone else** → a one-line free preview: headline `$/month` waste + issue count
   + an upgrade CTA to `tokendam.dev/pricing`. A funnel, not a wall.
 
-Onboarding is manual-first (right for this stage): a customer pays via the Stripe
-link → add their GitHub org/user to `TOKENDAM_PRO_ACCOUNTS` → redeploy. Swap that one
-function for a DB/Stripe lookup once volume justifies it — the webhook doesn't change.
+Two ways an account becomes Pro (`isPro()` in `api/github/_pro.js` = either):
+1. **Concierge / comps** — add the GitHub login to `TOKENDAM_PRO_ACCOUNTS` (env) + redeploy.
+2. **Self-serve (Stripe → KV)** — `api/stripe/webhook.js` records the customer's GitHub
+   account as active in KV the moment checkout completes; no redeploy. This closes the
+   "paid but got nothing" gap.
+
+### Wire self-serve billing (Stripe)
+1. On the Stripe **Payment Link**, add a **custom field** (text) with key `github_account`,
+   labelled e.g. "Your GitHub org or username" — this is who gets entitled.
+2. Stripe → Developers → **Webhooks** → add endpoint `https://tokendam.dev/api/stripe/webhook`,
+   subscribe to `checkout.session.completed` and `customer.subscription.deleted`.
+3. Copy the endpoint's **Signing secret** → set Vercel env `STRIPE_WEBHOOK_SECRET` → redeploy.
+Requires KV (same store as the dashboard). Dormant/no-op until `STRIPE_WEBHOOK_SECRET` is set.
 
 ## Cost-trend dashboard (Phase 2)
 

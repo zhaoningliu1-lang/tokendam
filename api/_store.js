@@ -51,6 +51,30 @@ export async function getAudits(repo) {
     .reverse();
 }
 
+// --- Pro subscription state (set by the Stripe webhook, read by gating) ---
+const proKey = (login) => `td:pro:${String(login).toLowerCase()}`;
+
+export async function setPro(login, data) {
+  if (!storeEnabled()) return;
+  await cmd(["SET", proKey(login), JSON.stringify({ ...data, at: data.at || "" })]);
+}
+
+export async function getPro(login) {
+  if (!storeEnabled()) return null;
+  const v = await cmd(["GET", proKey(login)]);
+  if (!v) return null;
+  try {
+    return JSON.parse(v);
+  } catch {
+    return null;
+  }
+}
+
+export async function isProInStore(login) {
+  const p = await getPro(login);
+  return Boolean(p && p.status === "active");
+}
+
 export async function listRepos() {
   if (!storeEnabled()) return [];
   return (await cmd(["SMEMBERS", "td:repos"])) || [];

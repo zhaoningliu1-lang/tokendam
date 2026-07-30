@@ -35,6 +35,25 @@ ok(
 const plain = analyze([{ model: "gpt-4o", messages: [{ role: "user", content: "hi" }] }]);
 ok("plain trace → no byAgent (behavior unchanged)", plain.byAgent === undefined);
 
+// --- agentLoopWaste: one agent invoked >= 4 times is a runaway loop ---
+const loop = analyze(Array.from({ length: 6 }, (_, i) => mk("worker", "gpt-4o", long + " iter " + i)));
+const loopF = loop.findings.find((f) => f.detector === "agent-loop-waste");
+ok("agent-loop-waste fires on a 6x agent loop", !!loopF);
+ok("loop finding names the agent + count", !!loopF && /worker/.test(loopF.title) && /6/.test(loopF.title));
+ok("loop finding carries recoverable $", (loopF?.wastedUSD ?? 0) > 0);
+ok("6x loop is medium (>=8 would be high)", loopF?.severity === "medium");
+const under = analyze(Array.from({ length: 3 }, () => mk("worker", "gpt-4o", long)));
+ok("no loop finding under threshold (3x)", !under.findings.some((f) => f.detector === "agent-loop-waste"));
+
+// --- stepCostOutlier: one dominating step among small ones ---
+const outlier = analyze([
+  mk("a", "gpt-4o-mini", "tiny"),
+  mk("b", "gpt-4o-mini", "tiny two"),
+  mk("c", "gpt-4o-mini", "tiny three"),
+  mk("big", "gpt-4o", long + long + long),
+]);
+ok("step-cost-outlier fires on a dominating step", outlier.findings.some((f) => f.detector === "step-cost-outlier"));
+
 if (r.byAgent)
   console.log(
     "  →",

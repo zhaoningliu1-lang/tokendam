@@ -12,6 +12,7 @@ import { modelOverkill } from "./detectors/modelOverkill.js";
 import { duplicateRequests } from "./detectors/duplicateRequests.js";
 import { agentLoopWaste } from "./detectors/agentLoopWaste.js";
 import { stepCostOutlier } from "./detectors/stepCostOutlier.js";
+import { batchOpportunity } from "./detectors/batchOpportunity.js";
 
 const SEV_ORDER = { high: 0, medium: 1, low: 2 } as const;
 
@@ -76,6 +77,7 @@ export function analyze(input: unknown): Report {
     ...duplicateRequests(trace),
     ...agentLoopWaste(trace),
     ...stepCostOutlier(trace),
+    ...batchOpportunity(trace),
   ].sort((a, b) => SEV_ORDER[a.severity] - SEV_ORDER[b.severity] || b.wastedUSD - a.wastedUSD);
 
   // Savings can conceptually overlap between detectors; cap at 90% of spend so

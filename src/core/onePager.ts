@@ -27,10 +27,11 @@ export function renderOnePager(report: Report, callsPerDay = 1000): string {
   const perCallSave = report.perCallSavableUSD;
   const monthly = perCallSave * callsPerDay * 30;
   const annual = perCallSave * callsPerDay * 365;
+  const monthlySpend = report.perCallUSD * callsPerDay * 30;
   const summary =
     report.findings.length === 0
       ? "No material token waste found — this workload is already well optimized."
-      : `Across a representative sample of ${report.numCalls} LLM call(s), TokenDam found ${report.findings.length} source(s) of token waste totaling about ${report.savablePct.toFixed(0)}% of spend. At ${callsPerDay.toLocaleString()} calls/day that is roughly ${money(monthly)}/month (${money(annual)}/year) recoverable without changing model behavior.`;
+      : `Across a representative sample of ${report.numCalls} LLM call(s), about ${report.wasteRatePct.toFixed(0)}% of tokens did no real work. TokenDam found ${report.findings.length} source(s) of waste totaling ~${report.savablePct.toFixed(0)}% of spend — roughly ${money(monthly)}/month (${money(annual)}/year) recoverable at ${callsPerDay.toLocaleString()} calls/day, without changing model behavior.`;
 
   // Reconcile: the per-finding "gross waste" figures sum to more than the headline
   // because the total is NET (discounted for prompt caching + capped for overlap).
@@ -60,6 +61,21 @@ export function renderOnePager(report: Report, callsPerDay = 1000): string {
 
   const notes = report.notes.map((n) => `<li>${esc(n)}</li>`).join("");
 
+  // Cost centers — CFO view of which agent/step drives spend (only when the trace
+  // carried agent identity). Monthly figure = the agent's share of projected spend.
+  const costCenters = report.byAgent?.length
+    ? `<h3 style="margin:26px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#374151">Cost centers — spend by agent</h3>
+  <table>
+    <thead><tr><th>Agent / step</th><th style="text-align:right">Calls</th><th style="text-align:right">Tokens</th><th style="text-align:right">Share</th><th style="text-align:right">Spend / mo</th></tr></thead>
+    <tbody>${report.byAgent
+      .map(
+        (a) =>
+          `<tr><td><b>${esc(a.id)}</b></td><td style="text-align:right">${a.calls}</td><td style="text-align:right">${a.tokens.toLocaleString()}</td><td style="text-align:right">${a.pctOfSpend.toFixed(0)}%</td><td style="text-align:right;font-weight:600">${money((a.pctOfSpend / 100) * monthlySpend)}/mo</td></tr>`
+      )
+      .join("")}</tbody>
+  </table>`
+    : "";
+
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TokenDam — token-cost report</title>
 <style>
@@ -75,21 +91,22 @@ export function renderOnePager(report: Report, callsPerDay = 1000): string {
 <body><div class="page">
   <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #111827;padding-bottom:12px">
     <div>
-      <h1>TokenDam — LLM token-cost report</h1>
-      <div class="muted" style="margin-top:4px">${esc(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }))} · prepared for the <b>${esc(report.model || report.vendor)}</b> workload</div>
+      <h1>TokenDam — Token P&amp;L</h1>
+      <div class="muted" style="margin-top:4px">${esc(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }))} · the token profit-and-loss for the <b>${esc(report.model || report.vendor)}</b> workload</div>
     </div>
     <div class="muted">model: <b>${esc(report.model || report.vendor)}</b></div>
   </div>
 
   <div style="display:flex;gap:12px;margin:22px 0">
+    ${stat("Spend / month", money(monthlySpend))}
     ${stat("Recoverable / month", money(monthly), true)}
+    ${stat("Waste rate", report.wasteRatePct > 0 ? report.wasteRatePct.toFixed(0) + "% of tokens" : "—")}
     ${stat("Recoverable / year", money(annual), true)}
-    ${stat("Share of spend", report.savablePct.toFixed(0) + "%")}
-    ${stat("Calls sampled", String(report.numCalls))}
   </div>
 
   <p style="font-size:15px;line-height:1.6">${esc(summary)}</p>
 
+  ${costCenters}
   <h3 style="margin:26px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#374151">Findings</h3>
   <table>
     <thead><tr><th>Sev</th><th>Issue &amp; recommended fix</th><th style="text-align:right">Waste</th><th style="text-align:right">Recoverable / mo</th></tr></thead>

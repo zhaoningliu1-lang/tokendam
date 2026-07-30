@@ -9,6 +9,7 @@ import { renderFixPrompt, renderFixPlan } from "./core/fixPrompt.js";
 import { diffReports, renderDiffText } from "./core/diff.js";
 import { renderOnePager } from "./core/onePager.js";
 import { applyFixes } from "./core/fix.js";
+import { fetchBill, renderBill } from "./usage.js";
 import type { Severity } from "./core/types.js";
 import pc from "picocolors";
 
@@ -22,6 +23,7 @@ Usage:
   tokendam <trace.json>            Analyze a trace (OpenAI/Anthropic/LangSmith/…)
   tokendam diff <before> <after>   Deterministic before/after cost regression (CI)
   tokendam fix <trace.json> [--apply]  Apply the safe prompt-cache fix in place (.bak kept)
+  tokendam bill --provider openai|anthropic   Your REAL daily spend (uses your admin key, local)
   tokendam --example sd|agent      Run a built-in demo
   cat trace.json | tokendam        Read a trace from stdin (JSON or JSONL)
 
@@ -246,6 +248,40 @@ async function main() {
         .replace(/IMPROVED|✓.*/g, (m) => pc.green(m))
     );
     process.exit(result.exitCode);
+  }
+
+  // --- bill: pull your REAL provider spend (measured, not estimated) ---
+  // Uses YOUR read-only admin key locally — nothing is uploaded to us. This is the
+  // closed-loop half of TokenDam: estimate the waste, then prove the real drop.
+  if (args[0] === "bill") {
+    const provider = (flagVal(args, "--provider") || "").toLowerCase();
+    if (provider !== "openai" && provider !== "anthropic") {
+      console.error(pc.red("Usage: tokendam bill --provider openai|anthropic [--days 30] [--key <admin-key>]"));
+      console.error(pc.dim("  Key is read from --key or env OPENAI_ADMIN_KEY / ANTHROPIC_ADMIN_KEY."));
+      process.exit(2);
+    }
+    const key =
+      flagVal(args, "--key") ||
+      process.env[provider === "openai" ? "OPENAI_ADMIN_KEY" : "ANTHROPIC_ADMIN_KEY"] ||
+      "";
+    if (!key) {
+      console.error(
+        pc.red(
+          `No admin key. Set ${provider === "openai" ? "OPENAI_ADMIN_KEY" : "ANTHROPIC_ADMIN_KEY"} (a read-only org admin key) or pass --key.`
+        )
+      );
+      process.exit(2);
+    }
+    const days = Math.max(1, Math.min(180, Number(flagVal(args, "--days")) || 30));
+    try {
+      const bill = await fetchBill(provider as "openai" | "anthropic", key, days);
+      console.log(renderBill(bill));
+    } catch (e) {
+      console.error(pc.red(`Couldn't fetch ${provider} costs — ${(e as Error).message}`));
+      console.error(pc.dim("  The key must be an ORG admin key with usage/cost read scope (not a regular API key)."));
+      process.exit(2);
+    }
+    return;
   }
 
   // --- fix: actually APPLY the safe, behavior-preserving fixes (prompt caching) ---

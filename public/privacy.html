@@ -30,9 +30,9 @@
     <div class="wrap">
       <a class="back" href="/">← ~/agent $ cd ..</a>
       <h1>Privacy Policy</h1>
-      <div class="eff">Effective 2026-07-29 · TokenDam</div>
+      <div class="eff">Effective 2026-07-30 · TokenDam</div>
 
-      <div class="tldr"><b>TL;DR —</b> Your traces and prompts <b>never leave your browser</b>. TokenDam analyzes them entirely on your device. We have no account system, run no analytics, and never receive, store, or log the content you paste.</div>
+      <div class="tldr"><b>TL;DR —</b> Your traces and prompts <b>never leave your browser</b> — TokenDam analyzes them entirely on your device, and we never receive, store, or log the content you paste. There is no account system. The only thing we measure is <b>anonymous, content-free usage</b>: cookieless page analytics and a counter that an analysis ran — a number, never <em>what</em> you analyzed.</div>
 
       <h2>What we don't collect</h2>
       <p>TokenDam's analysis runs <b>100% client-side</b> (in your browser) or locally (the CLI on your machine). Specifically, we do <b>not</b> collect, transmit, store, or log:</p>
@@ -40,13 +40,21 @@
         <li>the traces, prompts, tool schemas, or any content you paste or analyze;</li>
         <li>the analysis results ($ figures, findings, fix prompts);</li>
         <li>accounts, emails, names, or any personal information (there is no sign-up);</li>
-        <li>cookies, local analytics, fingerprinting, or third-party trackers.</li>
+        <li>cookies, cross-site trackers, device fingerprints, or any profile of you as an individual.</li>
       </ul>
+
+      <h2>What we do measure (anonymously)</h2>
+      <p>So we can tell whether TokenDam is actually useful, we collect two <b>aggregate, content-free</b> signals. Neither can see your trace, your prompts, or your results, and neither builds a profile of you:</p>
+      <ul>
+        <li><b>Cookieless page analytics</b> (Vercel Web Analytics): counts page views and where visitors arrived from (e.g. a link on X or Reddit). No cookies, no cross-site tracking, no fingerprinting — just aggregate totals.</li>
+        <li><b>A content-free analysis counter.</b> When you run an analysis, the page increments an anonymous number and records only <em>which button</em> started it (the example, an upload, or your own paste) — so we can tell real use from demo clicks. It sends <b>none</b> of your pasted content, none of the findings, and nothing that identifies you.</li>
+      </ul>
+      <p>That is the entire extent of it, and only in the web app — the <code>tokendam</code> CLI still makes no network calls at all. The guarantee at the top holds without exception: <b>the content you analyze never leaves your browser.</b></p>
 
       <h2>The only third parties involved</h2>
       <p>To be precise and honest, loading the web page itself involves two ordinary web requests that — like visiting any website — reveal your IP address to the host, but <b>never see your trace content</b>:</p>
       <ul>
-        <li><b>Vercel</b> serves the static page. Its standard edge logs may record the IP address and timestamp of a page request (not its contents). See Vercel's privacy policy.</li>
+        <li><b>Vercel</b> serves the static page and provides the cookieless Web Analytics described above. Its standard edge logs may record the IP address and timestamp of a page request (not its contents). See Vercel's privacy policy.</li>
         <li><b>Google Fonts</b> serves the page's typeface, which means Google receives your IP as part of delivering the font. It receives nothing about your traces.</li>
       </ul>
       <p>That's the complete list. There is no backend that your trace data is sent to — because there isn't one. The <code>tokendam</code> CLI makes no network calls at all when analyzing.</p>
@@ -63,7 +71,7 @@
       <h2>Contact</h2>
       <p>Questions: <a href="mailto:hello@avantia2a.com">hello@avantia2a.com</a>.</p>
 
-      <div class="note"># This policy covers the free, zero-upload web app and CLI. Any future opt-in feature that processes your data at runtime (e.g. a proxy) will be governed by a separate, clearly-consented data-processing agreement.</div>
+      <div class="note"># This policy covers the free, client-side web app and CLI. Any future opt-in feature that processes your data at runtime (e.g. a proxy) will be governed by a separate, clearly-consented data-processing agreement.</div>
     </div>
   </body>
 </html>

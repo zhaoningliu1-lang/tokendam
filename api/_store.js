@@ -79,3 +79,38 @@ export async function listRepos() {
   if (!storeEnabled()) return [];
   return (await cmd(["SMEMBERS", "td:repos"])) || [];
 }
+
+// --- Anonymous, content-free usage counters (see /api/hit) ---------------
+// We store COUNTS ONLY. Never the pasted trace, never prompts, never IP/UA.
+// `source` is which button ran the analysis (paste | example | file) — that's
+// a UI signal, not user content — so we can tell real usage from demo clicks.
+const daystamp = () => new Date().toISOString().slice(0, 10); // YYYY-MM-DD (UTC)
+
+export async function bumpHit(source = "unknown") {
+  if (!storeEnabled()) return;
+  const src = /^[a-z]{1,12}$/.test(source) ? source : "other";
+  await Promise.all([
+    cmd(["INCR", "td:hits:total"]),
+    cmd(["INCR", `td:hits:day:${daystamp()}`]),
+    cmd(["INCR", `td:hits:src:${src}`]),
+  ]);
+}
+
+// Admin read (gated by CRON_SECRET in /api/hit): total + last 14 days + by-source.
+export async function getHitStats() {
+  if (!storeEnabled()) return { enabled: false };
+  const days = [];
+  for (let i = 13; i >= 0; i--) days.push(new Date(Date.now() - i * 864e5).toISOString().slice(0, 10));
+  const [total, dayVals, ...srcVals] = await Promise.all([
+    cmd(["GET", "td:hits:total"]),
+    Promise.all(days.map((d) => cmd(["GET", `td:hits:day:${d}`]))),
+    ...["paste", "example", "file", "other"].map((s) => cmd(["GET", `td:hits:src:${s}`])),
+  ]);
+  const num = (v) => Number(v || 0);
+  return {
+    enabled: true,
+    total: num(total),
+    bySource: { paste: num(srcVals[0]), example: num(srcVals[1]), file: num(srcVals[2]), other: num(srcVals[3]) },
+    days: days.map((d, i) => ({ day: d, hits: num(dayVals[i]) })),
+  };
+}

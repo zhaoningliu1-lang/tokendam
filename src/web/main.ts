@@ -13,6 +13,29 @@ function loadCore(): Promise<Core> {
 
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
 
+// --- Anonymous, privacy-preserving usage signal (see /privacy) -------------
+// PROD only. Two things, BOTH content-free: (1) Vercel Web Analytics — cookieless
+// page visits/referrers; (2) a ping to /api/hit when an analysis actually runs.
+// NEITHER sends your trace or prompts — those are analyzed entirely in this tab.
+type TdSource = "paste" | "example" | "file";
+const PROD = /(^|\.)tokendam\.dev$/.test(location.hostname) || location.hostname.endsWith(".vercel.app");
+if (PROD) {
+  const s = document.createElement("script");
+  s.defer = true;
+  s.src = "/_vercel/insights/script.js";
+  document.head.appendChild(s);
+}
+function ping(source: TdSource) {
+  if (!PROD) return;
+  try {
+    const body = new Blob([JSON.stringify({ source })], { type: "application/json" });
+    if (navigator.sendBeacon) navigator.sendBeacon("/api/hit", body);
+    else void fetch("/api/hit", { method: "POST", body, keepalive: true }).catch(() => {});
+  } catch {
+    /* usage counting must never affect the user */
+  }
+}
+
 const traceEl = $<HTMLTextAreaElement>("#trace");
 const runEl = $<HTMLButtonElement>("#run");
 const errEl = $<HTMLElement>("#err");
@@ -223,7 +246,7 @@ const tap = a =&gt; (globalThis.__td.push(a), a);
   }
 }
 
-async function run() {
+async function run(source: TdSource = "paste") {
   setError("");
   const raw = traceEl.value.trim();
   if (!raw) {
@@ -242,6 +265,7 @@ async function run() {
   try {
     const core = await loadCore();
     render(core, core.analyze(input));
+    ping(source);
   } catch (e) {
     setError(`Couldn't read that trace — ${(e as Error).message}. Check it's valid JSON (or click an example).`);
   } finally {
@@ -249,9 +273,9 @@ async function run() {
   }
 }
 
-runEl.addEventListener("click", run);
+runEl.addEventListener("click", () => run("paste"));
 traceEl.addEventListener("keydown", (e) => {
-  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run();
+  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run("paste");
 });
 
 // "Not a developer?" — copy the hand-off note to email an engineer.
@@ -274,7 +298,7 @@ document.querySelectorAll<HTMLButtonElement>("[data-example]").forEach((btn) => 
     try {
       const res = await fetch(`${base}examples/${file}`);
       traceEl.value = JSON.stringify(await res.json(), null, 2);
-      run();
+      run("example");
     } catch {
       setError("Couldn't load the example.");
     }
@@ -285,5 +309,5 @@ fileEl.addEventListener("change", async () => {
   const file = fileEl.files?.[0];
   if (!file) return;
   traceEl.value = await file.text();
-  run();
+  run("file");
 });

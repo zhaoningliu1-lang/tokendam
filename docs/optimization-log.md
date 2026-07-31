@@ -319,8 +319,9 @@ shipped the review items:
 - **Flagship per-agent feature now has a real demo input** — `examples/langgraph-agent.json`
   (supervisor → researcher×5 → writer, `langgraph_node` identity) fires the cost-by-agent tree +
   `agentLoopWaste`, which the two shipped examples never could.
-- **Dead `tokendam.dev` links → `tokendam.vercel.app`** in the CLI footer + one-pager (the live site;
-  `.dev` is still pending purchase). `dist/` is git-ignored (rebuilt at publish).
+- CLI footer + one-pager point to **`tokendam.dev`** — the canonical live site (verified live during the
+  X/Reddit engagement patrol; an earlier "pending purchase" note was stale, so a mid-round change to
+  `tokendam.vercel.app` was reverted). `dist/` is git-ignored (rebuilt at publish).
 
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default

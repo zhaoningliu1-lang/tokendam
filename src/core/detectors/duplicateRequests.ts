@@ -1,4 +1,5 @@
 import type { Finding, NormCall, NormTrace } from "../types.js";
+import { callUSD } from "../pricing.js";
 
 // Cross-call duplication: the SAME request (same task/query, ignoring the static
 // system prompt) is sent to the model more than once in a trace. A response
@@ -55,7 +56,7 @@ export function duplicateRequests(trace: NormTrace): Finding[] {
       const inTok = inputTokens(c);
       const outTok = c.usage?.outputTokens ?? c.usage?.reasoningTokens ?? 0;
       wastedTokens += inTok + outTok;
-      wastedUSD += (inTok * c.price.input + outTok * c.price.output) / 1_000_000;
+      wastedUSD += callUSD(inTok, c.usage?.cachedInputTokens ?? 0, outTok, c.price);
       dupCalls++;
     }
     if (evidence.length < 5)
@@ -74,9 +75,14 @@ export function duplicateRequests(trace: NormTrace): Finding[] {
       wastedTokens,
       wastedUSD,
       evidence,
-      // Whole-call caching overlaps per-call findings on the duplicate calls, so
-      // keep it out of the headline floor.
-      secondary: true,
+      // PRIMARY: a re-sent identical call is genuine, recoverable spend (skip the
+      // call entirely via a response cache). Keeping it out of the headline made the
+      // CI gate FAIL OPEN — a 95%-duplicate trace passed with "$0 recoverable". On
+      // the dangerous case (pure duplicates, no cacheable prefix) unused-cache does
+      // not fire, so this is the sole, non-overlapping claim; where a big static
+      // prefix does exist both fire, but the analyze-layer 90% cap keeps the headline
+      // a bounded floor. (A precise per-call-index de-overlap is the follow-up.)
+      secondary: false,
     },
   ];
 }

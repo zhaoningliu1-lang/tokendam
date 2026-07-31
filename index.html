@@ -28,11 +28,13 @@
     </nav>
     <header class="hero">
       <div class="wrap">
-        <h1 id="headline">Cut your OpenAI &amp; Claude bill 20–50% — without changing how your product behaves.</h1>
+        <h1 id="headline">A Token P&amp;L for your AI agents — see what every call cost, which agent burned it, and what to cut.</h1>
         <p class="sub">
-          TokenDam finds the waste in how your app talks to AI — uncached prefixes, bloated context,
-          dead tools, duplicated docs, runaway reasoning — and tells you exactly what to fix, each with
-          a dollar figure. Paste a trace; it runs in your browser and nothing you paste is uploaded.
+          TokenDam reads a trace and shows the <b>% of tokens that did no real work</b>, the spend
+          <b>broken down per agent/step</b>, and 12 waste patterns — each with a dollar figure and a
+          paste-ready fix. Drop <code>tokendam --ci</code> in your pipeline to fail the build when token
+          cost regresses. Runs in your browser; nothing you paste is uploaded, and it never touches your
+          request path.
           <span class="sub-trust">No SDK swap, no gateway, no routing your prod traffic through anyone.</span>
         </p>
       </div>
@@ -137,6 +139,7 @@ print(Client().read_run(run_id).inputs)
           <thead><tr><th></th><th>tokendam</th><th>proxies &amp; gateways<br /><span>(tokenwise, openrouter, portkey…)</span></th></tr></thead>
           <tbody>
             <tr><td>setup</td><td>paste a trace — zero integration</td><td>route your prod traffic through them</td></tr>
+            <tr><td>what you get</td><td>a Token P&amp;L + a CI gate that fails the build on regressions</td><td>a runtime dashboard of live traffic</td></tr>
             <tr><td>sees your prompts</td><td><b>never</b> — runs in your browser</td><td>yes — sits in the request path</td></tr>
             <tr><td>best for</td><td>auditing &amp; fixing waste at the source</td><td>ongoing routing / failover / caching</td></tr>
           </tbody>

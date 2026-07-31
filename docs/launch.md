@@ -12,7 +12,7 @@ Live: https://tokendam.vercel.app · CLI: `npx tokendam`
 
 ## Tagline options (<60 chars)
 
-1. A linter for your LLM token spend.
+1. A P&L for your token spend — per call, per agent, per PR.
 2. Paste a trace. See where your agent burns money.
 3. Find wasted tokens. Nothing leaves your browser.
 4. Your agent is leaking $. Here's the line item.
@@ -23,12 +23,14 @@ Live: https://tokendam.vercel.app · CLI: `npx tokendam`
 
 ## PH description
 
-> TokenDam is a linter for your LLM token spend: paste an OpenAI or Anthropic trace and it
-> flags where your agent is burning money — uncached static prefixes, bloated context,
-> redundant tools, duplicated content, ever-growing history, and unbudgeted reasoning tokens —
-> each with a dollar estimate and a concrete fix. It runs 100% in your browser (or as a local
-> CLI via `npx tokendam`), so nothing is ever uploaded. Built for teams running agents in
-> production who suspect their token bill is bigger than it should be.
+> TokenDam is a **CI cost-gate + linter for AI agents**: paste an OpenAI / Anthropic / LangGraph
+> trace and it gives you a **Token P&L** — how much each call cost, what **% of your tokens did no
+> real work** (Effective Tokens), and **which agent/step burned the spend** — then flags 12 waste
+> patterns (uncached prefixes, runaway agent loops, model overkill, redundant tools, duplicated
+> context, uncapped reasoning, batchable jobs…) each with a dollar figure and a paste-ready fix.
+> Wire `tokendam --ci` into your pipeline and the build fails when token cost regresses. Runs 100%
+> locally — nothing is uploaded, and it never sits in your request path. For teams whose agent bill
+> is climbing faster than usage.
 
 ## First comment (founder note, draft)
 
@@ -39,7 +41,7 @@ Live: https://tokendam.vercel.app · CLI: `npx tokendam`
 > prompts never leave the tab — and source-available (FSL-1.1-MIT). Would love to know what waste it finds
 > in *your* traces.
 
-## Detectors (what it catches)
+## Detectors (12 — what it catches)
 
 1. **Unused prompt cache** — static prefix resent uncached (biggest lever)
 2. **Bloated context** — oversized page/file/API dumps
@@ -47,6 +49,12 @@ Live: https://tokendam.vercel.app · CLI: `npx tokendam`
 4. **Uncompacted history** — growing agent history resent every turn
 5. **Duplicate content** — same doc pasted more than once in a call
 6. **Reasoning-token waste** — uncontrolled hidden reasoning spend on reasoning models
+7. **Duplicate requests** — same task sent to the model more than once in a trace
+8. **Model overkill** — a flagship model on a task a cheaper sibling would nail
+9. **Agent-loop waste** — one agent/step looping without converging, re-billed every turn
+10. **Step-cost outlier** — one step costing many times the median — where to look first
+11. **Batch opportunity** — many same-shape calls a Batch API would run at ~50% off
+12. **Semantic-cache opportunity** — near-identical requests an exact-match cache misses
 
 ## Reads (paste any of)
 

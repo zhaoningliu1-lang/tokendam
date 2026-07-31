@@ -75,6 +75,24 @@ export function renderMarkdown(report: Report, ci?: CiResult, callsPerDay = 1000
     L.push(`No obvious token waste found. 🎉`);
   }
   L.push(`\n_model \`${report.model}\` · ${report.numCalls} call(s) · ${report.totalInputTokens.toLocaleString()} input tokens_`);
+  // Effective Tokens — the volume-independent "% of tokens that did no essential
+  // work" (the metric a team can gate on as traffic grows). Brought to the PR
+  // comment so the Token P&L story lands where the buyer actually decides.
+  if (report.totalTokens > 0 && report.wasteRatePct > 0) {
+    L.push(
+      `\n**Effective Tokens:** ${(100 - report.wasteRatePct).toFixed(0)}% did essential work · ${report.wasteRatePct.toFixed(
+        0
+      )}% (${report.wastedTokens.toLocaleString()} tok) avoidable or repriceable`
+    );
+  }
+  // Per-agent cost tree — which agent/step burned the spend (multi-agent traces only).
+  if (report.byAgent?.length) {
+    L.push(`\n**Cost by agent:**`);
+    L.push(`| Agent | Calls | $ | % of spend |`);
+    L.push(`|---|--:|--:|--:|`);
+    for (const a of report.byAgent)
+      L.push(`| ${a.id.replace(/\|/g, "\\|")} | ${a.calls} | ${usd(a.usd)} | ${a.pctOfSpend.toFixed(0)}% |`);
+  }
   if (ci && !ci.pass) {
     L.push(`\n**Budget violations:**`);
     for (const v of ci.violations) L.push(`- ❌ ${v}`);

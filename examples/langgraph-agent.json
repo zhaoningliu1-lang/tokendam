@@ -1,0 +1,85 @@
+[
+  {
+    "model": "gpt-4o-mini",
+    "metadata": { "langgraph_node": "supervisor" },
+    "system": "You are the supervisor node in a LangGraph research agent. Route the task to the researcher, then hand off to the writer. Keep routing decisions terse.",
+    "messages": [
+      { "role": "user", "content": "Produce a briefing on the 2026 EV battery supply chain: key suppliers, bottlenecks, and price outlook." }
+    ],
+    "usage": { "prompt_tokens": 220, "completion_tokens": 45 }
+  },
+  {
+    "model": "gpt-4o",
+    "metadata": { "langgraph_node": "researcher" },
+    "system": "You are the researcher node. You have web_search and read_url tools. Gather facts and cite sources. Full research dossier and tool schemas are attached on every turn.",
+    "tools": [
+      { "name": "web_search", "description": "Search the web for a query and return the top results with snippets." },
+      { "name": "read_url", "description": "Fetch and extract the readable text of a URL." }
+    ],
+    "messages": [
+      { "role": "user", "content": "Find the top cathode-material suppliers and their 2026 capacity." }
+    ],
+    "usage": { "prompt_tokens": 2600, "completion_tokens": 130, "prompt_tokens_details": { "cached_tokens": 300 } }
+  },
+  {
+    "model": "gpt-4o",
+    "metadata": { "langgraph_node": "researcher" },
+    "system": "You are the researcher node. You have web_search and read_url tools. Gather facts and cite sources. Full research dossier and tool schemas are attached on every turn.",
+    "tools": [
+      { "name": "web_search", "description": "Search the web for a query and return the top results with snippets." },
+      { "name": "read_url", "description": "Fetch and extract the readable text of a URL." }
+    ],
+    "messages": [
+      { "role": "user", "content": "Now check lithium and nickel spot-price trends for the last 12 months." }
+    ],
+    "usage": { "prompt_tokens": 2750, "completion_tokens": 140, "prompt_tokens_details": { "cached_tokens": 300 } }
+  },
+  {
+    "model": "gpt-4o",
+    "metadata": { "langgraph_node": "researcher" },
+    "system": "You are the researcher node. You have web_search and read_url tools. Gather facts and cite sources. Full research dossier and tool schemas are attached on every turn.",
+    "tools": [
+      { "name": "web_search", "description": "Search the web for a query and return the top results with snippets." },
+      { "name": "read_url", "description": "Fetch and extract the readable text of a URL." }
+    ],
+    "messages": [
+      { "role": "user", "content": "Identify the main geographic bottlenecks in refining capacity." }
+    ],
+    "usage": { "prompt_tokens": 2900, "completion_tokens": 150, "prompt_tokens_details": { "cached_tokens": 300 } }
+  },
+  {
+    "model": "gpt-4o",
+    "metadata": { "langgraph_node": "researcher" },
+    "system": "You are the researcher node. You have web_search and read_url tools. Gather facts and cite sources. Full research dossier and tool schemas are attached on every turn.",
+    "tools": [
+      { "name": "web_search", "description": "Search the web for a query and return the top results with snippets." },
+      { "name": "read_url", "description": "Fetch and extract the readable text of a URL." }
+    ],
+    "messages": [
+      { "role": "user", "content": "Cross-check supplier claims against the analyst reports you already retrieved." }
+    ],
+    "usage": { "prompt_tokens": 3050, "completion_tokens": 160, "prompt_tokens_details": { "cached_tokens": 300 } }
+  },
+  {
+    "model": "gpt-4o",
+    "metadata": { "langgraph_node": "researcher" },
+    "system": "You are the researcher node. You have web_search and read_url tools. Gather facts and cite sources. Full research dossier and tool schemas are attached on every turn.",
+    "tools": [
+      { "name": "web_search", "description": "Search the web for a query and return the top results with snippets." },
+      { "name": "read_url", "description": "Fetch and extract the readable text of a URL." }
+    ],
+    "messages": [
+      { "role": "user", "content": "Summarize everything into a fact sheet for the writer." }
+    ],
+    "usage": { "prompt_tokens": 3200, "completion_tokens": 220, "prompt_tokens_details": { "cached_tokens": 300 } }
+  },
+  {
+    "model": "gpt-4o",
+    "metadata": { "langgraph_node": "writer" },
+    "system": "You are the writer node. Turn the researcher's fact sheet into a concise executive briefing. Do not invent facts.",
+    "messages": [
+      { "role": "user", "content": "Write the final 400-word briefing from the fact sheet." }
+    ],
+    "usage": { "prompt_tokens": 1500, "completion_tokens": 520 }
+  }
+]

@@ -1,13 +1,21 @@
 # 🧱 TokenDam
 
-**A linter for your LLM token spend.** Paste your agent's trace — TokenDam finds where you're
-burning tokens and tells you how to stop. Runs 100% in your browser or as a local CLI.
-**Nothing is uploaded.**
+**A CI cost-gate + Token P&L for AI agents.** Paste your agent's trace — TokenDam shows what every
+call cost, the share of tokens that did no real work, and which agent burned the spend, then tells
+you how to stop. Runs 100% in your browser or as a local CLI. **Nothing is uploaded.**
 
 Production agents leak money in boringly consistent ways: the same 2,000-token system prompt
 resent uncached on every call, a whole scraped page dumped into context when 10% mattered, a
 kitchen-sink MCP server exposing 30 tools the model never calls, an ever-growing message history.
 TokenDam reads a trace and points at each one with a dollar figure and a fix.
+
+## Token P&L
+
+Point TokenDam at a trace and it gives you a **Token P&L**: what every call cost, the **% of your
+tokens that did no essential work** (Effective Tokens), and **which agent/step burned the spend** —
+a line-item breakdown, not a hand-wave. Then it flags the 12 waste patterns below, each with a
+dollar figure and a paste-ready fix. Wire the build-failing `tokendam --ci` gate into your pipeline
+and the build fails when token cost regresses — a P&L for your token spend, per call, per agent, per PR.
 
 ## What it catches
 
@@ -21,6 +29,10 @@ TokenDam reads a trace and points at each one with a dollar figure and a fix.
 | **Reasoning-token waste** | Reasoning models (o-series, GPT-5, deepseek-reasoner, Claude thinking) burning uncapped hidden reasoning tokens on simple tasks, billed at the output rate. |
 | **Duplicate requests** | The same request (same task/query, ignoring the static system prompt) sent to the model more than once in a trace — a response/semantic cache would skip the repeat entirely. |
 | **Model overkill** | A flagship model (Opus, GPT-4o, GPT-5) used for a simple task a cheaper sibling would nail — model price gaps of 10–20x, often larger than any prompt-side saving. |
+| **Agent-loop waste** | One agent/step invoked over and over — a loop that isn't converging, re-billing its full input every turn. The single most common way agent bills explode. |
+| **Step-cost outlier** | One step costing many times the median across the trace — usually over-large context, an over-powered model for a sub-task, or an unbounded tool result. Where to look first. |
+| **Batch opportunity** | Many same-shape calls (same model + system prompt, varying user input) — the signature of a bulk/offline job that a provider Batch API would run at ~50% off. |
+| **Semantic-cache opportunity** | Near-identical requests (a changed id/timestamp or reworded clause) that an exact-match cache misses — a normalized or semantic cache would serve them and skip the call. |
 
 ## Reads (paste any of these)
 

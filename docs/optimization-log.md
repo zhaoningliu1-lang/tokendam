@@ -298,3 +298,30 @@ as one bulk job) · `semanticCache` false-positive on load-bearing numeric diffs
 `bloatedContext` hard 3000-tok cliff + no cross-call duplicate-document detection + `unusedCache`
 requiring an all-calls-identical prefix (misses per-agent caching) — a false "no waste" on realistic
 multi-agent traces.
+
+## Round 11b — 2026-07-31 · shipped the Round 11 "needs human review" list (founder-approved)
+
+The founder approved the Round 11 backlog; merged `selfopt/2026-07-31` → `main` (P0/P1 + Round 11) and
+shipped the review items:
+- **`duplicateRequests` fail-open FIXED** — was unconditionally `secondary`, so the CI gate passed a
+  95%-duplicate trace with "$0 recoverable" (fail-open). Now **primary** + cache-aware (`callUSD`); on
+  the dangerous case (pure duplicates, no cacheable prefix) it's the sole non-overlapping claim, and
+  elsewhere the analyze-layer 90% cap keeps the headline a bounded floor. Test: a 20× identical-call
+  trace now **fails** the gate (exit 1), `savableUSD ≤ totalUSD`. (Follow-up: precise per-call-index
+  de-overlap with `unusedCache`.)
+- **PR comment carries the Token P&L** — `renderMarkdown` now renders the **Effective Tokens** line +
+  a **Cost-by-agent** table, so the finance-grade story lands on GitHub where a team converts (was
+  CLI/web/PDF-only). (`ci.ts`)
+- **Positioning repositioned** across all acquisition surfaces — README/`launch.md`(PH)/`pricing.html`
+  /hero now say **12 detectors** and lead with "**a CI cost-gate + Token P&L for AI agents**" (was
+  "a linter", 6–8 detectors); anti-proxy trust line preserved; "we flag, you implement" kept for the
+  batch/semantic-cache opportunities. (`README.md`, `docs/launch.md`, `public/pricing.html`, `index.html`)
+- **Flagship per-agent feature now has a real demo input** — `examples/langgraph-agent.json`
+  (supervisor → researcher×5 → writer, `langgraph_node` identity) fires the cost-by-agent tree +
+  `agentLoopWaste`, which the two shipped examples never could.
+- **Dead `tokendam.dev` links → `tokendam.vercel.app`** in the CLI footer + one-pager (the live site;
+  `.dev` is still pending purchase). `dist/` is git-ignored (rebuilt at publish).
+
+13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
+Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
+would be friendlier on first adoption); rebuild + `npm publish` when ready.

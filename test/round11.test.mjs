@@ -4,6 +4,7 @@
 // (3) the one-pager gates "already optimized" on recoverable value, not finding count.
 import { analyze } from "../src/core/analyze.ts";
 import { renderOnePager } from "../src/core/onePager.ts";
+import { evaluateCi } from "../src/core/ci.ts";
 
 let failed = 0;
 const ok = (n, c, x = "") => { console.log(`${c ? "✓" : "✗"} ${n}${x ? "  " + x : ""}`); if (!c) failed++; };
@@ -92,6 +93,23 @@ const maxFindingUSD = (r) => r.findings.reduce((m, f) => Math.max(m, f.wastedUSD
   );
   ok("one-pager says 'already well optimized' when savableUSD<=0", !zeroWaste || /already well optimized/.test(html));
   ok("one-pager NEVER claims 'source(s) of waste' when savableUSD<=0", !zeroWaste || !/source\(s\) of waste/.test(html));
+}
+
+// --- (4) duplicate-requests must NOT let the CI gate fail OPEN on a 95%-dup trace ---
+{
+  const q = "Summarize this quarterly report and list the top three risks in order. " + "report body sentence ".repeat(30);
+  const r = analyze(
+    Array.from({ length: 20 }, () => ({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: q }], // user-only: no cacheable prefix → duplicate-requests is the sole claim
+      usage: { prompt_tokens: 800, completion_tokens: 60 },
+    }))
+  );
+  ok("duplicate-requests fires on 20 identical calls", !!has(r, "duplicate-requests"));
+  ok("pure-duplicate waste is now counted (not fail-open)", r.savableUSD > 0, `savableUSD=$${r.savableUSD.toFixed(4)}`);
+  const ci = evaluateCi(r, { maxWastePct: 25 });
+  ok("CI gate CATCHES a 95%-duplicate trace (fails, exit != 0)", !ci.pass && ci.exitCode !== 0, `pass=${ci.pass} exit=${ci.exitCode}`);
+  ok("headline stays a floor (savableUSD <= totalUSD)", r.savableUSD <= r.totalUSD + 1e-9, `$${r.savableUSD.toFixed(4)} <= $${r.totalUSD.toFixed(4)}`);
 }
 
 console.log(failed ? `\nFAILED (${failed})` : "\nALL R11 CHECKS PASSED");

@@ -1,4 +1,5 @@
 import type { Finding, NormCall, NormTrace } from "../types.js";
+import { callUSD } from "../pricing.js";
 
 // Step cost outlier: one call/step whose cost dwarfs the median across the trace.
 // A dominating step is usually over-large context, an over-powered model for a
@@ -23,12 +24,18 @@ export function stepCostOutlier(trace: NormTrace): Finding[] {
   const costed = calls.map((c, i) => {
     const inTok = inputTokens(c);
     const outTok = c.usage?.outputTokens ?? c.usage?.reasoningTokens ?? 0;
-    const usd = (inTok * c.price.input + outTok * c.price.output) / 1_000_000;
+    const usd = callUSD(inTok, c.usage?.cachedInputTokens ?? 0, outTok, c.price);
     return { i, usd, label: c.agentId ?? c.stepId };
   });
   const sortedUsd = costed.map((x) => x.usd).sort((a, b) => a - b);
-  const median = sortedUsd[Math.floor(sortedUsd.length / 2)] || 0;
-  if (median <= 0) return [];
+  const n = sortedUsd.length;
+  // Average the two middle elements for even n (a true median, not the upper-middle).
+  const median = n % 2 ? sortedUsd[(n - 1) / 2] : (sortedUsd[n / 2 - 1] + sortedUsd[n / 2]) / 2;
+  // A trivially-tiny median (e.g. a trace with 1-token calls) makes any normal call
+  // read as "80× the median" — a meaningless ratio. Require an absolute floor so the
+  // multiple is only reported against a substantive baseline.
+  const MEDIAN_FLOOR = 1e-5; // $0.00001 — below this (e.g. 1-token calls) the median is noise, not a baseline
+  if (median < MEDIAN_FLOOR) return [];
 
   const top = costed.reduce((m, x) => (x.usd > m.usd ? x : m), costed[0]);
   if (top.usd < median * OUTLIER_X) return [];

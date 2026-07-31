@@ -28,10 +28,13 @@ export function renderOnePager(report: Report, callsPerDay = 1000): string {
   const monthly = perCallSave * callsPerDay * 30;
   const annual = perCallSave * callsPerDay * 365;
   const monthlySpend = report.perCallUSD * callsPerDay * 30;
+  // Gate on recoverable VALUE, not finding count: a single $0 advisory (e.g. a
+  // step-cost pointer) must not flip a clean workload into "found 1 source of waste
+  // … $0.00000/month recoverable."
   const summary =
-    report.findings.length === 0
+    report.savableUSD <= 0
       ? "No material token waste found — this workload is already well optimized."
-      : `Across a representative sample of ${report.numCalls} LLM call(s), about ${report.wasteRatePct.toFixed(0)}% of tokens did no real work. TokenDam found ${report.findings.length} source(s) of waste totaling ~${report.savablePct.toFixed(0)}% of spend — roughly ${money(monthly)}/month (${money(annual)}/year) recoverable at ${callsPerDay.toLocaleString()} calls/day, without changing model behavior.`;
+      : `Across a representative sample of ${report.numCalls} LLM call(s), about ${report.wasteRatePct.toFixed(0)}% of tokens went to avoidable or repriceable overhead (uncached prefixes, duplication, bloat). TokenDam found ${report.findings.length} source(s) of waste totaling ~${report.savablePct.toFixed(0)}% of spend — roughly ${money(monthly)}/month (${money(annual)}/year) recoverable at ${callsPerDay.toLocaleString()} calls/day, without changing model behavior.`;
 
   // Reconcile: the per-finding "gross waste" figures sum to more than the headline
   // because the total is NET (discounted for prompt caching + capped for overlap).

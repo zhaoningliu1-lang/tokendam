@@ -12,6 +12,22 @@ export interface ModelPrice {
   output: number;
 }
 
+/** USD for the input side of a call, cache-aware: observed cached tokens bill at
+ *  the cache-hit rate. Never exceeds the uncached cost. Detectors MUST price
+ *  through this (not `tok * price.input`) so no finding can claim more than the
+ *  call actually cost — the recurring "$0.045 waste on a $0.030 trace" bug. */
+export function inputUSD(inTok: number, cachedTok: number, p: ModelPrice): number {
+  const inn = Math.max(0, inTok);
+  const cached = Math.min(inn, Math.max(0, cachedTok));
+  return ((inn - cached) * p.input + cached * p.cachedInput) / 1_000_000;
+}
+
+/** USD for a whole call (input + output), cache-aware — mirrors the per-call
+ *  pricing in analyze.ts so a detector's dollar figure matches the real bill. */
+export function callUSD(inTok: number, cachedTok: number, outTok: number, p: ModelPrice): number {
+  return inputUSD(inTok, cachedTok, p) + (Math.max(0, outTok) * p.output) / 1_000_000;
+}
+
 // List prices verified against platform.claude.com/docs pricing on this date.
 // They drift, so keep this stamp current (the CTO agent watches it).
 export const PRICES_AS_OF = "2026-07-29";

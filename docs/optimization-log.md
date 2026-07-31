@@ -238,3 +238,63 @@ system must not run on wrong numbers). Plus two requested features.
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
 "model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
 go-ahead — it's outward-facing/public while the project is pre-launch & private).
+
+## Round 11 — 2026-07-31 · fresh 5-lens critique of the unlogged P0/P1 batch (8 → 12 detectors)
+
+The P0/P1 work (Effective Tokens / wasteRate, per-agent attribution + cost tree, Token P&L one-pager,
++4 detectors) grew the tool past Round 10 without a holistic critique. A full 5-critic army (LLM-infra
+correctness · adversarial break-it · product · target-user · positioning) read the real code + ran the
+tool on adversarial traces. They **independently converged** on the same class of bug that has recurred
+every round: **the newest detectors' dollar figures are the moat, and the newest ones were wrong** — a
+single finding claimed **152% of a trace's real cost**. Prioritized through the CI-gate north star (an
+accurate + fail-safe gate) and the trust moat ("a linter whose numbers lie is worthless").
+
+**Shipped (3 correctness/trust fixes, on `selfopt/2026-07-31`):**
+- **Cache-blind pricing in the 4 new detectors (the moat bug, back again)** — `agentLoopWaste`,
+  `batchOpportunity`, `semanticCache`, `stepCostOutlier` priced input at the full rate, ignoring
+  `usage.cachedInputTokens`, so on a heavily-cached trace a finding read **$0.045 waste on a $0.030
+  trace (152%)**. Added shared cache-aware `inputUSD`/`callUSD` helpers to `pricing.ts` (mirroring the
+  correct `modelOverkill`/`analyze` per-call, cache-aware math) and routed all four detectors through
+  them. No finding's `wastedUSD` can now exceed the call's real billed cost. (`pricing.ts`,
+  `detectors/{agentLoopWaste,batchOpportunity,semanticCache,stepCostOutlier}.ts`)
+- **`extractMeta` fabricated `agentId` from a generic `name`/`node` (`normalize.ts:305`)** — a plain
+  trace whose elements carry a benign `name` (e.g. `"chatCompletion"`) minted an agentId on every call,
+  triggering a phantom "Agent X ran 5× — runaway loop" + a bogus per-agent cost tree on ordinary
+  single-model traces (the *common* case, since raw OpenAI/Anthropic bodies carry no agent identity).
+  Now only EXPLICIT identity (`langgraph_node` / `meta.agentId` / `meta.agent` / `el.agentId` /
+  `el.agent`) attributes; generic `name`/`node` no longer do.
+- **Effective-Tokens / one-pager honesty** — (a) "X% of tokens **did no real work**" was falsifiable in
+  30s (those tokens are the system prompt/tools the model needs every call — repriceable via caching,
+  not dead); reworded to "avoidable or **repriceable** overhead" across CLI/one-pager/web. (b) The
+  one-pager said "already optimized" only when `findings.length === 0`, so a single $0 advisory flipped
+  a clean workload into "found 1 source of waste … $0.00000/month" — now gated on `savableUSD <= 0`.
+  (c) `stepCostOutlier` used the upper-middle element as the median and priced cache-blind, so a trace
+  with trivially-cheap calls read "81× the median" on a normal call — now a true even-length median,
+  cache-aware, with a $0.00001 baseline floor. (`format.ts`, `onePager.ts`, `web/main.ts`,
+  `detectors/stepCostOutlier.ts`)
+
+13 test suites green (added `round11.test`: cache-aware `wastedUSD ≤ totalUSD`, plain-trace-`name` →
+no phantom agent, $0-advisory → "already optimized"), `tsc --noEmit` clean. Branch only — not merged,
+not deployed.
+
+**Needs human review (strong convergence, deliberately NOT auto-shipped — higher-risk or a founder call):**
+- **`duplicateRequests` is unconditionally `secondary` → the CI gate FAILS OPEN** on a 95%-duplicate
+  trace (exits 0, prints "$0 recoverable"). The scariest gate-safety hole, but the safe fix needs
+  careful per-call de-overlap with unusedCache — do it deliberately, before any publish. (`duplicateRequests.ts:79`)
+- **Positioning: the whole Token-P&L story is invisible where it sells.** README lists **8** detectors
+  (built 12); `docs/launch.md`/PH says **6**; `pricing.html` says "8 checks"; the hero + the hosted
+  PR-comment (`renderMarkdown`, `api/github/webhook.js`) omit Effective Tokens + the per-agent tree —
+  so the strongest, already-built asset is only visible *after* a dev has converted. Critic 5's exact
+  rewrite ("**a CI cost-gate + Token P&L for AI agents**") + updated hero/description are ready to apply.
+- **The CI gate is an absolute 25% budget, not a baseline/regression diff** (`ci.ts:21`), so it can
+  fail an honest build on first adoption; the real `diff` command isn't what `--ci`/the scaffold uses.
+- **Per-agent attribution has no real input** — both shipped examples carry zero agent identity, so the
+  flagship cost tree/loop detector never demo. Ship a `langgraph-agent.json` example + let `tap` tag `agentId`.
+- **Stale `dist/`** (documented `npx tokendam` path lacks the new metrics) + **dead `tokendam.dev`
+  links** in the CLI/one-pager footers (product is `tokendam.vercel.app`).
+
+**Parked (precision round):** `batchOpportunity` empty-system-prompt collision (system-less calls group
+as one bulk job) · `semanticCache` false-positive on load-bearing numeric diffs (777 vs 999) · a
+`bloatedContext` hard 3000-tok cliff + no cross-call duplicate-document detection + `unusedCache`
+requiring an all-calls-identical prefix (misses per-agent caching) — a false "no waste" on realistic
+multi-agent traces.

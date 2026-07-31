@@ -302,7 +302,12 @@ function extractMeta(el: Any): Pick<NormCall, "agentId" | "stepId" | "parentId" 
   if (!el || typeof el !== "object") return undefined;
   const md = el.extra?.metadata ?? el.metadata ?? {};
   const m = el.meta ?? {};
-  const agentId = md.langgraph_node ?? m.agentId ?? m.agent ?? el.agentId ?? el.agent ?? el.node ?? el.name;
+  // Only EXPLICIT agent identity — a framework node or a tap() meta.agentId/agent.
+  // Do NOT fall back to generic `el.node`/`el.name`: a plain trace element often
+  // carries a benign `name` (e.g. "chatCompletion" or a function name), and minting
+  // an agentId from it fabricates phantom "runaway loop" findings + a bogus per-agent
+  // cost tree on ordinary single-model traces that have no agents at all.
+  const agentId = md.langgraph_node ?? m.agentId ?? m.agent ?? el.agentId ?? el.agent;
   const stepId = m.stepId ?? m.step ?? el.stepId ?? el.step ?? el.id ?? el.run_id ?? el.observationId;
   const parentId = m.parentId ?? el.parentId ?? el.parent_run_id ?? el.parentObservationId ?? el.parent_id;
   const turnRaw = m.turnIndex ?? m.turn ?? el.turnIndex ?? el.turn ?? el.iteration;

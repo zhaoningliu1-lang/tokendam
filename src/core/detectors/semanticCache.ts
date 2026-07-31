@@ -1,4 +1,5 @@
 import type { Finding, NormCall, NormTrace } from "../types.js";
+import { callUSD } from "../pricing.js";
 
 // Semantic-cache opportunity: requests that are NEAR-identical but not byte-for-
 // byte the same (a changed id/timestamp/number, whitespace, a reworded clause) —
@@ -98,7 +99,7 @@ export function semanticCache(trace: NormTrace): Finding[] {
       const inTok = inputTokens(c);
       const outTok = c.usage?.outputTokens ?? c.usage?.reasoningTokens ?? 0;
       wastedTokens += inTok + outTok;
-      wastedUSD += (inTok * c.price.input + outTok * c.price.output) / 1_000_000;
+      wastedUSD += callUSD(inTok, c.usage?.cachedInputTokens ?? 0, outTok, c.price);
       repeats++;
     }
     if (evidence.length < 4)

@@ -1,4 +1,5 @@
 import type { Finding, NormCall, NormTrace } from "../types.js";
+import { inputUSD } from "../pricing.js";
 
 // Agentic loop waste: one agent/step (by identity) invoked many times in a single
 // trace — the classic runaway loop that re-bills its whole context every turn.
@@ -38,7 +39,7 @@ export function agentLoopWaste(trace: NormTrace): Finding[] {
       const c = trace.calls[i];
       const inTok = inputTokens(c);
       wastedTokens += inTok;
-      wastedUSD += (inTok * c.price.input) / 1_000_000;
+      wastedUSD += inputUSD(inTok, c.usage?.cachedInputTokens ?? 0, c.price);
     }
     if (wastedUSD <= 0) continue;
     findings.push({

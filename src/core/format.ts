@@ -43,8 +43,8 @@ export function renderText(report: Report, callsPerDay = 1000): string {
   }
   if (report.totalTokens > 0 && report.wastedTokens > 0) {
     L.push(
-      `  ▶ Effective tokens: ${(100 - report.wasteRatePct).toFixed(0)}% did real work` +
-        ` · ${report.wasteRatePct.toFixed(0)}% (${report.wastedTokens.toLocaleString()} tok) was waste`
+      `  ▶ Effective tokens: ${(100 - report.wasteRatePct).toFixed(0)}% did essential work` +
+        ` · ${report.wasteRatePct.toFixed(0)}% (${report.wastedTokens.toLocaleString()} tok) avoidable or repriceable`
     );
   }
   L.push(BAR);

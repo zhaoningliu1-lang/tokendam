@@ -144,7 +144,7 @@ function render(core: Core, report: Report) {
     line(
       "effective",
       report.wasteRatePct > 0
-        ? `${report.wasteRatePct.toFixed(0)}% wasted · ${(100 - report.wasteRatePct).toFixed(0)}% did work`
+        ? `${report.wasteRatePct.toFixed(0)}% avoidable/repriceable · ${(100 - report.wasteRatePct).toFixed(0)}% essential`
         : "all working"
     ),
     boxBot,

@@ -54,8 +54,12 @@ export function duplicateRequests(trace: NormTrace): Finding[] {
       const c = calls[i];
       const inTok = inputTokens(c);
       const outTok = c.usage?.outputTokens ?? c.usage?.reasoningTokens ?? 0;
+      // Price cache-aware: cached tokens bill at the cache-hit rate, so the waste
+      // reflects the actual cost of the duplicate call, not the uncached price.
+      const cached = Math.min(inTok, c.usage?.cachedInputTokens ?? 0);
       wastedTokens += inTok + outTok;
-      wastedUSD += (inTok * c.price.input + outTok * c.price.output) / 1_000_000;
+      wastedUSD +=
+        ((inTok - cached) * c.price.input + cached * c.price.cachedInput + outTok * c.price.output) / 1_000_000;
       dupCalls++;
     }
     if (evidence.length < 5)

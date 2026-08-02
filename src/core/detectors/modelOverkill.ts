@@ -13,8 +13,12 @@ const SHORT_OUTPUT = 220; // tokens — simple tasks produce short answers
 function suggestCheaper(model: string): { target: string; label: string } | null {
   const m = model.toLowerCase();
   if (m.includes("opus")) return { target: "claude-sonnet-4", label: "Claude Sonnet" };
-  if (m.includes("claude-sonnet") || m.includes("claude-3-5-sonnet"))
-    return { target: "claude-3-5-haiku", label: "Claude Haiku" };
+  // For the legacy 3.5 Sonnet, the same-generation sibling is 3.5 Haiku.
+  // For modern Sonnet 4/5+, suggest the current Haiku generation (Haiku 4.5).
+  if (m.includes("claude-3-5-sonnet"))
+    return { target: "claude-3-5-haiku", label: "Claude Haiku 3.5" };
+  if (m.includes("claude-sonnet"))
+    return { target: "claude-haiku-4", label: "Claude Haiku 4.5" };
   if (m.includes("gpt-4o") && !m.includes("mini")) return { target: "gpt-4o-mini", label: "gpt-4o-mini" };
   if (m.includes("gpt-4.1") && !m.includes("mini")) return { target: "gpt-4.1-mini", label: "gpt-4.1-mini" };
   if (m.includes("gpt-5") && !m.includes("mini") && !m.includes("nano"))

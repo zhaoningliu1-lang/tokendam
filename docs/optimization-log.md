@@ -238,3 +238,23 @@ system must not run on wrong numbers). Plus two requested features.
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
 "model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
 go-ahead — it's outward-facing/public while the project is pre-launch & private).
+
+## Round 11 (autonomous) — 2026-08-02
+
+Three-lens critique of the grown codebase (correctness · adversarial · product/target-user).
+All fixes are small, low-risk, and fully test-covered. 9 test suites green, typecheck clean.
+
+**FOUND:**
+1. **`detectVendorFromModel` skips o4** (`normalize.ts:355`) — matched `o1`/`o3` starters but not `o4`, so `o4-mini` traces reported `vendor: "unknown"`. The reasoning-model detection in `reasoningTokenWaste.ts` already uses the correct `/^o[0-9]/` regex; only the vendor field was wrong.
+2. **`duplicateRequests` prices at full input rate** (`duplicateRequests.ts:57-58`) — ignored `cachedInputTokens` when costing duplicate calls. If the duplicate call had a cached prefix, the waste was overclaimed (paid cache-hit rate, not full rate). Inconsistent with every other detector that computes `(inTok - cached) * input + cached * cachedInput`.
+3. **`modelOverkill.suggestCheaper` generation mismatch** (`modelOverkill.ts:17-18`) — the `claude-sonnet` branch (matching Sonnet 4, Sonnet 5) suggested the legacy `claude-3-5-haiku`. Modern Sonnet 4/5 users should be directed to the current Haiku 4.5 (`claude-haiku-4`), not an older generation sibling.
+
+**FIXED-ON-BRANCH (`selfopt/2026-08-02`):**
+1. `normalize.ts` — `detectVendorFromModel` now uses `/^o[0-9]/` (same regex as the reasoning detector), correctly flagging o4 and o4-mini as `"openai"`.
+2. `duplicateRequests.ts` — duplicate call waste is now priced cache-aware: `(inTok - cached) * input + cached * cachedInput + out * output`, consistent with `analyze.ts` and the other detectors.
+3. `modelOverkill.ts` — split the Sonnet condition: `claude-3-5-sonnet` → Haiku 3.5 (same-gen sibling), `claude-sonnet` (4/5+) → Haiku 4.5 (`claude-haiku-4`).
+4. `test/round11.test.mjs` added (9 checks); `package.json` test script updated to include it.
+
+**NEEDS-HUMAN-REVIEW:** None — all fixes are correctness-only, no behavior-changing advice altered.
+
+**PARKED (carry-over):** full token-level cross-detector dedup · reasoning-token disjoint-usage pricing · surface `secondary` as a distinct "model-selection opportunity" line · web CI section · npm publish.

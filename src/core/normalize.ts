@@ -352,7 +352,8 @@ function detectVendorFromModel(model: string): string {
   const m = model.toLowerCase();
   if (m.includes("claude")) return "anthropic";
   if (m.includes("deepseek")) return "deepseek";
-  if (m.includes("gpt") || m.startsWith("o1") || m.startsWith("o3") || m.includes("openai"))
+  if (m.includes("gemini")) return "gemini";
+  if (m.includes("gpt") || /^o[0-9]/.test(m) || m.includes("openai"))
     return "openai";
   return "unknown";
 }

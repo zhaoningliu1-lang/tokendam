@@ -113,6 +113,8 @@ export function unusedCache(trace: NormTrace): Finding[] {
       fix:
         trace.vendor === "anthropic" || trace.vendor === "deepseek"
           ? "Add cache_control:{type:'ephemeral'} to the last system block (and/or the last tool). Anthropic/DeepSeek cache the prefix up to that marker; hits cost ~10% of input."
+          : trace.vendor === "gemini"
+          ? "Gemini uses the Context Caching API (not auto-caching): call ai.caches.create() with your static content (system + tools), then pass cachedContent: name on each request. Hits cost ~25% of input; minimum TTL is 60 s. See the Gemini API docs on Context Caching."
           : "Keep the static prefix (system + tools) first and identical across calls — OpenAI auto-caches prefixes ≥1024 tokens at ~50% off. Don't interpolate per-call data (timestamps, IDs) into the system prompt; it busts the cache.",
       wastedTokens,
       wastedUSD,

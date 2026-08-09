@@ -238,3 +238,38 @@ system must not run on wrong numbers). Plus two requested features.
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
 "model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
 go-ahead — it's outward-facing/public while the project is pre-launch & private).
+
+## Round 11 (autonomous) — 2026-08-09 · correctness: vendor detection + detector pricing
+
+Three-lens critique of the grown product (correctness / adversarial / product-user). All three fixes
+are in the "moat" bucket: wrong numbers or wrong advice erode trust faster than any missing feature.
+
+**FOUND:**
+- `detectVendorFromModel` in `normalize.ts` only matched `o1`/`o3` prefixes for OpenAI — `o4-mini` and
+  `o4` resolved to "unknown" vendor. Gemini models were also unrecognised ("unknown"). Both bugs cascade
+  directly into `unusedCache`: (a) `o4-mini` users got the vendor="unknown" fall-through advice instead
+  of the OpenAI advice; (b) Gemini users got the OpenAI auto-caching advice ("auto-caches ≥1024 tokens")
+  which is incorrect — Gemini requires the explicit Context Caching API, not automatic prefix caching.
+- `duplicateRequests` (added in Round 10) priced duplicate-call waste at full input rate, ignoring
+  `cachedInputTokens`. Every other detector was made cache-aware in Round 2; this one was added later
+  and missed the pattern. Result: overstated wastedUSD on traces with OpenAI auto-caching or Anthropic
+  prompt-cache hits active on the duplicate calls.
+
+**FIXED ON BRANCH (`selfopt/2026-08-09`):**
+1. `normalize.ts:355` — `detectVendorFromModel` now uses `/^o[0-9]/` for OpenAI o-series (catches o4,
+   o4-mini, future o5, etc.) and adds `gemini` as a recognised vendor.
+2. `detectors/unusedCache.ts:113` — added a third branch for `vendor === "gemini"` that gives the
+   correct Gemini Context Caching API advice (`ai.caches.create()`, TTL ≥ 60 s, ~25% of input).
+3. `detectors/duplicateRequests.ts:55` — pricing now follows the Round-2 cache-aware formula:
+   `(inTok - cached) * price.input + cached * price.cachedInput + outTok * price.output`.
+   New test (round11): cache hit on a duplicate call reduces wastedUSD from $0.000577 → $0.000314.
+
+**NEEDS HUMAN REVIEW:** none (all are mechanical correctness fixes; no behaviour change for existing
+passing traces).
+
+**PARKED (still deferred):** full token-level cross-detector dedup · reasoning-token disjoint pricing ·
+`secondary` findings surface · web CI section · npm publish · `loadConfig` silent-fail for malformed
+`.tokendam.json` (CI gate runs with defaults instead of user budget — medium risk, needs a warn-not-crash
+approach).
+
+9 test suites green (added round11.test), typecheck clean.

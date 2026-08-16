@@ -238,3 +238,24 @@ system must not run on wrong numbers). Plus two requested features.
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
 "model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
 go-ahead — it's outward-facing/public while the project is pre-launch & private).
+
+## Round 11 (autonomous) — 2026-08-16
+
+Three-angle critique (correctness · adversarial · product/target-user) of the full codebase.
+No issues from Rounds 1–10 were repeated or re-proposed.
+
+**FOUND:**
+1. `detectVendorFromModel` in `normalize.ts` (line 355) only matched `o1`/`o3` prefixes — `o4-mini` (and any future `o2`/`o4` models) returned vendor `"unknown"`, causing slightly wrong cache-fix advice and an incorrect vendor field in the report. Low-severity user-visible correctness bug.
+2. `duplicateRequests.ts` cost calculation ignored `cachedInputTokens`, overstating the "wasted" dollar figure for duplicate calls when prompt caching is active. Downstream impact was limited (finding is `secondary`, so headline is unaffected), but the per-finding $ was dishonest.
+3. `modelOverkill.ts` `suggestCheaper` pointed all `claude-sonnet-*` users (including Sonnet 4.6 and Sonnet 5) to `claude-3-5-haiku` — the legacy 3.5 generation — instead of `claude-haiku-4` (the current Haiku 4). `claude-opus-5` was mapped to `claude-sonnet-4` instead of `claude-sonnet-5`. `claude-fable-5`/`claude-mythos-5` had no cheaper suggestion at all.
+
+**FIXED-ON-BRANCH (selfopt/2026-08-16):**
+- **[F1] `normalize.ts`** — replaced `m.startsWith("o1") || m.startsWith("o3")` with `/^o\d/.test(m)`, correctly marking all OpenAI o-series models as `"openai"` vendor.
+- **[F2] `duplicateRequests.ts`** — `wastedUSD` now accounts for `cachedInputTokens` using the same `(uncached * input + cached * cachedInput + out * output) / 1M` formula used everywhere else.
+- **[F3] `modelOverkill.ts`** — `suggestCheaper` updated: `claude-sonnet-*` (non-3.5) now maps to `claude-haiku-4`; `claude-opus-5` maps to `claude-sonnet-5`; `claude-fable-5`/`claude-mythos-5` added, suggesting `claude-sonnet-5`. Legacy `claude-3-5-sonnet` still maps to `claude-3-5-haiku`. 13 new regression tests in `test/round11.test.mjs`.
+
+**NEEDS-HUMAN-REVIEW:** nothing — all three are small, mechanical, test-covered correctness fixes.
+
+**PARKED (carried forward):** full token-level cross-detector dedup · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct line · CJK caveat (non-OpenAI tokenizer estimates can be 2-5× off for Chinese/Japanese/Korean content; add a character-set detection and note) · whether `gpt-5-mini`/`gpt-5-nano` should be excluded from `isReasoningModel` in `reasoningTokenWaste.ts` (speculative — depends on whether OpenAI ships them with reasoning capability) · `PRICES_AS_OF` date refresh (2.5 weeks stale as of this run).
+
+9 test suites green (added round11.test), typecheck clean.

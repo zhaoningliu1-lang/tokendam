@@ -215,6 +215,16 @@ async function main() {
     console.log(HELP);
     return;
   }
+  if (args.includes("--version") || args.includes("-V")) {
+    for (const p of [join(here, "..", "package.json"), join(here, "..", "..", "package.json")]) {
+      try {
+        console.log(JSON.parse(readFileSync(p, "utf8")).version);
+        return;
+      } catch { /* try next */ }
+    }
+    console.log("unknown");
+    return;
+  }
   if (args[0] === "init") {
     doInit();
     return;

@@ -238,3 +238,24 @@ system must not run on wrong numbers). Plus two requested features.
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
 "model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
 go-ahead — it's outward-facing/public while the project is pre-launch & private).
+
+## Round 11 (autonomous) — 2026-08-23
+
+Autonomous self-optimization run (scheduled loop). 3-lens critique of real source files; 3 small correctness/UX fixes implemented, tested, and verified.
+
+**FOUND:**
+- `detectVendorFromModel` (normalize.ts:354) matched only `o1`/`o3` via `startsWith` — any `o4-mini`, `o4`, or future o-series model returned vendor `"unknown"` instead of `"openai"`. Practical effect: report header shows wrong vendor; `unusedCache` fix advice defaulted to OpenAI path anyway (correct by accident), so dollar math was unaffected.
+- `duplicateRequests` (duplicateRequests.ts:58) priced duplicate calls at full `c.price.input` for all input tokens, ignoring `c.usage?.cachedInputTokens`. Every other detector deducts cached tokens. This overcounts `wastedUSD` for duplicate calls where the provider already auto-cached the prefix.
+- No `--version`/`-V` flag on the CLI. Running `tokendam --version` silently fell through to the stdin reader and either hung or emitted "No LLM calls found" — common developer expectation violated.
+
+**FIXED-ON-BRANCH (selfopt/2026-08-23):**
+1. `normalize.ts` — replaced `m.startsWith("o1") || m.startsWith("o3")` with `/^o\d/.test(m)` so all OpenAI o-series models (o4-mini, o5, etc.) are correctly identified as `"openai"`.
+2. `duplicateRequests.ts` — deduct `cachedInputTokens` before pricing duplicate input tokens (same pattern as `analyze.ts`, `modelOverkill.ts`). Now `wastedUSD` uses `(inTok - cachedTok) * price.input + cachedTok * price.cachedInput` for each duplicate call.
+3. `cli.ts` — added `--version`/`-V` flag that reads and prints the version from `package.json` (two-path lookup for src/ vs dist/). Returns early, no effect on any other flow.
+4. `test/round11.test.mjs` — tests for all three fixes; added to the `npm test` script.
+
+9 test suites green, typecheck clean.
+
+**NEEDS-HUMAN-REVIEW:** All three are small and low-risk; normal review applies.
+
+**PARKED:** Full Admin API page-envelope support in CLI `toElements` (would require the CLI to recognize and specially-handle `{object:"page",data:[...]}` before `analyze` sees it, since `toElements` currently unwraps `data` and strips the envelope that `normalize.ts` needs to detect that shape). Medium complexity, niche use case — the `tokendam bill` command is the primary Admin API path and is unaffected. · All prior-round parked items unchanged.

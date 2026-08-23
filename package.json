@@ -23,7 +23,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "deploy": "vercel build --prod && vercel deploy --prebuilt --prod --yes",
-    "test": "tsx test/detectors.test.mjs && tsx test/formats.test.mjs && tsx test/ci.test.mjs && tsx test/capture.test.mjs && tsx test/round5.test.mjs && tsx test/round7.test.mjs && tsx test/mcp.test.mjs && tsx test/usage.test.mjs && tsx test/web-smoke.mjs"
+    "test": "tsx test/detectors.test.mjs && tsx test/formats.test.mjs && tsx test/ci.test.mjs && tsx test/capture.test.mjs && tsx test/round5.test.mjs && tsx test/round7.test.mjs && tsx test/mcp.test.mjs && tsx test/usage.test.mjs && tsx test/web-smoke.mjs && tsx test/round11.test.mjs"
   },
   "keywords": [
     "llm",

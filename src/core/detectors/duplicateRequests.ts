@@ -55,7 +55,8 @@ export function duplicateRequests(trace: NormTrace): Finding[] {
       const inTok = inputTokens(c);
       const outTok = c.usage?.outputTokens ?? c.usage?.reasoningTokens ?? 0;
       wastedTokens += inTok + outTok;
-      wastedUSD += (inTok * c.price.input + outTok * c.price.output) / 1_000_000;
+      const cachedTok = Math.min(inTok, c.usage?.cachedInputTokens ?? 0);
+      wastedUSD += ((inTok - cachedTok) * c.price.input + cachedTok * c.price.cachedInput + outTok * c.price.output) / 1_000_000;
       dupCalls++;
     }
     if (evidence.length < 5)

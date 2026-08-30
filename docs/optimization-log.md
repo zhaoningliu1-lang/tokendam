@@ -238,3 +238,22 @@ system must not run on wrong numbers). Plus two requested features.
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
 "model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
 go-ahead — it's outward-facing/public while the project is pre-launch & private).
+
+## Round 11 (autonomous) — 2026-08-30
+
+Fresh 3-lens critique of the full codebase (correctness · adversarial · product). Read all src/ files and test suite.
+
+**FOUND:**
+- **Sonnet 5 introductory pricing expires 2026-08-31** — `pricing.ts:30` had `$2/$10` hard-coded with a comment "through 2026-08-31". After that date every Sonnet 5 analysis is a 50% underestimate on output. The moat is "trustworthy dollar figures" — a known-stale price is a credibility hit.
+- **`detectVendorFromModel` missed o4/o5+ models** — `normalize.ts:356` used `m.startsWith("o1") || m.startsWith("o3")` but not `o4`, `o5`, etc. An `o4-mini` trace would report `vendor="unknown"` rather than `"openai"`, which could appear in report notes and affects the cache-advice path.
+- **`modelOverkill` suggested stale sibling models** — for Opus tasks it suggested `claude-sonnet-4` (same price as Sonnet 5 after the pricing fix); for Sonnet tasks it suggested `claude-3-5-haiku` (old 3.x model) instead of `claude-haiku-4` (current gen). Users see confusing cross-generation suggestions.
+
+**FIXED-ON-BRANCH:**
+1. `src/core/pricing.ts` — updated `claude-sonnet-5` to `{ input: 3, cachedInput: 0.3, output: 15 }` (standard rate) and stamped `PRICES_AS_OF = "2026-08-30"`.
+2. `src/core/normalize.ts` — replaced `m.startsWith("o1") || m.startsWith("o3")` with `/^o\d/.test(m)` so all current and future o-series models are recognized as OpenAI.
+3. `src/core/detectors/modelOverkill.ts` — updated `suggestCheaper`: Opus → `claude-sonnet-5` / "Claude Sonnet 5"; Sonnet → `claude-haiku-4` / "Claude Haiku 4".
+4. `test/round11.test.mjs` — 9 new assertions covering all three fixes.
+
+**NEEDS-HUMAN-REVIEW:** none — all are data/heuristic changes, no new logic paths.
+
+**PARKED:** full token-level cross-detector dedup · reasoning-token disjoint pricing · `secondary` findings as a distinct UI section · npm publish.

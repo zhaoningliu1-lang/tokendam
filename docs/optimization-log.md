@@ -238,3 +238,40 @@ system must not run on wrong numbers). Plus two requested features.
 additive) · reasoning-token disjoint-usage pricing · surface `secondary` findings as a distinct
 "model-selection opportunity" line · web "put it in CI" section · **npm publish** (needs owner
 go-ahead — it's outward-facing/public while the project is pre-launch & private).
+
+## Round 11 (autonomous) — 2026-09-06
+
+Three-lens critique of the live codebase (correctness · adversarial · product/user). All 9 test
+suites green, typecheck clean.
+
+**FOUND:**
+- **`detectVendorFromModel` misses `o4-series` and Gemini** (`normalize.ts:354`). Uses
+  `m.startsWith("o1") || m.startsWith("o3")` — misses `o4-mini` (today's most common reasoning
+  model). Gemini models also silently fell through to `"unknown"` despite having their own pricing
+  table entries. Consequence: `report.vendor` shows "unknown" for these popular models, confusing
+  users; and Gemini got the wrong caching fix advice.
+- **`duplicateRequests` ignores cached input tokens when pricing waste** (`duplicateRequests.ts:58`).
+  Always priced all input at the full `c.price.input` rate, never subtracting tokens already served
+  from cache. The correct formula (matching `analyze.ts`) is: `(inTok - cached) * input + cached *
+  cachedInput + outTok * output`. Inflated wastedUSD on traces where the system prefix is cached.
+- **`unusedCache` has no Gemini-specific fix advice** (`unusedCache.ts:114`). The two-way
+  `vendor === "anthropic" || "deepseek"` branch leaves Gemini in the OpenAI path, recommending
+  OpenAI auto-caching (wrong for Gemini, which requires an explicit Context Caching API call).
+
+**FIXED-ON-BRANCH (`selfopt/2026-09-06`):**
+1. `normalize.ts` — `detectVendorFromModel` now uses `/^o\d/.test(m)` (captures o1, o3, o4, and any
+   future o-series) and adds `m.includes("gemini") → "google"`.
+2. `unusedCache.ts` — added a `trace.vendor === "google"` branch with Gemini Context Caching API
+   advice (≥32k tokens, explicit cached-content resource, ~25% rate).
+3. `duplicateRequests.ts` — now subtracts `cachedInputTokens` and prices the cached portion at
+   `c.price.cachedInput`, matching the correctness standard of every other detector.
+4. `test/round11.test.mjs` — 8 tests covering all three fixes (o1/o3/o4 vendor, gemini vendor,
+   gemini caching advice, duplicate-requests cached vs uncached pricing comparison).
+
+**PARKED (carry-forward from prior rounds):**
+- Full token-level cross-detector dedup (headline is a clamped floor, not additive) — large rearch.
+- Bloated-context content-aware trimmable fraction (#9).
+- Surface `secondary` findings as a distinct model-selection opportunity line.
+- Gemini caching advice in the `unusedCache` detail text (only the `fix` field was updated; the
+  `detail` text still says "OpenAI auto-caches" — a human should review and extend the detail too).
+- **npm publish** — awaiting owner go-ahead.

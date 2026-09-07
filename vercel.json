@@ -3,12 +3,5 @@
   "buildCommand": "npm run build:cli && npm run build:web",
   "outputDirectory": "dist-web",
   "framework": null,
-  "cleanUrls": true,
-  "crons": [
-    { "path": "/api/ops-sentinel", "schedule": "*/15 * * * *" },
-    { "path": "/api/credit-canary", "schedule": "0 15 * * *" },
-    { "path": "/api/pm-agent", "schedule": "0 16 * * 1" },
-    { "path": "/api/cto-agent", "schedule": "0 16 * * 4" },
-    { "path": "/api/detector-rnd", "schedule": "0 17 * * 5" }
-  ]
+  "cleanUrls": true
 }

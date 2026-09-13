@@ -326,3 +326,43 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-09-13
+
+Multi-lens critique (correctness · adversarial · product/target-user) of `src/core/pricing.ts`,
+`src/core/normalize.ts`, and all 12 detectors. Zero prior-round items re-raised; reading from Round 11b
+log state.
+
+**FOUND:**
+- `claude-sonnet-5` introductory pricing ($2/$10) expired 2026-08-31 per the in-code comment; any Sonnet 5
+  trace since then shows costs 33% too low — the accuracy moat's most obvious current gap.
+- `detectVendorFromModel` (normalize.ts) matched only `o1`/`o3` prefixes for the OpenAI o-series; `o4-mini`
+  and `o4` returned vendor `"unknown"` instead of `"openai"` (cosmetic display bug in report header).
+- `uncompactedHistory` and `duplicateSubstring` priced the savings at `call.price.cachedInput` when ANY call
+  in the trace had a `hasCacheMarker`. The targeted content (old history turns / user-message duplicates) is
+  always in the dynamic, uncached portion of the prompt — billed at the full `input` rate. Using the cached
+  rate under-reports waste by 10× on Anthropic/DeepSeek traces where users already have caching active.
+
+**FIXED ON BRANCH (`selfopt/2026-09-13`):**
+1. **Sonnet 5 pricing** (`pricing.ts`) — updated to $3/$15/$0.30 (standard Sonnet 4.x tier), bump `PRICES_AS_OF` to 2026-09-13.
+2. **o4 vendor detection** (`normalize.ts`) — replaced `m.startsWith("o1") || m.startsWith("o3")` with the
+   `/^o[0-9]/` regex already used in `reasoningTokenWaste.ts` and `modelOverkill.ts`; covers o4/o5/future.
+3. **`uncompactedHistory` + `duplicateSubstring` cache-blind pricing** — always use `call.price.input` for
+   dynamic content; removed the unused `cached` variable from `duplicateSubstring.ts`.
+
+14 test suites green (added `round12.test`: Sonnet 5 price, o4 vendor, full-rate savings on cached traces),
+`tsc --noEmit` clean. Branch only — not merged, not deployed.
+
+**NEEDS HUMAN REVIEW:**
+- Confirm Sonnet 5 is indeed now at $3/$15 — verify at platform.claude.com/docs pricing before merging if
+  there's any doubt (the code comment was the source for the expiry date).
+
+**PARKED (carry-over):**
+- CI gate is an absolute 25% budget; a baseline/regression-diff default would be friendlier on first
+  adoption — medium-effort rearchitecture.
+- `batchOpportunity` empty-system-prompt collision (all no-system calls to same model grouped as one job).
+- `semanticCache` is `secondary` → excluded from headline; `duplicateRequests` overlap de-duplication.
+- Full token-level cross-detector dedup (headline is a floor, not additive).
+- `bloatedContext` cliff at 3000 tok + no cross-call duplicate-document detection.
+- `unusedCache` all-calls-identical prefix requirement (misses per-agent caching in multi-agent traces).
+- npm publish (needs owner go-ahead — pre-launch).

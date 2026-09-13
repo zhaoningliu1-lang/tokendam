@@ -60,15 +60,15 @@ function dupTokensInCall(call: NormCall): { dup: number; pairs: string[] } {
 export function duplicateSubstring(trace: NormTrace): Finding[] {
   let totalDup = 0;
   const evidence: string[] = [];
-  const cached = trace.calls.some((c) => c.hasCacheMarker);
-
   let wastedUSD = 0;
   for (const call of trace.calls) {
     const { dup, pairs } = dupTokensInCall(call);
     if (dup >= FIRE_AT) {
       totalDup += dup;
-      // Price each call's duplicated tokens by its own model.
-      wastedUSD += (dup * RECOVERABLE * (cached ? call.price.cachedInput : call.price.input)) / 1_000_000;
+      // Price each call's duplicated tokens by its own model at the FULL input rate.
+      // The duplicate copy is always in dynamic (non-cached) content, so it bills
+      // at the uncached rate regardless of whether a cache marker is present.
+      wastedUSD += (dup * RECOVERABLE * call.price.input) / 1_000_000;
       for (const p of pairs) if (evidence.length < 6) evidence.push(p);
     }
   }

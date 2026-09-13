@@ -16,10 +16,10 @@ export function uncompactedHistory(trace: NormTrace): Finding[] {
   const growing = lens[lens.length - 1] > lens[0] + 2;
   if (!growing) return [];
 
-  const cached = calls.some((c) => c.hasCacheMarker);
-
   // For each call, tokens in "old" messages beyond the recent window — priced by
   // that call's own model so mixed-model agent loops are costed correctly.
+  // Old history turns are always dynamic (beyond any cache breakpoint) and billed
+  // at the full input rate, even when the static prefix is cached.
   let oldTokensResent = 0;
   let maxOld = 0;
   let wastedUSD = 0;
@@ -29,7 +29,7 @@ export function uncompactedHistory(trace: NormTrace): Finding[] {
     const t = old.reduce((s, m) => s + m.tokens, 0);
     oldTokensResent += t;
     maxOld = Math.max(maxOld, t);
-    wastedUSD += (t * COMPACT_RATIO * (cached ? call.price.cachedInput : call.price.input)) / 1_000_000;
+    wastedUSD += (t * COMPACT_RATIO * call.price.input) / 1_000_000;
   }
   if (oldTokensResent < 2000) return [];
 

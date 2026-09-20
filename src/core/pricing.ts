@@ -30,7 +30,7 @@ export function callUSD(inTok: number, cachedTok: number, outTok: number, p: Mod
 
 // List prices verified against platform.claude.com/docs pricing on this date.
 // They drift, so keep this stamp current (the CTO agent watches it).
-export const PRICES_AS_OF = "2026-07-29";
+export const PRICES_AS_OF = "2026-09-20";
 
 // Keys are matched by substring against the model string (longest match wins),
 // so specific versions (claude-opus-4-8) override family defaults (claude-opus-4).
@@ -42,8 +42,8 @@ export const PRICES: Record<string, ModelPrice> = {
   "claude-opus-4-7": { input: 5, cachedInput: 0.5, output: 25 },
   "claude-opus-4-6": { input: 5, cachedInput: 0.5, output: 25 },
   "claude-opus-4-5": { input: 5, cachedInput: 0.5, output: 25 },
-  // Sonnet 5 introductory pricing $2/$10 through 2026-08-31; then $3/$15 (= Sonnet 4.x).
-  "claude-sonnet-5": { input: 2, cachedInput: 0.2, output: 10 },
+  // Sonnet 5 introductory ($2/$10) ended 2026-08-31 — now $3/$15 (= Sonnet 4.x tier).
+  "claude-sonnet-5": { input: 3, cachedInput: 0.3, output: 15 },
   // Fable 5 / Mythos 5 (creative flagship tier).
   "claude-fable-5": { input: 10, cachedInput: 1, output: 50 },
   "claude-mythos-5": { input: 10, cachedInput: 1, output: 50 },

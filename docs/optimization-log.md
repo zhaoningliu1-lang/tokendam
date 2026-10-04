@@ -326,3 +326,21 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-10-04 · three correctness fixes (price expiry + vendor gap + cache-blind bloat)
+
+**FOUND (3-lens critique):**
+- **Correctness:** `claude-sonnet-5` price expired. The code itself documented `$2/$10 through 2026-08-31; then $3/$15`. Today is Oct 4 2026 — the intro period ended 34 days ago and the table was never updated. Every Sonnet 5 trace has been understating cost by ~33% since September. (`pricing.ts:46`)
+- **Adversarial:** `detectVendorFromModel` only checked `startsWith("o1")` and `startsWith("o3")`. An `o4-mini` trace reported `vendor: "unknown"`, displaying misleading UI and losing model-family context. The pattern `^o\d` is robust against future o5+ models. (`normalize.ts:394`)
+- **Correctness (recurring bug class):** `bloatedContext` used `call.price.input` (full rate) without considering `cachedInputTokens`, overstating waste when input is heavily cached — the same cache-blind bug that was fixed for 4 other detectors in Round 11. Fixed with a per-call blended rate: `input×(1−cachedFrac) + cachedInput×cachedFrac`. (`bloatedContext.ts:32`)
+
+**FIXED ON BRANCH (`selfopt/2026-10-04`, 14 suites green, `tsc --noEmit` clean):**
+- `PRICES_AS_OF` updated to `2026-10-04`; `claude-sonnet-5` updated to `{ input: 3, cachedInput: 0.3, output: 15 }` per the table's own expiry comment. (`pricing.ts`)
+- `detectVendorFromModel` now uses `/^o\d/` instead of `startsWith("o1") || startsWith("o3")`, catching o4, o4-mini, and future o-series models. (`normalize.ts`)
+- `bloatedContext` computes a cache-aware blended input rate per call — if 95% of input was cached, waste is priced at the blended rate, not full price. (`bloatedContext.ts`)
+- `test/round12.test.mjs` added (9 new assertions); wired into `npm test`.
+
+**NEEDS HUMAN REVIEW / PARKED (unchanged from Round 11b):**
+- CI gate is an absolute 25% budget, not a regression diff — friendlier on first adoption as a regression gate.
+- `npm publish` + rebuild (outward-facing; owner go-ahead required).
+- Detector-precision backlog: `bloatedContext` hard 3000-tok cliff + no cross-call document dedup; `unusedCache` misses per-agent caching; `batchOpportunity` groups system-less calls together.

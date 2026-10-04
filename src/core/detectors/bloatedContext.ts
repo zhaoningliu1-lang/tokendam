@@ -19,8 +19,19 @@ export function bloatedContext(trace: NormTrace): Finding[] {
   trace.calls.forEach((call, ci) => {
     for (const m of call.messages) {
       if (m.role === "assistant") continue; // model output, not our context waste
-      if (m.tokens >= BLOAT_THRESHOLD)
-        bigs.push({ call: ci, msg: m, tokens: m.tokens, inPrice: call.price.input });
+      if (m.tokens >= BLOAT_THRESHOLD) {
+        // Cache-aware blended rate: if part of the input was a cache hit, those tokens
+        // bill cheaper. Blend proportionally so the waste estimate is never overstated.
+        const inTok =
+          call.system.reduce((s, x) => s + x.tokens, 0) +
+          call.tools.reduce((s, t) => s + t.tokens, 0) +
+          call.messages.reduce((s, x) => s + x.tokens, 0);
+        const cached = Math.min(inTok, call.usage?.cachedInputTokens ?? 0);
+        const cachedFrac = inTok > 0 ? cached / inTok : 0;
+        const blendedRate =
+          call.price.input * (1 - cachedFrac) + call.price.cachedInput * cachedFrac;
+        bigs.push({ call: ci, msg: m, tokens: m.tokens, inPrice: blendedRate });
+      }
     }
   });
   if (!bigs.length) return findings;
@@ -28,7 +39,7 @@ export function bloatedContext(trace: NormTrace): Finding[] {
   bigs.sort((a, b) => b.tokens - a.tokens);
   const totalBloatTokens = bigs.reduce((s, b) => s + b.tokens, 0);
   const trimTokens = Math.round(totalBloatTokens * TRIMMABLE_FRACTION);
-  // Price each chunk by its own call's model (correct on mixed-model traces).
+  // Price each chunk by its own call's cache-aware blended rate (set above).
   const wastedUSD = bigs.reduce(
     (s, b) => s + (b.tokens * TRIMMABLE_FRACTION * b.inPrice) / 1_000_000,
     0

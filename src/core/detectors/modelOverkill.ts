@@ -1,5 +1,5 @@
 import type { Finding, NormCall, NormTrace } from "../types.js";
-import { priceFor, usd, type ModelPrice } from "../pricing.js";
+import { priceFor, usd, callUSD } from "../pricing.js";
 
 // The biggest cost lever most teams miss: using a flagship model (Opus, GPT-4o,
 // GPT-5) for a task a cheaper sibling would nail. Model price gaps are 10-20x —
@@ -35,10 +35,6 @@ function inputTokens(c: NormCall): number {
     c.tools.reduce((s, t) => s + t.tokens, 0) +
     c.messages.reduce((s, m) => s + m.tokens, 0)
   );
-}
-function callCost(inTok: number, cachedTok: number, outTok: number, p: ModelPrice): number {
-  const cached = Math.min(inTok, Math.max(0, cachedTok));
-  return ((inTok - cached) * p.input + cached * p.cachedInput + outTok * p.output) / 1_000_000;
 }
 
 export function modelOverkill(trace: NormTrace): Finding[] {
@@ -79,7 +75,7 @@ export function modelOverkill(trace: NormTrace): Finding[] {
     const cached = c.usage?.cachedInputTokens ?? 0;
     const cur = priceFor(c.model).price;
     const cheap = priceFor(suggestion.target).price;
-    const delta = callCost(inTok, cached, out, cur) - callCost(inTok, cached, out, cheap);
+    const delta = callUSD(inTok, cached, out, cur) - callUSD(inTok, cached, out, cheap);
     if (delta <= 0) continue;
 
     saving += delta;

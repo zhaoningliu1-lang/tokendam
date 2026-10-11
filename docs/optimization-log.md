@@ -326,3 +326,29 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-10-11
+
+Three-lens critique (correctness / adversarial / product) of the code as shipped after Round 11b.
+
+**FOUND:**
+- **`detectVendorFromModel` misses o4-series and Gemini** (`normalize.ts:395`). `"o4-mini"` / `"o4"` returned `"unknown"` (only `o1`/`o3` were explicit); Gemini models likewise returned `"unknown"`. Impact: (a) the `vendor` field in reports shows "unknown" for o4 and Gemini users, breaking the display; (b) `unusedCache` hit the else branch for Gemini and printed *"OpenAI auto-caches…"* — incorrect vendor and wrong fix advice for a major model family (Gemini 2.5 Flash/Pro are popular low-cost agent models).
+- **`unusedCache` gives wrong caching advice for Gemini** (`unusedCache.ts:114`). Consequence of the above — Gemini users see OpenAI-specific advice instead of Gemini-specific.
+- **`modelOverkill.ts` duplicates `callUSD` as a local `callCost`** (`modelOverkill.ts:39`). The private function was semantically equivalent but doesn't clamp `inTok`/`outTok` to 0, diverging from `pricing.callUSD`'s defensive guards. Future changes to the shared helper wouldn't propagate.
+- **`ghPrComment` doesn't paginate GitHub comment list** (`cli.ts:191`). GitHub returns 30 comments per page by default; on PRs with >30 comments the existing tokendam comment isn't found and a new one is POSTed instead of patched — spamming the PR thread with duplicate audit comments.
+
+**FIXED-ON-BRANCH** (`selfopt/2026-10-11`):
+1. `normalize.ts` — added `m.startsWith("o4")` to the OpenAI branch and a new `m.includes("gemini") → "google"` branch. `o4-mini`, `o4` now resolve `vendor: "openai"`; `gemini-2.5-flash/pro` resolve `vendor: "google"`.
+2. `unusedCache.ts` — added a `trace.vendor === "google"` arm with Gemini-accurate fix advice ("Gemini 2.5 implicitly caches prefixes ≥1024 tokens") instead of the OpenAI copy-paste.
+3. `modelOverkill.ts` — removed local `callCost` (4 lines); now imports and calls `callUSD` from `pricing.ts`. No behavioral change for non-negative inputs; adds the clamp guards for free.
+- New test suite `test/round12.test.mjs` (12 assertions): vendor detection for gemini-2.5-flash/pro, o4-mini, o4; `unusedCache` advice per-vendor (anthropic/openai/google); modelOverkill still fires and returns `wastedUSD > 0` after the refactor.
+
+**NEEDS-HUMAN-REVIEW:**
+- **`ghPrComment` pagination** (`cli.ts:191`): fix is one line (`?per_page=100`), correct and low-risk, but can't be auto-tested without mocking the GitHub API — deliberate human checkpoint.
+
+**PARKED (no change):**
+- CI gate uses an absolute 25% budget rather than a regression/baseline diff — friendlier default on first adoption (noted since Round 11b).
+- `npm publish` — pending founder go-ahead.
+- Per-call-index de-overlap between `duplicateRequests` and `unusedCache` (a precise follow-up to the Round 11b fail-open fix).
+
+14 suites green, `tsc --noEmit` clean, branch `selfopt/2026-10-11` pushed.

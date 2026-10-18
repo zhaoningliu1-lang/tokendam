@@ -326,3 +326,42 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-10-18
+
+**FOUND (3-lens critique of the code as it stands post-11b):**
+
+- **Correctness: `claude-sonnet-5` pricing stale** (`pricing.ts:46`) — The comment says "introductory pricing
+  $2/$10 through 2026-08-31; then $3/$15". As of 2026-10-18 the table still read $2/$10, causing all Sonnet-5
+  traces to report ~33% lower cost than the real bill. Directly undermines the "trustworthy dollar figures" moat.
+- **Correctness: `detectVendorFromModel` misses `o4-prefix` models** (`normalize.ts:394`) — `o4-mini` (in the
+  price table) returned vendor `"unknown"` instead of `"openai"`. Side effects: confusing vendor label in the
+  report, and the `unusedCache` fix text falling to the generic path instead of the correct OpenAI
+  auto-caching advice.
+- **Adversarial: `isReasoningModel` over-classified `gpt-5-mini` / `gpt-5-nano`** (`reasoningTokenWaste.ts:16`) —
+  Both are lightweight non-reasoning variants. A usage-only record (no messages array) with >500 output tokens
+  but no `reasoningTokens` in usage triggered the "estimated hidden reasoning" path, generating a false-positive
+  `reasoning-token-waste` finding. Exact reproduction: a gpt-5-mini call with `completion_tokens: 3000` and no
+  `reasoningTokens` field — the estimation path computed R = 3000 > MIN\_REASONING (1500 cumulative) and fired.
+
+**FIXED ON BRANCH (`selfopt/2026-10-18`):**
+1. **`claude-sonnet-5` pricing** — updated `{ input: 2, cachedInput: 0.2, output: 10 }` →
+   `{ input: 3, cachedInput: 0.3, output: 15 }` (= Sonnet 4.x tier); updated `PRICES_AS_OF` to 2026-10-18;
+   updated the stale introductory-period comment. (`pricing.ts`)
+2. **`detectVendorFromModel` o4 coverage** — added `m.startsWith("o4")` to the OpenAI detection branch, so
+   `o4-mini` (and any future o4 variant) reports vendor `"openai"`. (`normalize.ts`)
+3. **`isReasoningModel` mini/nano guard** — `gpt-5-mini` and `gpt-5-nano` now return `false` from
+   `isReasoningModel` unless `c.usage?.reasoningTokens > 0` is explicitly present; the estimation path never
+   fires on them. Explicit `reasoningTokens` reporting still triggers the finding as intended. (`reasoningTokenWaste.ts`)
+
+**TESTS:** added `test/round12.test.mjs` (8 assertions: Sonnet-5/Sonnet-4 cost parity, o4-mini vendor,
+gpt-5-mini/nano quiet without reasoning tokens, gpt-5-mini fires on explicit reasoningTokens, full gpt-5
+regression guard). 14 test suites green, `tsc --noEmit` clean. Branch only — not merged, not deployed.
+
+**NEEDS HUMAN REVIEW:** none — all three fixes are straightforward correctness/precision changes with clear tests.
+
+**PARKED (not re-proposing items from prior rounds):**
+- CI gate is an absolute 25% budget (a baseline/regression-diff default); `npm publish` decision.
+- `batchOpportunity` empty-system-prompt grouping collision.
+- `unusedCache` per-agent sub-group prefix detection (misses per-agent caching).
+- `bloatedContext` content-aware trimmable fraction (hard 3000-tok cliff).

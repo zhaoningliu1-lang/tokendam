@@ -13,6 +13,11 @@ const SIMPLE_TASK = /classif|extract|route|label|score|yes\/no|\bjson\b/i;
 
 function isReasoningModel(c: NormCall): boolean {
   const m = c.model.toLowerCase();
+  // gpt-5-mini / gpt-5-nano are lightweight non-reasoning variants; treat them as
+  // reasoning models only if the trace actually reports reasoning tokens, so we
+  // don't estimate hidden reasoning on high-output-token calls from these models.
+  if ((m.includes("gpt-5-mini") || m.includes("gpt-5-nano")) && !((c.usage?.reasoningTokens ?? 0) > 0))
+    return false;
   return (
     /^o[0-9]/.test(m) ||
     m.includes("gpt-5") ||

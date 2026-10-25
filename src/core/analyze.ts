@@ -132,6 +132,12 @@ export function analyze(input: unknown): Report {
     notes.push(`Mixed models — each call is priced by its own model: ${models.join(", ")}.`);
   if (totalOutputTokens === 0)
     notes.push("Trace had no response usage, so output token cost isn't included in the total.");
+  // semanticCache skips traces with >400 calls (O(n²) comparison). Notify the
+  // user so they know that analysis was not run, not just that nothing fired.
+  if (trace.calls.length > 400)
+    notes.push(
+      `Trace has ${trace.calls.length} calls — semantic-cache analysis was skipped (too large for the O(n²) per-call comparison; limit is 400).`
+    );
 
   return {
     vendor: trace.vendor,

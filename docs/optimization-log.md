@@ -326,3 +326,59 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-10-25
+
+Multi-lens autonomous critique (correctness · adversarial · product/target-user) of the current
+codebase. Read all detectors, CLI, normalize, analyze, pricing, and CI modules. Checked against the
+parked/done list — none of these issues were previously addressed.
+
+**FOUND (backlog ranked by impact ÷ effort):**
+1. **`detectVendorFromModel` misclassified `o4-mini`/`o4` as "unknown"** (`normalize.ts:395`) — the
+   check only matched `o1`/`o3` prefixes; `o4-mini` (which is in the price table + actively used) got
+   "unknown" vendor, causing `unusedCache` to potentially show the wrong cache advice for Gemini users
+   (Gemini also showed "unknown"). Correctness + trust issue.
+2. **`uncompactedHistory` priced dynamic history at `cachedInput` rate when caching was active**
+   (`uncompactedHistory.ts:32`) — when any call had `hasCacheMarker`, old messages were priced at
+   the cached rate (~10% of full input for Anthropic). But old messages are the DYNAMIC part of the
+   prompt (they come AFTER the cache_control marker on the static prefix) and are NOT cached — they
+   bill at the full input rate. This understated the savings from compacting history by ~10x on
+   Anthropic traces with caching active. The `duplicateSubstring` detector has the same shape of bug
+   (cached trace → cached rate for duplicate content) but it's a conservative underestimate, not an
+   overestimate, so it was not fixed here (parked).
+3. **`semanticCache` silently skipped traces with >400 calls** (`semanticCache.ts:7`) — the O(n²)
+   comparison bails at 400 calls with no user notification; a 500-call trace appeared fully analyzed
+   when semantic-cache analysis just didn't run.
+
+**FIXED ON BRANCH (`selfopt/2026-10-25`):**
+- **Vendor detection** — added `m.startsWith("o4")` for `o4`/`o4-mini` and `m.includes("gemini")`
+  for Gemini models to `detectVendorFromModel` (`normalize.ts`). Now `o4-mini` → "openai",
+  `gemini-2.5-pro` → "google", and the `unusedCache` fix text routes these correctly.
+- **`uncompactedHistory` full-rate pricing** — removed the `cached ? call.price.cachedInput :
+  call.price.input` branch; old messages always price at `call.price.input` (the full rate), since
+  those tokens are in the dynamic portion beyond the cache_control marker and are not cached.
+  Savings estimates for growing history loops now reflect reality on Anthropic/DeepSeek traces.
+- **Large-trace note for semantic-cache skip** — `analyze.ts` appends a report note when
+  `trace.calls.length > 400` explaining that semantic-cache analysis was skipped and why, so the
+  user knows the detector didn't fire due to a scale limit, not because nothing was found.
+
+14 test suites green (added `round12.test.mjs`: vendor detection, uncompacted-history full-rate
+pricing, large-trace note), `tsc --noEmit` clean. Branch only — not merged, not deployed.
+
+**NEEDS HUMAN REVIEW:**
+- **`duplicateSubstring` uses cached rate for duplicate content** (`duplicateSubstring.ts:49`) — same
+  shape of bug as `uncompactedHistory` above: duplicate content within a call (e.g., same doc in
+  system AND user turn) is priced at `cachedInput` rate if any cache marker is present. Unlike
+  uncompacted history, this is a CONSERVATIVE underestimate (not a false overestimate), so it was
+  parked here, but it should be fixed to use `call.price.input` for the user-message duplicate at
+  minimum (system portion genuinely could be cached).
+- **`o4-mini` in `modelOverkill` `suggestCheaper`** — `o4-mini` is suggested as the downgrade for
+  `o1`/`o3` (non-mini), but there's no explicit entry for `o4`/`o4-mini` being flagged itself if
+  there's a cheaper o-series. Likely intentional (o4-mini IS the cheap option), but worth a review
+  to confirm `suggestCheaper("o4-mini")` returns `null` as expected.
+
+**PARKED:**
+- `duplicateSubstring` cached-rate pricing (see above — conservative, not dangerous).
+- The CI gate absolute-budget issue (no regression-diff default) from Round 11b — higher-effort
+  founder call, unchanged.
+- Full token-level cross-detector dedup (headline clamped floor) — unchanged from prior rounds.

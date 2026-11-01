@@ -16,10 +16,12 @@ export function uncompactedHistory(trace: NormTrace): Finding[] {
   const growing = lens[lens.length - 1] > lens[0] + 2;
   if (!growing) return [];
 
-  const cached = calls.some((c) => c.hasCacheMarker);
-
   // For each call, tokens in "old" messages beyond the recent window — priced by
   // that call's own model so mixed-model agent loops are costed correctly.
+  // Per-call hasCacheMarker (not a trace-wide flag) so that calls without a cache
+  // marker are priced at the full input rate even when other calls in the trace do
+  // have one — the earlier "any call cached → all calls use cache rate" was wrong
+  // for partially-cached agent loops.
   let oldTokensResent = 0;
   let maxOld = 0;
   let wastedUSD = 0;
@@ -29,7 +31,7 @@ export function uncompactedHistory(trace: NormTrace): Finding[] {
     const t = old.reduce((s, m) => s + m.tokens, 0);
     oldTokensResent += t;
     maxOld = Math.max(maxOld, t);
-    wastedUSD += (t * COMPACT_RATIO * (cached ? call.price.cachedInput : call.price.input)) / 1_000_000;
+    wastedUSD += (t * COMPACT_RATIO * (call.hasCacheMarker ? call.price.cachedInput : call.price.input)) / 1_000_000;
   }
   if (oldTokensResent < 2000) return [];
 

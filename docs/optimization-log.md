@@ -326,3 +326,35 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-11-01
+
+Self-optimization loop (scheduled agent). Three critique angles (correctness · adversarial · product/target-user) read the real code under `src/`.
+
+**FOUND:**
+
+- **`detectVendorFromModel` misses o4-series** (`normalize.ts:395`) — the function matched `m.startsWith("o1") || m.startsWith("o3")` but not o4, o5, etc. An `o4-mini` trace got vendor "unknown" instead of "openai", causing the unusedCache fix message to fall through to generic advice and the report header to show `(unknown)` for a valid OpenAI model.
+- **`uncompactedHistory` used a trace-wide cache flag** (`detectors/uncompactedHistory.ts:19`) — `const cached = calls.some(c => c.hasCacheMarker)` meant that if ANY call in a loop had a cache marker, ALL calls priced their old-history waste at the cheap cache rate (~10% of input). A partially-cached agent loop (first call cached, later calls not) would understate the real re-billing cost by up to ~10×.
+- **`claude-sonnet-5` price entry may be stale** (`pricing.ts`) — the comment says the $2/$10 introductory pricing ran through 2026-08-31, which has passed. If Anthropic raised it to $3/$15 as noted, every trace using `claude-sonnet-5` now undercounts spend by ~33%. Requires human verification before updating.
+- **`modelOverkill` `suggestCheaper` for `claude-opus-*` targets `claude-sonnet-4`** — current gen is `claude-sonnet-5`; after the intro period they're the same price ($3/$15), so the delta math is correct but the label is one generation stale. Low priority.
+
+**FIXED-ON-BRANCH (`selfopt/2026-11-01`):**
+
+1. **`detectVendorFromModel` now recognises any o-series model as OpenAI** — replaced `m.startsWith("o1") || m.startsWith("o3")` with `/^o\d/.test(m)` so o4-mini, o5-mini, etc. resolve to "openai" like gpt-series models. (`normalize.ts`)
+2. **`uncompactedHistory` per-call cache pricing** — removed the trace-wide `cached` flag and switched to `call.hasCacheMarker` per iteration so each call's old-history waste is priced at its own model's correct rate. (`detectors/uncompactedHistory.ts`)
+3. **Tests** — `test/round12.test.mjs` added (6 assertions: o4-mini/o5-mini vendor, `normalize()` vendor, uncompacted-history fires, waste > 0, waste priced closer to input rate than cache rate). Added to `npm test` chain.
+
+**NEEDS HUMAN REVIEW:**
+
+- **Stale `claude-sonnet-5` price** — the table shows $2/$10 (introductory) but the comment says it was due to rise to $3/$15 after 2026-08-31. Verify against the live pricing page and update `PRICES_AS_OF` + the entry. (`pricing.ts`)
+- **`modelOverkill` suggestion labels** — `suggestCheaper` for claude-opus points to `claude-sonnet-4`; update to `claude-sonnet-5` once the price entry is corrected and stable.
+
+**PARKED (carried from prior rounds):**
+- `batchOpportunity` empty-system-prompt false positive (calls with no system prompt all group as one batch shape).
+- `semanticCache` false-positive on load-bearing numeric diffs (threshold tuning).
+- `bloatedContext` hard 3000-token cliff (graduated severity).
+- Full cross-detector token-level dedup (headline is a 90%-capped floor, not additive).
+- Cache write-premium + TTL range (#15).
+- CI gate baseline/regression diff as the default (absolute 25% is too aggressive on first adoption).
+
+14 test suites green (`tsc --noEmit` clean). Branch only — not merged, not deployed.

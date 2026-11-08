@@ -326,3 +326,51 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-11-08 · vendor detection + CI PR-comment robustness
+
+Three-angle critique (correctness · adversarial · product) of the current code.
+
+**FOUND:**
+- `detectVendorFromModel` (`normalize.ts:392`) has two gaps: Gemini model names
+  (`"gemini-2.5-flash"`, `"gemini-2.5-pro"`) return `"unknown"` vendor (the check never
+  looks for `"gemini"`), and o4-series models (`"o4-mini"`, `"o4"`) also return `"unknown"`
+  (the check only tests `startsWith("o1")` / `startsWith("o3")`). Effect: Gemini traces
+  get the wrong `unusedCache` fix advice — "OpenAI auto-caches at 50% off" instead of
+  Gemini's Context Caching API. Impact is proportional to Gemini adoption; the advice
+  was actively misleading.
+- `ghPrComment` (`cli.ts:191`) doesn't check HTTP response status codes. A 401/403 from
+  GitHub (expired/missing `GITHUB_TOKEN`) is silently treated as a successful listing
+  (`Array.isArray(list)` is false → skips update → tries POST → no status check → returns
+  `"pr-comment: posted"`) . A CI run with a bad token appeared to succeed but posted no
+  comment, misleading developers debugging a failed pipeline.
+
+**FIXED ON BRANCH (`selfopt/2026-11-08`):**
+- **Vendor detection** — added `if (m.includes("gemini")) return "google"` and replaced
+  `m.startsWith("o1") || m.startsWith("o3")` with `/^o\d/.test(m)` (catches all
+  o-series: o1, o3, o4, and future versions). (`normalize.ts`)
+- **Gemini caching advice** — added a `trace.vendor === "google"` branch in `unusedCache`
+  that cites the Gemini Context Caching API instead of the OpenAI auto-caching advice.
+  (`detectors/unusedCache.ts`)
+- **`ghPrComment` HTTP error surfacing** — added `response.ok` checks on the GET
+  (comment list), PATCH (update), and POST (create) calls; a non-2xx now returns
+  `"pr-comment: failed — GitHub API <status> <statusText> ..."` so the error appears
+  in CI logs instead of silently passing. (`cli.ts`)
+
+14 test suites green (added `round12.test.mjs`: vendor regression for gemini/o4-mini/claude,
+unusedCache fix advice by vendor, Anthropic regression guard). `tsc --noEmit` clean.
+Branch only — not merged, not deployed.
+
+**NEEDS HUMAN REVIEW (not auto-shipped):**
+- **Stale `PRICES_AS_OF = "2026-07-29"`** — it's now 2026-11-08 (3+ months). New models
+  (e.g. `claude-haiku-5-5`) fall to FALLBACK_PRICE ($3/$12) with a note, which is correct
+  but the actual prices are likely much lower. A pricing audit with confirmed list prices
+  would improve estimate accuracy. (`pricing.ts:33`)
+- **CI gate is still an absolute % budget** (not baseline/regression-diff) — still open
+  from R11b. Friendlier on first adoption would be a diff-based threshold.
+
+**PARKED (unchanged from R11b):**
+- `batchOpportunity` empty-system-prompt collision
+- `semanticCache` false-positive on load-bearing numeric diffs (777 vs 999)
+- `bloatedContext` hard 3000-tok cliff + no cross-call duplicate-document detection
+- `unusedCache` per-agent caching (prefix need not be identical across all calls)

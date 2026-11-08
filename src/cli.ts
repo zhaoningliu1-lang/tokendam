@@ -188,23 +188,30 @@ async function ghPrComment(body: string): Promise<string> {
     "content-type": "application/json",
   };
   try {
-    const list = await (await fetch(`${base}/issues/${pr}/comments`, { headers })).json();
+    const listRes = await fetch(`${base}/issues/${pr}/comments`, { headers });
+    if (!listRes.ok)
+      return `pr-comment: failed — GitHub API ${listRes.status} ${listRes.statusText} (check GITHUB_TOKEN scope)`;
+    const list = await listRes.json();
     const existing = Array.isArray(list)
       ? list.find((c: any) => typeof c.body === "string" && c.body.includes("<!-- tokendam -->"))
       : null;
     if (existing) {
-      await fetch(`${base}/issues/comments/${existing.id}`, {
+      const patchRes = await fetch(`${base}/issues/comments/${existing.id}`, {
         method: "PATCH",
         headers,
         body: JSON.stringify({ body }),
       });
+      if (!patchRes.ok)
+        return `pr-comment: failed — GitHub API ${patchRes.status} ${patchRes.statusText} on PATCH`;
       return "pr-comment: updated";
     }
-    await fetch(`${base}/issues/${pr}/comments`, {
+    const postRes = await fetch(`${base}/issues/${pr}/comments`, {
       method: "POST",
       headers,
       body: JSON.stringify({ body }),
     });
+    if (!postRes.ok)
+      return `pr-comment: failed — GitHub API ${postRes.status} ${postRes.statusText} on POST`;
     return "pr-comment: posted";
   } catch (e) {
     return "pr-comment: failed — " + String(e).slice(0, 140);

@@ -1,5 +1,5 @@
 import type { Finding, NormMessage, NormTrace } from "../types.js";
-import { usd } from "../pricing.js";
+import { usd, inputUSD } from "../pricing.js";
 
 // Flags oversized VARIABLE content — a single user/tool message that dwarfs
 // everything else. Classic case: dumping a whole scraped page / file / API
@@ -14,13 +14,24 @@ export function bloatedContext(trace: NormTrace): Finding[] {
   const findings: Finding[] = [];
 
   // Aggregate the biggest non-system chunk per call, then report the worst few.
-  type Big = { call: number; msg: NormMessage; tokens: number; inPrice: number };
+  // effectiveInputRate: blended per-token price (cache-aware) so the savings estimate
+  // can't exceed the call's real billed cost — the same fix applied in Round 11 for
+  // the other four detectors that had this "moat bug."
+  type Big = { call: number; msg: NormMessage; tokens: number; effectiveInputRate: number };
   const bigs: Big[] = [];
   trace.calls.forEach((call, ci) => {
+    const totalIn =
+      call.system.reduce((s, m) => s + m.tokens, 0) +
+      call.tools.reduce((s, t) => s + t.tokens, 0) +
+      call.messages.reduce((s, m) => s + m.tokens, 0);
+    const cachedIn = call.usage?.cachedInputTokens ?? 0;
+    const totalInputCost = inputUSD(totalIn, cachedIn, call.price);
+    // Blended effective rate ($/token); fall back to full price on zero-token calls.
+    const effectiveInputRate = totalIn > 0 ? totalInputCost / totalIn : call.price.input / 1_000_000;
     for (const m of call.messages) {
       if (m.role === "assistant") continue; // model output, not our context waste
       if (m.tokens >= BLOAT_THRESHOLD)
-        bigs.push({ call: ci, msg: m, tokens: m.tokens, inPrice: call.price.input });
+        bigs.push({ call: ci, msg: m, tokens: m.tokens, effectiveInputRate });
     }
   });
   if (!bigs.length) return findings;
@@ -28,9 +39,9 @@ export function bloatedContext(trace: NormTrace): Finding[] {
   bigs.sort((a, b) => b.tokens - a.tokens);
   const totalBloatTokens = bigs.reduce((s, b) => s + b.tokens, 0);
   const trimTokens = Math.round(totalBloatTokens * TRIMMABLE_FRACTION);
-  // Price each chunk by its own call's model (correct on mixed-model traces).
+  // Price each chunk by its own call's blended effective input rate.
   const wastedUSD = bigs.reduce(
-    (s, b) => s + (b.tokens * TRIMMABLE_FRACTION * b.inPrice) / 1_000_000,
+    (s, b) => s + b.tokens * TRIMMABLE_FRACTION * b.effectiveInputRate,
     0
   );
 

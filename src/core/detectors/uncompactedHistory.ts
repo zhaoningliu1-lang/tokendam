@@ -16,10 +16,11 @@ export function uncompactedHistory(trace: NormTrace): Finding[] {
   const growing = lens[lens.length - 1] > lens[0] + 2;
   if (!growing) return [];
 
-  const cached = calls.some((c) => c.hasCacheMarker);
-
   // For each call, tokens in "old" messages beyond the recent window — priced by
   // that call's own model so mixed-model agent loops are costed correctly.
+  // Per-call cache check: a call with an explicit marker OR observed cache-read tokens
+  // (OpenAI auto-caching) already bills old messages at the cache-hit rate — compaction
+  // saves less, so we must price it at the lower rate to avoid overstating savings.
   let oldTokensResent = 0;
   let maxOld = 0;
   let wastedUSD = 0;
@@ -29,7 +30,8 @@ export function uncompactedHistory(trace: NormTrace): Finding[] {
     const t = old.reduce((s, m) => s + m.tokens, 0);
     oldTokensResent += t;
     maxOld = Math.max(maxOld, t);
-    wastedUSD += (t * COMPACT_RATIO * (cached ? call.price.cachedInput : call.price.input)) / 1_000_000;
+    const perCallCached = call.hasCacheMarker || (call.usage?.cachedInputTokens ?? 0) > 0;
+    wastedUSD += (t * COMPACT_RATIO * (perCallCached ? call.price.cachedInput : call.price.input)) / 1_000_000;
   }
   if (oldTokensResent < 2000) return [];
 

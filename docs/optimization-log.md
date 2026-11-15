@@ -326,3 +326,48 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-11-15
+
+Autonomous self-optimization loop (see `docs/self-optimization.md`). Three-lens critique (correctness ·
+adversarial · product/target-user) of the full codebase. The same class of "moat bug" that recurred in
+Rounds 6, 7, and 11 was found again in two detectors that were NOT touched in Round 11.
+
+**FOUND (ranked by impact/effort):**
+1. **`bloatedContext` cache-blind pricing** (`bloatedContext.ts:23`) — stored `inPrice: call.price.input`
+   (full uncached rate), ignored `usage.cachedInputTokens`. On a 90%-cached trace with a large user
+   message this reported ~10× the actual savings, potentially exceeding the whole trace cost — the same
+   "moat bug" fixed for `agentLoopWaste` / `batchOpportunity` / `semanticCache` / `stepCostOutlier` in
+   Round 11.
+2. **`uncompactedHistory` trace-level cache flag** (`uncompactedHistory.ts:19`) — computed
+   `const cached = calls.some(c => c.hasCacheMarker)` (trace-wide), so if ANY call had a marker, ALL
+   old-history tokens across ALL calls were priced at the cache-hit rate. Also ignored
+   `usage.cachedInputTokens` (OpenAI auto-caching), so uncached traces overstated savings and
+   auto-cached traces understated them.
+3. **`detectVendorFromModel` missing `o4-*`→openai and `gemini`→google** (`normalize.ts:395`) — `o4-mini`
+   traces got `vendor: "unknown"` (cosmetic; doesn't affect dollar figures, but affects fix advice display
+   and future vendor-specific paths). `gemini-*` also got `"unknown"`.
+
+**FIXED ON BRANCH (`selfopt/2026-11-15`):**
+- **Fix 1 — `bloatedContext` cache-aware pricing**: imported `inputUSD` from `pricing.ts`; now computes
+  a blended effective per-token input rate per call (`inputUSD(totalIn, cachedIn, price) / totalIn`) and
+  prices each bloated chunk through that rate. Mirrors the Round 11 fix for the other four detectors.
+- **Fix 2 — `uncompactedHistory` per-call cache check**: removed the trace-level `cached` flag; each
+  call now checks `call.hasCacheMarker || (call.usage?.cachedInputTokens ?? 0) > 0` individually.
+- **Fix 3 — `detectVendorFromModel` for `o4-*` and `gemini`**: added `m.startsWith("o4")` to the
+  OpenAI branch; added `m.includes("gemini") → "google"`.
+- **New test suite `test/round12.test.mjs`** (10 assertions): `bloatedContext wastedUSD ≤ totalUSD`
+  on a 90%-cached trace; `bloatedContext wastedUSD > 0` on an uncached trace; `uncompactedHistory`
+  fires and uses lower rate on cached calls vs uncached; vendor detection for `o4-mini` and
+  `gemini-2.5-flash`.
+
+**NEEDS HUMAN REVIEW:** nothing blocking — all three fixes are low-risk correctness corrections.
+
+**PARKED (carry-forward from Round 11):**
+- `batchOpportunity` empty-system-prompt collision (system-less calls group as one bulk job).
+- `semanticCache` false-positive on load-bearing numeric diffs (777 vs 999).
+- `bloatedContext` hard 3000-tok cliff + no cross-call duplicate-document detection.
+- `unusedCache` all-calls-identical prefix check (misses per-agent caching).
+- CI gate absolute 25% budget (a regression-diff default would be friendlier on first adoption).
+
+14 suites green (added `round12.test`), `tsc --noEmit` clean. Branch only — not merged, not deployed.

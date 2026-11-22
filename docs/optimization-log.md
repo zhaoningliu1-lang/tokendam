@@ -326,3 +326,41 @@ shipped the review items:
 13 suites green (added the fail-open test to `round11.test`), `tsc --noEmit` clean, committed to `main`.
 Still open for a founder call: the CI gate is an absolute 25% budget (a baseline/regression-diff default
 would be friendlier on first adoption); rebuild + `npm publish` when ready.
+
+## Round 12 (autonomous) — 2026-11-22
+
+Three-lens critique (correctness · adversarial · product) of the full codebase on the current state of main.
+
+**FOUND:**
+- **`claude-sonnet-5` price is stale** (`pricing.ts:46`) — introductory $2/$10 expired 2026-08-31 per the
+  note in the file; now $3/$15 (= Sonnet 4.x). Any user on Sonnet 5 today saw costs underestimated 33%.
+- **`bloatedContext` is cache-blind** (`bloatedContext.ts:18`) — stored `call.price.input` (full uncached
+  rate) instead of the cache-aware effective per-token cost. On a 95%-cached trace the finding estimated
+  waste at ~7× the actual cost. This is the same "moat bug" Round 11 fixed for `agentLoopWaste`,
+  `batchOpportunity`, `semanticCache`, and `stepCostOutlier` — `bloatedContext` was missed.
+- **`detectVendorFromModel` misses `o4-*` and `gemini-*`** (`normalize.ts:395`) — `o4-mini` returned
+  `vendor: "unknown"` instead of `"openai"`; Gemini models also returned `"unknown"`. Affects the
+  `report.vendor` field and any vendor-specific advice rendered downstream.
+
+**FIXED-ON-BRANCH (`selfopt/2026-11-22`):**
+1. `pricing.ts`: Updated `claude-sonnet-5` to `{input:3, cachedInput:0.3, output:15}` and bumped
+   `PRICES_AS_OF` to `2026-11-22`.
+2. `bloatedContext.ts`: Replaced `inPrice: call.price.input` with `effectiveRate` computed via the
+   shared `inputUSD()` helper — the same fix applied to the other four detectors in Round 11.
+3. `normalize.ts`: Added `m.startsWith("o4")` to the OpenAI branch; added `gemini` → `"google"` vendor.
+4. `test/round12.test.mjs`: 10 new tests covering all three fixes; added to the npm test script.
+
+14 suites green (added `round12.test`), `tsc --noEmit` clean. Branch only — not merged, not deployed.
+
+**NEEDS HUMAN REVIEW:**
+- Gemini context-caching advice: `unusedCache.ts` now gets `vendor: "google"` for Gemini traces but the
+  fix advice still falls into the OpenAI "auto-caching" branch — Gemini uses explicit context caching
+  (a different API). The vendor detection fix is correct but advice needs a `vendor === "google"` branch
+  with Gemini-specific guidance; deferred so the branch stays minimal.
+
+**PARKED (this round):**
+- `claude-haiku-5` / `claude-haiku-5-5` have no price entry → fall back to FALLBACK_PRICE ($3), wildly
+  overestimating Haiku-tier cost (~0.08 actual). Needs a founder call on current Haiku 5.5 pricing.
+- CI gate uses an absolute 25% waste budget (not a regression/diff default) — friendlier first-adoption
+  UX is a founder-scoped decision, not a small fix.
+- Gemini context-caching fix advice (see Needs Human Review above).

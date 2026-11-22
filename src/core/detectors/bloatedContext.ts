@@ -1,5 +1,5 @@
 import type { Finding, NormMessage, NormTrace } from "../types.js";
-import { usd } from "../pricing.js";
+import { usd, inputUSD } from "../pricing.js";
 
 // Flags oversized VARIABLE content — a single user/tool message that dwarfs
 // everything else. Classic case: dumping a whole scraped page / file / API
@@ -14,13 +14,22 @@ export function bloatedContext(trace: NormTrace): Finding[] {
   const findings: Finding[] = [];
 
   // Aggregate the biggest non-system chunk per call, then report the worst few.
-  type Big = { call: number; msg: NormMessage; tokens: number; inPrice: number };
+  // effectiveRate = real USD per input token for this call, cache-aware — mirrors
+  // the fix applied to agentLoopWaste/batchOpportunity/semanticCache in Round 11.
+  type Big = { call: number; msg: NormMessage; tokens: number; effectiveRate: number };
   const bigs: Big[] = [];
   trace.calls.forEach((call, ci) => {
+    const totalIn =
+      call.system.reduce((s, m) => s + m.tokens, 0) +
+      call.tools.reduce((s, t) => s + t.tokens, 0) +
+      call.messages.reduce((s, m) => s + m.tokens, 0);
+    const cachedIn = Math.min(totalIn, call.usage?.cachedInputTokens ?? 0);
+    // Cost per input token for this call (never exceeds call.price.input / 1M).
+    const effectiveRate = totalIn > 0 ? inputUSD(totalIn, cachedIn, call.price) / totalIn : 0;
     for (const m of call.messages) {
       if (m.role === "assistant") continue; // model output, not our context waste
       if (m.tokens >= BLOAT_THRESHOLD)
-        bigs.push({ call: ci, msg: m, tokens: m.tokens, inPrice: call.price.input });
+        bigs.push({ call: ci, msg: m, tokens: m.tokens, effectiveRate });
     }
   });
   if (!bigs.length) return findings;
@@ -28,9 +37,11 @@ export function bloatedContext(trace: NormTrace): Finding[] {
   bigs.sort((a, b) => b.tokens - a.tokens);
   const totalBloatTokens = bigs.reduce((s, b) => s + b.tokens, 0);
   const trimTokens = Math.round(totalBloatTokens * TRIMMABLE_FRACTION);
-  // Price each chunk by its own call's model (correct on mixed-model traces).
+  // Price each chunk at the call's cache-aware per-token rate so the finding's $
+  // can never exceed what those tokens actually cost (closes the Round 11 "moat bug"
+  // class for bloatedContext, which was missed in that round).
   const wastedUSD = bigs.reduce(
-    (s, b) => s + (b.tokens * TRIMMABLE_FRACTION * b.inPrice) / 1_000_000,
+    (s, b) => s + b.tokens * TRIMMABLE_FRACTION * b.effectiveRate,
     0
   );
 
